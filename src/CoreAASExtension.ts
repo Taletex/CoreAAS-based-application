@@ -1,14 +1,14 @@
 import { AddressSpace, ConstructorFunc, Namespace, UADataType, UAObject, UAObjectType, UAReferenceType, UAVariableType } from "node-opcua";
 import * as path from "path";
 import { AssetObject, AASObject, EDSObject, SubmodelPropertyObject, SubmodelObject, ConceptDescriptionObject, ConceptDictionaryObject, 
-        DataSpecificationIEC61360, ReferenceElementObject, AASFileObject, SubmodelElementCollectionObject, ViewObject, Identifier, Key, AASReferenceObject, ReferableNamespaceObject, AdministrativeInformationObject } from "./types";
+        DataSpecificationIEC61360, ReferenceElementObject, AASFileObject, SubmodelElementCollectionObject, ViewObject, Identifier, Key, AASReferenceObject, ReferableNamespaceObject, AdministrativeInformationObject, SubmodelElementObject } from "./types";
 import { AASBuilder, AdministrativeInformationBuilder, AASReferenceBuilder, AssetBuilder, DataSpecificationIEC61360Builder, 
         EmbeddedDataSpecificationBuilder, SubmodelPropertyBuilder, SubmodelBuilder, ConceptDescriptionBuilder, 
         ConceptDictionaryBuilder, SubmodelElementsBuilder, ViewBuilder } from "./builders/builder";
 import { AASOptions, AASReferenceOptions, AdministrativeInformationOptions, AssetOptions, ConceptDescriptionOptions, ConceptDictionaryOptions, 
         DataSpecificationIECOptions, EmbeddedDataSpecificationOptions, SubmodelOptions, ReferenceElementOptions, FileOptions, SubmodelElementCollectionOptions, SubmodelPropertyOptions, ViewOptions } from "./options_types";
 import assert = require("assert");
-import { CoreServer, LocalizedText, KeyElements, KeyType, IdentifierType } from ".";
+import { CoreServer, LocalizedText, KeyElements, KeyType, IdentifierType, Kind, PropertyCategory, PropertyValueType, Variant, DataType } from ".";
 
 /**
  * This class represents the extension part of the OPC UA Server relevant to the CoreAAS Information Model.\
@@ -276,23 +276,183 @@ export class CoreAASExtension {
 
     }
 
-    /** Adds a ConceptDictionary to an AAS */
-    addConceptDictionaryToAAS(aas: AASObject, server: CoreServer, dictionarySize: number, name: string, descriptionEn: string): ConceptDictionaryObject {
-        const conceptDictionary = server.coreaas.addConceptDictionary({
-        browseName: name,
-        idShort: name,
-        conceptDictionaryOf: aas,
-        description: [new LocalizedText({locale: "en", text: descriptionEn})]
+
+    /** Creates an AAS and adds to it its submodel references  */
+    createAssetAdministrationShell(server: CoreServer, browseName: string, administrativeInformation: AdministrativeInformationObject, itDescription: string, enDescription: string, id: string, assetRef: string, submodelRefs: string[]): AASObject {
+        const aas = server.coreaas.addAssetAdministrationShell({
+            browseName: browseName, 
+            administration: administrativeInformation,
+            description: [  new LocalizedText({locale: "en", text: itDescription}),
+                            new LocalizedText({locale: "it", text: enDescription}) ],
+            identification: new server.coreaas.Identifier({
+                id: id,
+                idType: IdentifierType.URI
+            }),
+            assetRef: [new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: KeyElements.Asset,
+                value: assetRef
+            })]
         })
+        for(let i=0; i<=submodelRefs.length; i++){
+            aas.addSubmodelRef([new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: KeyElements.Submodel,
+                value: submodelRefs[i]
+            })]);
+        }
+
+        return aas;
+    }
+
+    /** Creates an asset and adds it to its AAS */
+    createAsset(server: CoreServer, browseName: string, idShort: string, id: string, kind: Kind, itDescription: string, enDescription: string, aas: AASObject, identificationSubmodelRef: string): AssetObject {
+        const asset = server.coreaas.addAsset({
+            browseName: browseName,
+            idShort: idShort,
+            identification: new server.coreaas.Identifier({
+                id: id,
+                idType: IdentifierType.URI
+            }),
+            kind: kind,
+            description: [  new LocalizedText({locale: "en", text: itDescription}),
+                            new LocalizedText({locale: "it", text: enDescription}) ],
+            assetOf: aas,
+            assetIdentificationModelRef: [ new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: KeyElements.Submodel,
+                value: identificationSubmodelRef
+            }) ]
+        });
+
+        return asset;
+    }
+    
+    /** Creates a submodel and adds it to its AAS if kind==instance */
+    createSubmodel(server: CoreServer, browseName: string, kind: Kind, idShort: string, id: string, semanticElementType: number, semanticId: string,  aas: AASObject): SubmodelObject {
+        const submodel = server.coreaas.addSubmodel({
+            browseName: browseName,
+            kind: kind,
+            idShort: idShort,
+            identification: new server.coreaas.Identifier({
+                id: id,
+                idType: IdentifierType.URI
+            }),
+            semanticId: [ new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: semanticElementType,
+                value: semanticId
+            })]
+        })
+        
+        if(kind == Kind.Instance) 
+            submodel.submodelOf(aas);
+        
+        return submodel;
+    }
+
+    /** Creates a submodel property and adds it to its submodel */
+    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any): SubmodelPropertyObject {
+        const property = server.coreaas.addSubmodelProperty({
+            browseName: browseName,
+            kind: kind,
+            idShort: idShort,
+            submodelElementOf: submodel,
+            semanticId: [ new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: semanticElementType,
+                value: semanticId
+            }) ],
+            category: category,
+            valueType: valueType,
+            value: {
+                dataType: dataType1,
+                value: {
+                    get: () => {
+                        return new Variant({ dataType: dataType2, value: value});
+                    }
+                }
+            }
+        });
+
+        return property;
+    }
+
+    /** Creates a submodel file and adds it to its submodel */
+    createSubmodelFile(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, mimeType: string, value: string): AASFileObject {
+        const file = server.coreaas.addAASFile({
+            browseName: browseName,
+            kind: kind,
+            idShort: idShort,
+            submodelElementOf: submodel,
+            semanticId: [ new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: semanticElementType,
+                value: semanticId
+            }) ],
+            mimeType: mimeType,
+            value: value
+        });
+
+        return file;
+    }
+
+    /** Creates a submodel file and adds it to its submodel */
+    createSubmodelElementCollection(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, values: SubmodelElementObject[]): SubmodelElementCollectionObject {
+        const collection = server.coreaas.addSubmodelElementCollection({
+            browseName: browseName,
+            kind: kind,
+            idShort: idShort,
+            ordered: true,
+            submodelElementOf: submodel,
+            semanticId: [ new server.coreaas.Key({
+                idType: KeyType.URI,
+                local: true,
+                type: semanticElementType,
+                value: semanticId
+            }) ]
+        }).addParent([new server.coreaas.Key({
+            idType: KeyType.URI,
+            local: true,
+            type: KeyElements.Submodel,
+            value: submodel.identification._dataValue  // TODO: Check
+            })
+        ]).addElements(values);
+
+        return collection;
+    }
+    
+    /** Creates a Concept Dictionary and adds it to its AAS */
+    createConceptDictionary(server: CoreServer, aas: AASObject, dictionarySize: number, browseName: string, idShort: string, enDescription: string, itDescription: string): ConceptDictionaryObject {
+        const conceptDictionary = server.coreaas.addConceptDictionary({
+            browseName: browseName,
+            idShort: idShort,
+            conceptDictionaryOf: aas,
+            description: [new LocalizedText({locale: "en", text: enDescription}), 
+                        new LocalizedText({locale: "it", text: itDescription})]
+            })
+
         for(let i = 0; i++; i<=dictionarySize) {
-            conceptDictionary.addConceptDescriptionRef([new server.coreaas.Key({idType: KeyType.URI, local: true,type: KeyElements.ConceptDescription, value: "www.test.com/00" + i.toString() }) ])
+            conceptDictionary.addConceptDescriptionRef([new server.coreaas.Key({
+                idType: KeyType.URI, 
+                local: true,
+                type: KeyElements.ConceptDescription, 
+                value: "www.test.com/0" + ("0" ? i<10 : "") + i.toString() 
+                }) 
+            ])
         }
         return conceptDictionary; 
     }
 
-    /** Adds a ConceptDescription to a ConceptDictionary */
-    addConceptDescriptionToDictionary(server: CoreServer, conceptDictionary: ConceptDictionaryObject, element: UAObject, browseName: string, preferredName: string, definition: string, dataType: string, unit: string, shortName: string, id: string): void {
-        // Add ConceptDescriptions to the Dictionary
+    /** Creates a Concept Description and adds it to its Concept Dictionary */
+
+    createConceptDescription(server: CoreServer, conceptDictionary: ConceptDictionaryObject, element: UAObject, browseName: string, preferredName: string, description: string, unit: string, id: string): ConceptDescriptionObject {
         const embedded = server.coreaas.addEmbeddedDataSpecification({
             browseName: "EmbeddedDS_1",
             hasDataSpecification: [ new server.coreaas.Key({
@@ -303,16 +463,12 @@ export class CoreAASExtension {
             }) ],
         })
         .addDataSpecificationIEC61360({
-            // identifier: "rtzspd#123",
             preferredName: preferredName,
-            definition: definition,
-            dataType: dataType,
             unit: unit,
-            shortName: shortName,
-            valueFormat: "NR1..5"
+            description: description
         });
 
-        server.coreaas.addConceptDescription({
+        const conceptDescription = server.coreaas.addConceptDescription({
             browseName: browseName,
             identification: new server.coreaas.Identifier({
                 id: id,
@@ -322,6 +478,8 @@ export class CoreAASExtension {
             conceptDescriptionOf: conceptDictionary,
         })
         .semanticOf(element);
+
+        return conceptDescription;
     }
 }
 
