@@ -29,12 +29,69 @@ function postInitialize() {
     const aas_mps = server.coreaas.createAssetAdministrationShell(server, "AAS_MPS", admin, "Multi Processing Station AAS", "Multi Processing Station AAS", "www.test.com/aas-mps/1.0", "http://www.test.com/536632", ["http://www.test.com/identification1"]);
         
     /** Assets */
-    server.coreaas.createAsset(server, "MultiProcessingStation536632", "536632", "http://www.test.com/536632", Kind.Instance, "Asset Multi Processing Station 536632", "Asset Multi Processing Station 536632", aas_mps, "http://www.test.com/identification1");
+    server.coreaas.createAsset(server, "MultiProcessingStation536632", Kind.Instance, "536632", "http://www.test.com/536632", "Asset Multi Processing Station 536632", "Asset Multi Processing Station 536632", aas_mps, "http://www.test.com/identification1");
 
     /** Submodels and Submodels elements TYPES */
-    // Identification
-    const submodel_identification_type = server.coreaas.createSubmodel(server, "Identification_type", Kind.Type, "Identification", "http://www.test.com/identificationType", KeyElements.ConceptDescription, "http://www.test.com/001", aas_mps);
-    server.coreaas.createSubmodelProperty(server, "assetSerialNumber", Kind.Type, "assetSerialNumber", submodel_identification_type, KeyElements.ConceptDescription, "www.test.com/002", PropertyCategory.CONSTANT, PropertyValueType.String, "String", DataType.String, ""); 
+    // Identification type
+    const submodel_identification_type = server.coreaas.createSubmodel(server, "Identification Type", Kind.Type, "Identification", "http://www.test.com/identificationType", KeyElements.ConceptDescription, "http://www.test.com/001", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Asset Serial Number Type", Kind.Type, "AssetSerialNumber", submodel_identification_type, KeyElements.ConceptDescription, "www.test.com/002", PropertyCategory.CONSTANT, PropertyValueType.String, "String", DataType.String, ""); 
+    server.coreaas.createSubmodelProperty(server, "Asset Manufacturer Type", Kind.Type, "AssetManufacturer", submodel_identification_type, KeyElements.ConceptDescription, "www.test.com/005", PropertyCategory.CONSTANT, PropertyValueType.String, "String", DataType.String, ""); 
+    
+    // Configuration type
+    const submodel_configuration_type = server.coreaas.createSubmodel(server, "Configuration Type", Kind.Type, "Configuration", "http://www.test.com/configurationType", KeyElements.ConceptDescription, "http://www.test.com/003", aas_mps);
+    server.coreaas.createSubmodelFile(server, "Data Sheet Type", Kind.Type, "DataSheet", submodel_identification_type, KeyElements.ConceptDescription, "www.test.com/004", "", ""); 
+    
+    // VacuumGripperOven type
+    const submodel_vacuum_gripper_oven_type = server.coreaas.createSubmodel(server, "Vacuum Gripper Oven Type", Kind.Type, "VacuumGripperOven", "http://www.test.com/gripperType", KeyElements.ConceptDescription, "http://www.test.com/006", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelOperation(server, "Pick Up Type", Kind.Type, "PickUp", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/007"); 
+    server.coreaas.createSubmodelOperation(server, "Set Down Type", Kind.Type, "SetDown", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/018"); 
+    server.coreaas.createSubmodelOperation(server, "Move Type", Kind.Type, "Move", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/030"); 
+    
+    // Oven type
+    const submodel_oven_type = server.coreaas.createSubmodel(server, "Oven Type", Kind.Type, "Oven", "http://www.test.com/ovenType", KeyElements.ConceptDescription, "http://www.test.com/008", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", submodel_oven_type, KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelOperation(server, "Burn Type", Kind.Type, "Burn", submodel_oven_type, KeyElements.ConceptDescription, "www.test.com/010"); 
+
+    // Turntable type
+    const submodel_turntable_type = server.coreaas.createSubmodel(server, "Turntable Type", Kind.Type, "Turntable", "http://www.test.com/turntableType", KeyElements.ConceptDescription, "http://www.test.com/011", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelOperation(server, "Turn Type", Kind.Type, "Turn", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/031"); 
+    server.coreaas.createSubmodelOperation(server, "Activate Saw Type", Kind.Type, "ActivateSaw", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/013"); 
+    server.coreaas.createSubmodelOperation(server, "Ejection Type", Kind.Type, "Ejection", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/014"); 
+    server.coreaas.createSubmodelOperation(server, "Activate Belt Type", Kind.Type, "ActivateBelt", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/015"); 
+
+    /** Submodels and Submodels elements INSTANCES */
+    // Identification instance
+    const submodel_identification_instance = server.coreaas.createSubmodel(server, "Identification Instance 1", Kind.Type, "Identification", "http://www.test.com/identification1", KeyElements.Submodel, "http://www.test.com/identificationType", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Asset Serial Number Instance 1", Kind.Type, "AssetSerialNumber", submodel_identification_instance, KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.String, "String", DataType.String, "TODO"); 
+    server.coreaas.createSubmodelProperty(server, "Asset Manufacturer Instance 1", Kind.Type, "AssetManufacturer", submodel_identification_instance, KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.String, "String", DataType.String, "Fischertechnik"); 
+    
+    // Configuration instance
+    const submodel_configuration_instance = server.coreaas.createSubmodel(server, "Configuration Instance 1", Kind.Type, "Configuration", "http://www.test.com/configuration1", KeyElements.Submodel, "http://www.test.com/configurationType", aas_mps);
+    server.coreaas.createSubmodelFile(server, "Data Sheet Instance 1", Kind.Type, "DataSheet", submodel_configuration_instance, KeyElements.ConceptDescription, "", "application/json", "https://drive.google.com/file/d/1AqBTlzL6ZXX9i17vkJZnzRUSE5FdJhD_/view?usp=sharing"); 
+    
+    // TODO: RIPARTIRE DA QUI - VacuumGripperOven instance
+    const submodel_vacuum_gripper_oven_instance = server.coreaas.createSubmodel(server, "Vacuum Gripper Oven Type", Kind.Type, "VacuumGripperOven", "http://www.test.com/gripperType", KeyElements.ConceptDescription, "http://www.test.com/006", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelOperation(server, "Pick Up Type", Kind.Type, "PickUp", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/007"); 
+    server.coreaas.createSubmodelOperation(server, "Set Down Type", Kind.Type, "SetDown", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/018"); 
+    server.coreaas.createSubmodelOperation(server, "Move Type", Kind.Type, "Move", submodel_vacuum_gripper_oven_type, KeyElements.ConceptDescription, "www.test.com/030"); 
+    
+    // Oven instance
+    const submodel_oven_instance = server.coreaas.createSubmodel(server, "Oven Type", Kind.Type, "Oven", "http://www.test.com/ovenType", KeyElements.ConceptDescription, "http://www.test.com/008", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", submodel_oven_type, KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelOperation(server, "Burn Type", Kind.Type, "Burn", submodel_oven_type, KeyElements.ConceptDescription, "www.test.com/010"); 
+
+    // Turntable instance
+    const submodel_turntable_instance = server.coreaas.createSubmodel(server, "Turntable Type", Kind.Type, "Turntable", "http://www.test.com/turntableType", KeyElements.ConceptDescription, "http://www.test.com/011", aas_mps);
+    server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelOperation(server, "Turn Type", Kind.Type, "Turn", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/031"); 
+    server.coreaas.createSubmodelOperation(server, "Activate Saw Type", Kind.Type, "ActivateSaw", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/013"); 
+    server.coreaas.createSubmodelOperation(server, "Ejection Type", Kind.Type, "Ejection", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/014"); 
+    server.coreaas.createSubmodelOperation(server, "Activate Belt Type", Kind.Type, "ActivateBelt", submodel_turntable_type, KeyElements.ConceptDescription, "www.test.com/015"); 
+
+
 
     /** Add Dictionary */
     const conceptDictionary = server.coreaas.createConceptDictionary(server, aas_mps, 90, "ConceptDictionary", "ConceptDictionary", "AAS Concept Dictionary", "AAS Concept Dictionary");
