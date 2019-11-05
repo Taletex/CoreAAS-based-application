@@ -1,0 +1,33 @@
+{
+  "name": "node-opcua-coreaas",
+  "version": "1.0.1",
+  "description": "An extension for node-opcua implementing coreAAS Information Model",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npx tsc & node dist/index.js",
+    "uaIndustryServer": "npx tsc & node dist/uaIndustryServer.js",
+    "doc": "npx typedoc --excludeExternals --excludeNotExported --excludePrivate src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "opcua",
+    "node",
+    "coreaas",
+    "aas",
+    "industry4.0"
+  ],
+  "author": "Marco Salafia",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OPCUAUniCT/node-opcua-coreaas"
+  },
+  "devDependencies": {
+    "typedoc": "^0.15.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "node-opcua": "^2.1.5"
+  }
+}

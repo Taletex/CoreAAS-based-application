@@ -170,7 +170,7 @@ export interface ConceptDescriptionObject extends UAObject {
     identification: UAVariable;
     administration?: UAObject;
 
-    semanticOf(elem: UAObject): ConceptDescriptionObject;
+    semanticOf(elems: UAObject[]): ConceptDescriptionObject;
     isCaseOf(ref: RefArgument): ConceptDescriptionObject;
     hasEmbeddedDataSpecifications(eds: EDSObject | EDSObject[]): ConceptDescriptionObject;
     conceptDescriptionOf(dict: ConceptDictionaryObject): ConceptDescriptionObject;

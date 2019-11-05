@@ -154,8 +154,8 @@ export interface ConceptDictionaryOptions {
     idShort: string;
     /** The node id for the created Object. */
     nodeId?: NodeIdLike;
-    /** The AAS owning this Concept Dicitonary. */
-    conceptDictionaryOf?: AASObject;
+    /** The AASs owning this Concept Dicitonary. */
+    conceptDictionaryOf?: AASObject[];
     /** An AAS reference to the parent entity of this Object. */
     parent?: RefArgument;
     /** A description of the Concept Dictionary. */
@@ -373,8 +373,8 @@ export interface SubmodelPropertyOptions {
     nodeId?: NodeIdLike;
     /** The browsename for the created Object. */
     browseName?: string;
-    /** The Submodel containing this Object inside its [[SubmodelObject.submodelElements]] by means of Organizes Reference. */
-    submodelElementOf?: SubmodelObject
+    /** Submodels containing this Object inside its [[SubmodelObject.submodelElements]] by means of Organizes Reference. */
+    submodelElementOf?: SubmodelObject[]
     /** An AAS Reference pointing to an entity defining the semantics for this SubmodelProperty. */
     semanticId?: RefArgument;
     /** An AAS reference to the parent entity of this Object. */

@@ -23,11 +23,13 @@ export class SubmodelPropertyBuilder extends Builder  {
 
         //Add this Submodel Property to a Submodel
         if (options.submodelElementOf != null) {
-            assert(options.submodelElementOf.typeDefinitionObj.isSupertypeOf(this.coreaas.findCoreAASObjectType("SubmodelType")!), "options.submodelElementOf is not a SubmodelType.");
+            for(let i=0; i<options.submodelElementOf.length; i++) {
+                assert(options.submodelElementOf[i].typeDefinitionObj.isSupertypeOf(this.coreaas.findCoreAASObjectType("SubmodelType")!), "options[i].submodelElementOf is not a SubmodelType.");
             
-            const submodelElements = (<SubmodelObject>options.submodelElementOf).submodelElements;
-            submodelElements.addReference({ referenceType: "Organizes", nodeId: property });
-            options.submodelElementOf.referableChildrenMap.set(options.idShort, property);
+                const submodelElements = (<SubmodelObject>options.submodelElementOf[i]).submodelElements;
+                submodelElements.addReference({ referenceType: "Organizes", nodeId: property });
+                options.submodelElementOf[i].referableChildrenMap.set(options.idShort, property);
+            }
         }
 
         //Add idShort

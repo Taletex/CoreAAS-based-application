@@ -73,11 +73,13 @@ export class ConceptDescriptionBuilder extends Builder {
             this._create_hasEmbeddedDataSpecifications(conceptDescription)(options.hasEmbeddedDataSpecifications);
         }
 
-        conceptDescription.semanticOf = (elem: UAObject): ConceptDescriptionObject => {
-            assert(elem instanceof UAObject, "elem is not a UAObject.");
+        conceptDescription.semanticOf = (elems: UAObject[]): ConceptDescriptionObject => {
+            for(let i=0; i<elems.length; i++) {
+                assert(elems[i] instanceof UAObject, "elem is not a UAObject.");
 
-            const hasSemanticRefType = this.coreaas.findCoreAASReferenceType("HasSemantic")!;
-            elem.addReference({ referenceType: hasSemanticRefType, nodeId: conceptDescription });
+                const hasSemanticRefType = this.coreaas.findCoreAASReferenceType("HasSemantic")!;
+                elems[i].addReference({ referenceType: hasSemanticRefType, nodeId: conceptDescription });
+            }
 
             return conceptDescription;
         }

@@ -46,12 +46,14 @@ export class ConceptDictionaryBuilder extends Builder {
             }
         });
 
-        //Add this ConceptDictionary to an AAS
+        //Add this ConceptDictionary to a set of AAS
         if (options.conceptDictionaryOf != null) {
             
-            const conceptDictionaries = options.conceptDictionaryOf.conceptDictionaries;
-            conceptDictionaries.addReference({ referenceType: "Organizes", nodeId: conceptDictionary });
-            options.conceptDictionaryOf.referableChildrenMap.set(conceptDictionary.idShort._dataValue.value.value, conceptDictionary);
+            for(let i=0; i<options.conceptDictionaryOf.length; i++) {
+                const conceptDictionaries = options.conceptDictionaryOf[i].conceptDictionaries;
+                conceptDictionaries.addReference({ referenceType: "Organizes", nodeId: conceptDictionary });
+                options.conceptDictionaryOf[i].referableChildrenMap.set(conceptDictionary.idShort._dataValue.value.value, conceptDictionary);
+            }
         }
 
         //Add Parent

@@ -370,7 +370,7 @@ export class CoreAASExtension {
     }
 
     /** Creates a submodel property and adds it to its submodel */
-    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any): SubmodelPropertyObject {
+    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject[], semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any): SubmodelPropertyObject {
         const property = server.coreaas.addSubmodelProperty({
             browseName: browseName,
             kind: kind,
@@ -518,7 +518,7 @@ export class CoreAASExtension {
     }
     
     /** Creates a Concept Dictionary and adds it to its AAS */
-    createConceptDictionary(server: CoreServer, aas: AASObject, dictionarySize: number, browseName: string, idShort: string, enDescription: string, itDescription: string): ConceptDictionaryObject {
+    createConceptDictionary(server: CoreServer, aas: AASObject[], dictionarySize: number, browseName: string, idShort: string, enDescription: string, itDescription: string): ConceptDictionaryObject {
         const conceptDictionary = server.coreaas.addConceptDictionary({
             browseName: browseName,
             idShort: idShort,
@@ -540,7 +540,7 @@ export class CoreAASExtension {
     }
 
     /** Creates a Concept Description and adds it to its Concept Dictionary */
-    createConceptDescription(server: CoreServer, conceptDictionary: ConceptDictionaryObject, element: UAObject, browseName: string, preferredName: string, description: string, unit: string, id: string): ConceptDescriptionObject {
+    createConceptDescription(server: CoreServer, conceptDictionary: ConceptDictionaryObject, elements: UAObject[], browseName: string, preferredName: string, description: string, unit: string, id: string): ConceptDescriptionObject {
         const embedded = server.coreaas.addEmbeddedDataSpecification({
             browseName: "EmbeddedDS_1",
             hasDataSpecification: [ new server.coreaas.Key({
@@ -565,7 +565,7 @@ export class CoreAASExtension {
             hasEmbeddedDataSpecifications: embedded,
             conceptDescriptionOf: conceptDictionary,
         })
-        .semanticOf(element);
+        .semanticOf(elements);
 
         return conceptDescription;
     }
