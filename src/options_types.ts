@@ -329,7 +329,7 @@ export interface SubmodelOperationOptions {
     /** Specifies whether the SubmodelOperation to be created should be a type or an instance. */
     kind?: Kind;
     /** The Submodel containing this Object inside its [[SubmodelObject.submodelElements]] by means of Organizes Reference. */
-    submodelElementOf?: SubmodelObject;
+    submodelElementOf?: SubmodelObject[];
     /** A description of the SubmodelOperation. */
     description?: Description;
     /** The browsename for the created Object. */

@@ -497,7 +497,7 @@ export class CoreAASExtension {
     /** Creates a submodel operation and adds it to its submodel 
      *  TODO: aggiungere parametro per act
     */
-    createSubmodelOperation(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string): SubmodelOperationObject {
+    createSubmodelOperation(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject[], semanticElementType: number, semanticId: string): SubmodelOperationObject {
         const operation = server.coreaas.addSubmodelOperation({
             browseName: browseName,
             kind: kind,

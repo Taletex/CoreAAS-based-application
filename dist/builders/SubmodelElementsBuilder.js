@@ -270,10 +270,12 @@ class SubmodelElementsBuilder extends builder_1.Builder {
         const idShort = builder_utilities_1.get_idShort_creator(this.coreaas, operation)(options.idShort);
         //Add this Submodel Operation to a Submodel
         if (typeof options.submodelElementOf !== "undefined") {
-            assert(options.submodelElementOf.typeDefinitionObj.isSupertypeOf(this.coreaas.findCoreAASObjectType("SubmodelType")), "options.submodelElementOf is not a SubmodelType.");
-            const submodelElements = options.submodelElementOf.submodelElements;
-            submodelElements.addReference({ referenceType: "Organizes", nodeId: operation });
-            options.submodelElementOf.referableChildrenMap.set(options.idShort, operation);
+            for (let i = 0; i < options.submodelElementOf.length; i++) {
+                assert(options.submodelElementOf[i].typeDefinitionObj.isSupertypeOf(this.coreaas.findCoreAASObjectType("SubmodelType")), "options.submodelElementOf is not a SubmodelType.");
+                const submodelElements = options.submodelElementOf[i].submodelElements;
+                submodelElements.addReference({ referenceType: "Organizes", nodeId: operation });
+                options.submodelElementOf[i].referableChildrenMap.set(options.idShort, operation);
+            }
         }
         //Add description
         if (options.description != null) {

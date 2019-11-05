@@ -1,5 +1,5 @@
 {
-  "name": "node-opcua-coreaas",
+  "name": "opcua-coreaas",
   "version": "1.0.1",
   "description": "An extension for node-opcua implementing coreAAS Information Model",
   "main": "dist/index.js",
@@ -21,13 +21,21 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OPCUAUniCT/node-opcua-coreaas"
+    "url": "git+https://github.com/OPCUAUniCT/node-opcua-coreaas.git"
   },
   "devDependencies": {
     "typedoc": "^0.15.0",
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "node-opcua": "^2.1.5"
+    "node-opcua": "^2.1.5",
+    "node-opcua-coreaas": "^1.0.1"
+  },
+  "bugs": {
+    "url": "https://github.com/OPCUAUniCT/node-opcua-coreaas/issues"
+  },
+  "homepage": "https://github.com/OPCUAUniCT/node-opcua-coreaas#readme",
+  "directories": {
+    "doc": "doc"
   }
 }
