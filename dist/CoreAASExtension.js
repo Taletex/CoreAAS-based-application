@@ -362,6 +362,7 @@ class CoreAASExtension {
     }
     /** Creates a submodel element collection and adds it to its submodel */
     createSubmodelElementCollection(server, browseName, kind, idShort, submodel, semanticElementType, semanticId, values) {
+        console.log(values);
         const collection = server.coreaas.addSubmodelElementCollection({
             browseName: browseName,
             kind: kind,
@@ -380,13 +381,13 @@ class CoreAASExtension {
                 idType: _1.KeyType.URI,
                 local: true,
                 type: _1.KeyElements.Submodel,
-                value: submodel.identification._dataValue // TODO: Check
+                value: submodel.identification.readValue().value.value.id // TODO: Check
             })
         ]).addElements(values);
         return collection;
     }
     /** Creates a submodel relationship element and adds it to its submodel */
-    createSubmodelRelationshipElement(server, browseName, kind, idShort, submodel, semanticElementType, semanticId, first, firstElementType, second, secondElementType) {
+    createSubmodelRelationshipElement(server, browseName, kind, idShort, submodel, semanticElementType, semanticId, first, firstElementType, firstRefType, second, secondElementType, secondRefType) {
         const relationship = server.coreaas.addSubmodelRelationshipElement({
             browseName: browseName,
             kind: kind,
@@ -396,7 +397,7 @@ class CoreAASExtension {
                 browseName: "first",
                 keys: [
                     new server.coreaas.Key({
-                        idType: _1.KeyType.URI,
+                        idType: firstRefType,
                         local: true,
                         type: firstElementType,
                         value: first
@@ -407,7 +408,7 @@ class CoreAASExtension {
                 browseName: "second",
                 keys: [
                     new server.coreaas.Key({
-                        idType: _1.KeyType.URI,
+                        idType: secondRefType,
                         local: true,
                         type: secondElementType,
                         value: second

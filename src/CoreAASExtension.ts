@@ -425,6 +425,7 @@ export class CoreAASExtension {
 
     /** Creates a submodel element collection and adds it to its submodel */
     createSubmodelElementCollection(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, values: SubmodelElementObject[]): SubmodelElementCollectionObject {
+        console.log(values);
         const collection = server.coreaas.addSubmodelElementCollection({
             browseName: browseName,
             kind: kind,
@@ -444,7 +445,7 @@ export class CoreAASExtension {
             idType: KeyType.URI,
             local: true,
             type: KeyElements.Submodel,
-            value: submodel.identification._dataValue  // TODO: Check
+            value: submodel.identification.readValue().value.value.id // TODO: Check
             })
         ]).addElements(values);
 
