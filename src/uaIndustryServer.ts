@@ -31,16 +31,20 @@ function postInitialize() {
     const aas_sl = server.coreaas.createAssetAdministrationShell(server, "AAS_SL", admin, "Sorting Line AAS", "Sorting Line AAS", "www.test.com/aas-sl/1.0", "http://www.test.com/536633", ["http://www.test.com/identification3", "http://www.test.com/configuration3", "http://www.test.com/sortingLine3"]);
     /** AAS Automated High Bay Warehouse */
     const aas_ahbw = server.coreaas.createAssetAdministrationShell(server, "AAS_AHBW", admin, "Automated High Bay Warehouse AAS", "Automated High Bay Warehouse AAS", "www.test.com/aas-ahbw/1.0", "http://www.test.com/536631", ["http://www.test.com/identification4", "http://www.test.com/configuration4", "http://www.test.com/ahbWarehouse4"]);
+    /** AAS PLC */
+    const aas_plc = server.coreaas.createAssetAdministrationShell(server, "AAS_PLC", admin, "PLC AAS", "PLC AAS", "www.test.com/aas-plc/1.0", "http://www.test.com/PLC_1214C", ["http://www.test.com/identification5", "http://www.test.com/configuration5", "http://www.test.com/IO5", "http://www.test.com/IECConfiguration5", "http://www.test.com/IECResource5", "http://www.test.com/IECProgram5", "http://www.test.com/IECTask5", "http://www.test.com/IECCommunication5"]);
     
 
-    /** MPS Assets */
+    /** MPS Asset */
     server.coreaas.createAsset(server, "Multi Processing Station 536632", Kind.Instance, "536632", "http://www.test.com/536632", "Asset Multi Processing Station 536632", "Asset Multi Processing Station 536632", aas_mps, "http://www.test.com/identification1");
-    /** VG Assets */
+    /** VG Asset */
     server.coreaas.createAsset(server, "Vacuum Gripper 536630", Kind.Instance, "536630", "http://www.test.com/536630", "Asset Vacuum Gripper 536630", "Asset Vacuum Gripper 536630", aas_vg, "http://www.test.com/identification2");
-    /** SL Assets */
+    /** SL Asset */
     server.coreaas.createAsset(server, "Sorting Line 536633", Kind.Instance, "536633", "http://www.test.com/536633", "Asset Sorting Line 536633", "Asset Sorting Line 536633", aas_sl, "http://www.test.com/identification3");
-    /** AHBW Assets */
+    /** AHBW Asset */
     server.coreaas.createAsset(server, "Automated High Bay Warehouse Line 536631", Kind.Instance, "536631", "http://www.test.com/536631", "Asset Automated High Bay Warehouse 536631", "Asset Automated High Bay Warehouse 536631", aas_ahbw, "http://www.test.com/identification4");
+    /** PLC Asset */
+    server.coreaas.createAsset(server, "PLC 1214C DC/DC/DC", Kind.Instance, "PLC_1214C", "http://www.test.com/PLC_1214C", "PLC 1214C DC/DC/DC", "PLC 1214C DC/DC/DC", aas_plc, "http://www.test.com/identification5");
 
     
     /** Submodels and Submodels elements TYPES */
@@ -84,8 +88,19 @@ function postInitialize() {
     const submodel_ahbwarehouse_type = server.coreaas.createSubmodel(server, "AHB Warehouse Type", Kind.Type, "AHBWarehouse", "http://www.test.com/ahbWarehouseType", KeyElements.ConceptDescription, "http://www.test.com/026", aas_ahbw);
     const operation_retrieving_type = server.coreaas.createSubmodelOperation(server, "Retrieving Type", Kind.Type, "Retrieving", [submodel_ahbwarehouse_type], KeyElements.ConceptDescription, "www.test.com/028"); 
 
+    // PLC IO type
+    const submodel_IO_type = server.coreaas.createSubmodel(server, "IO Type", Kind.Type, "IO", "http://www.test.com/IOType", KeyElements.ConceptDescription, "http://www.test.com/012", aas_plc);
+    
+    // PLC IOModule type
+    const submodel_IOModule_type = server.coreaas.createSubmodel(server, "IO Module Type", Kind.Type, "IOModule", "http://www.test.com/IOModuleType", KeyElements.ConceptDescription, "http://www.test.com/053", aas_plc);
+    
+    // PLC IEC Configuration type
+    const submodel_IECConfiguration_type = server.coreaas.createSubmodel(server, "IEC Configuration Type", Kind.Type, "IECConfiguration", "http://www.test.com/IECConfigurationType", KeyElements.ConceptDescription, "http://www.test.com/056", aas_plc);
+    const property_name_type = server.coreaas.createSubmodelProperty(server, "Configuration Name Type", Kind.Type, "Name", [submodel_IECConfiguration_type], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.String, "String", DataType.String, ""); 
+    const property_resourcenumber_type = server.coreaas.createSubmodelProperty(server, "Configuration Resource Number Type", Kind.Type, "ResourceNumber", [submodel_IECConfiguration_type], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.Int, "Int16", DataType.Int16, 0); 
+
     // SharedSubmodelElements type
-    const property_terminal_type = server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", [submodel_oven_type, submodel_vacuum_gripper_oven_type, submodel_turntable_type, submodel_vacuum_gripper_robot_type, submodel_sortingline_type, submodel_ahbwarehouse_type], KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    const property_terminal_type = server.coreaas.createSubmodelProperty(server, "Terminal Type", Kind.Type, "Terminal", [submodel_oven_type, submodel_vacuum_gripper_oven_type, submodel_turntable_type, submodel_vacuum_gripper_robot_type, submodel_sortingline_type, submodel_ahbwarehouse_type, submodel_IO_type, submodel_IOModule_type], KeyElements.ConceptDescription, "www.test.com/009", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
     const operation_activatebelt_type = server.coreaas.createSubmodelOperation(server, "Activate Belt Type", Kind.Type, "ActivateBelt", [submodel_turntable_type, submodel_sortingline_type], KeyElements.ConceptDescription, "www.test.com/015"); 
 
 
