@@ -309,7 +309,7 @@ export class CoreAASExtension {
                 value: assetRef
             })]
         })
-        for(let i=0; i<=submodelRefs.length; i++){
+        for(let i=0; i<submodelRefs.length; i++){
             aas.addSubmodelRef([new server.coreaas.Key({
                 idType: KeyType.URI,
                 local: true,

@@ -22,13 +22,13 @@ function postInitialize() {
         revision: "1"
     });
     /** AAS Multi processing Station */
-    const aas_mps = server.coreaas.createAssetAdministrationShell(server, "AAS_MPS", admin, "Multi Processing Station AAS", "Multi Processing Station AAS", "www.test.com/aas-mps/1.0", "http://www.test.com/536632", ["http://www.test.com/identification1"]);
+    const aas_mps = server.coreaas.createAssetAdministrationShell(server, "AAS_MPS", admin, "Multi Processing Station AAS", "Multi Processing Station AAS", "www.test.com/aas-mps/1.0", "http://www.test.com/536632", ["http://www.test.com/identification1", "http://www.test.com/configuration1", "http://www.test.com/gripper1", "http://www.test.com/oven1", "http://www.test.com/turntable1"]);
     /** AAS Vacuum Gripper */
-    const aas_vg = server.coreaas.createAssetAdministrationShell(server, "AAS_VG", admin, "Vacuum Gripper AAS", "Vacuum Gripper AAS", "www.test.com/aas-vg/1.0", "http://www.test.com/536630", ["http://www.test.com/identification2"]);
+    const aas_vg = server.coreaas.createAssetAdministrationShell(server, "AAS_VG", admin, "Vacuum Gripper AAS", "Vacuum Gripper AAS", "www.test.com/aas-vg/1.0", "http://www.test.com/536630", ["http://www.test.com/identification2", "http://www.test.com/configuration2", "http://www.test.com/gripper2"]);
     /** AAS Sorting Line */
-    const aas_sl = server.coreaas.createAssetAdministrationShell(server, "AAS_SL", admin, "Sorting Line AAS", "Sorting Line AAS", "www.test.com/aas-sl/1.0", "http://www.test.com/536633", ["http://www.test.com/identification3"]);
+    const aas_sl = server.coreaas.createAssetAdministrationShell(server, "AAS_SL", admin, "Sorting Line AAS", "Sorting Line AAS", "www.test.com/aas-sl/1.0", "http://www.test.com/536633", ["http://www.test.com/identification3", "http://www.test.com/configuration3", "http://www.test.com/sortingLine3"]);
     /** AAS Automated High Bay Warehouse */
-    const aas_ahbw = server.coreaas.createAssetAdministrationShell(server, "AAS_AHBW", admin, "Automated High Bay Warehouse AAS", "Automated High Bay Warehouse AAS", "www.test.com/aas-ahbw/1.0", "http://www.test.com/536631", ["http://www.test.com/identification4"]);
+    const aas_ahbw = server.coreaas.createAssetAdministrationShell(server, "AAS_AHBW", admin, "Automated High Bay Warehouse AAS", "Automated High Bay Warehouse AAS", "www.test.com/aas-ahbw/1.0", "http://www.test.com/536631", ["http://www.test.com/identification4", "http://www.test.com/configuration4", "http://www.test.com/ahbWarehouse4"]);
     /** MPS Assets */
     server.coreaas.createAsset(server, "Multi Processing Station 536632", _1.Kind.Instance, "536632", "http://www.test.com/536632", "Asset Multi Processing Station 536632", "Asset Multi Processing Station 536632", aas_mps, "http://www.test.com/identification1");
     /** VG Assets */
@@ -106,7 +106,7 @@ function postInitialize() {
     const submodel_configuration_instance2 = server.coreaas.createSubmodel(server, "Configuration Instance 2", _1.Kind.Instance, "Configuration", "http://www.test.com/configuration2", _1.KeyElements.Submodel, "http://www.test.com/configurationType", aas_vg);
     server.coreaas.createSubmodelFile(server, "Data Sheet Instance 2", _1.Kind.Type, "DataSheet", submodel_configuration_instance2, _1.KeyElements.ConceptDescription, "", "application/json", "https://drive.google.com/file/d/15k3wBcavtV-Tv5XV1fIkxuhFM9Y4GE0G/view?usp=sharing");
     // VacuumGripperRobot instance
-    const submodel_vacuum_gripper_robot_instance = server.coreaas.createSubmodel(server, "Vacuum Gripper Robot Instance 1", _1.Kind.Instance, "VacuumGripper", "http://www.test.com/vacuumGripper2", _1.KeyElements.Submodel, "http://www.test.com/gripperRobotType", aas_vg);
+    const submodel_vacuum_gripper_robot_instance = server.coreaas.createSubmodel(server, "Vacuum Gripper Robot Instance 1", _1.Kind.Instance, "VacuumGripper", "http://www.test.com/gripper2", _1.KeyElements.Submodel, "http://www.test.com/gripperRobotType", aas_vg);
     const property_terminal2a_instance = server.coreaas.createSubmodelProperty(server, "Terminal Instance 2a (Switch)", _1.Kind.Instance, "Terminal-SwitchVerticalAxis", [submodel_vacuum_gripper_robot_instance], _1.KeyElements.ConceptDescription, "www.test.com/040", _1.PropertyCategory.VARIABLE, _1.PropertyValueType.Float, "Float", _1.DataType.Float, 0.0);
     const property_terminal2b_instance = server.coreaas.createSubmodelProperty(server, "Terminal Instance 2b (Switch)", _1.Kind.Instance, "Terminal-SwitchHorizontalAxis", [submodel_vacuum_gripper_robot_instance], _1.KeyElements.ConceptDescription, "www.test.com/040", _1.PropertyCategory.VARIABLE, _1.PropertyValueType.Float, "Float", _1.DataType.Float, 0.0);
     const property_terminal2c_instance = server.coreaas.createSubmodelProperty(server, "Terminal Instance 2c (Switch)", _1.Kind.Instance, "Terminal-SwitchRotate", [submodel_vacuum_gripper_robot_instance], _1.KeyElements.ConceptDescription, "www.test.com/040", _1.PropertyCategory.VARIABLE, _1.PropertyValueType.Float, "Float", _1.DataType.Float, 0.0);
@@ -122,7 +122,7 @@ function postInitialize() {
     const submodel_configuration_instance3 = server.coreaas.createSubmodel(server, "Configuration Instance 3", _1.Kind.Instance, "Configuration", "http://www.test.com/configuration3", _1.KeyElements.Submodel, "http://www.test.com/configurationType", aas_sl);
     server.coreaas.createSubmodelFile(server, "Data Sheet Instance 3", _1.Kind.Type, "DataSheet", submodel_configuration_instance3, _1.KeyElements.ConceptDescription, "", "application/json", "https://drive.google.com/file/d/1R1_fr89RpPtwMJJWcaD7VPIlgBBb-I82/view?usp=sharing");
     // Sorting Line instance
-    const submodel_sortingline_instance = server.coreaas.createSubmodel(server, "Sorting Line Instance 1", _1.Kind.Instance, "SortingLine", "http://www.test.com/sortingLine1", _1.KeyElements.Submodel, "http://www.test.com/sortingLineType", aas_sl);
+    const submodel_sortingline_instance = server.coreaas.createSubmodel(server, "Sorting Line Instance 1", _1.Kind.Instance, "SortingLine", "http://www.test.com/sortingLine3", _1.KeyElements.Submodel, "http://www.test.com/sortingLineType", aas_sl);
     const property_terminal3a_instance = server.coreaas.createSubmodelProperty(server, "Terminal Instance 3a (Motor)", _1.Kind.Instance, "Terminal-MotorConveyorBelt", [submodel_sortingline_instance], _1.KeyElements.ConceptDescription, "www.test.com/017", _1.PropertyCategory.VARIABLE, _1.PropertyValueType.Float, "Float", _1.DataType.Float, 0.0);
     const property_terminal3b_instance = server.coreaas.createSubmodelProperty(server, "Terminal Instance 3b (Light barrier)", _1.Kind.Instance, "Terminal-LightBarrierBlue", [submodel_sortingline_instance], _1.KeyElements.ConceptDescription, "www.test.com/041", _1.PropertyCategory.VARIABLE, _1.PropertyValueType.Float, "Float", _1.DataType.Float, 0.0);
     server.coreaas.createSubmodelOperation(server, "Activate Belt Instance 3", _1.Kind.Instance, "ActivateBelt", [submodel_sortingline_instance], 0, "");
@@ -144,7 +144,7 @@ function postInitialize() {
     server.coreaas.createSubmodelOperation(server, "Retrieving Instance 4", _1.Kind.Instance, "Retrieving", [submodel_ahbwarehouse_instance], 0, "");
     /************************ Concept Dictionary  ************************/
     /** Add Dictionary */
-    const conceptDictionary = server.coreaas.createConceptDictionary(server, [aas_mps], 98, "ConceptDictionary", "ConceptDictionary", "AAS Concept Dictionary", "AAS Concept Dictionary");
+    const conceptDictionary = server.coreaas.createConceptDictionary(server, [aas_mps, aas_ahbw, aas_sl, aas_vg], 98, "ConceptDictionary", "ConceptDictionary", "AAS Concept Dictionary", "AAS Concept Dictionary");
     /** Add ConceptDescriptions to the Dictionary */
     server.coreaas.createConceptDescription(server, conceptDictionary, [submodel_identification_type], "Identification", "Identification", "Submodel contenente informazioni sull'identificazione dell'asset", "", "www.test.com/001");
     server.coreaas.createConceptDescription(server, conceptDictionary, [property_asn_type], "Asset serial number", "Asset serial number", "Numero seriale dell'asset", "", "www.test.com/002");
