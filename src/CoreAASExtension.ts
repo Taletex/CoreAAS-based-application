@@ -370,7 +370,7 @@ export class CoreAASExtension {
     }
 
     /** Creates a submodel property and adds it to its submodel */
-    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject[], semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any): SubmodelPropertyObject {
+    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject[] | undefined, semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any): SubmodelPropertyObject {
         const property = server.coreaas.addSubmodelProperty({
             browseName: browseName,
             kind: kind,
@@ -401,7 +401,7 @@ export class CoreAASExtension {
     }
 
     /** Creates a submodel file and adds it to its submodel */
-    createSubmodelFile(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, mimeType: string, value: string): AASFileObject {
+    createSubmodelFile(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject | undefined, semanticElementType: number, semanticId: string, mimeType: string, value: string): AASFileObject {
         const file = server.coreaas.addAASFile({
             browseName: browseName,
             kind: kind,
@@ -452,7 +452,7 @@ export class CoreAASExtension {
     }
 
     /** Creates a submodel relationship element and adds it to its submodel */
-    createSubmodelRelationshipElement(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject, semanticElementType: number, semanticId: string, first: string, firstElementType: number, second: string, secondElementType: number): SubmodelRelationshipElementObject {
+    createSubmodelRelationshipElement(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject | undefined, semanticElementType: number, semanticId: string, first: string, firstElementType: number, firstRefType: KeyType, second: string, secondElementType: number, secondRefType: KeyType): SubmodelRelationshipElementObject {
         const relationship = server.coreaas.addSubmodelRelationshipElement({
             browseName: browseName,
             kind: kind,
@@ -462,7 +462,7 @@ export class CoreAASExtension {
                 browseName: "first",
                 keys: [ 
                     new server.coreaas.Key({
-                        idType: KeyType.URI,
+                        idType: firstRefType,
                         local: true,
                         type: firstElementType,
                         value: first
@@ -473,7 +473,7 @@ export class CoreAASExtension {
                 browseName: "second",
                 keys: [ 
                     new server.coreaas.Key({
-                        idType: KeyType.URI,
+                        idType: secondRefType,
                         local: true,
                         type: secondElementType,
                         value: second
