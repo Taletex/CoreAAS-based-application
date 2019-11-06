@@ -217,7 +217,7 @@ class SubmodelElementsBuilder extends builder_1.Builder {
     }
     addSubmodelRelationshipElement(options) {
         assert(options.idShort, "options.idShort parameter is missing.");
-        const secType = this.coreaas.findCoreAASObjectType("SubmodelRelationshipElementType");
+        const secType = this.coreaas.findCoreAASObjectType("RelationshipElementType");
         const relationship = this._namespace.addObject({
             typeDefinition: secType,
             browseName: options.browseName || options.idShort,

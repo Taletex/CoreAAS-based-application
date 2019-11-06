@@ -362,7 +362,6 @@ class CoreAASExtension {
     }
     /** Creates a submodel element collection and adds it to its submodel */
     createSubmodelElementCollection(server, browseName, kind, idShort, submodel, semanticElementType, semanticId, values) {
-        console.log(values);
         const collection = server.coreaas.addSubmodelElementCollection({
             browseName: browseName,
             kind: kind,
