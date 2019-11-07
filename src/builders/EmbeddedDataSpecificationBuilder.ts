@@ -3,7 +3,7 @@ import { CoreAASExtension } from "../CoreAASExtension";
 import { BaseUAObject } from "node-opcua-factory";
 import { UAObject } from "node-opcua-address-space/dist/src/ua_object";
 import assert = require("assert");
-import { isKey, EDSObject, DataSpecificationIEC61360 } from "../types";
+import { isKey, EDSObject, DataSpecificationIEC61360, DataSpecificationTerminalTemplate } from "../types";
 import { Builder } from "./builder";
 import { DataSpecificationIECOptions, EmbeddedDataSpecificationOptions } from "../options_types";
 
@@ -50,6 +50,15 @@ export class EmbeddedDataSpecificationBuilder extends Builder {
                 const dataSpec = this.coreaas.addDataSpecificationIEC61360(options);
                 eds.addReference({ referenceType: "HasComponent", nodeId: dataSpec });
             }
+            return eds;
+        }
+
+        eds.addDataSpecificationTerminalTemplate = (options: DataSpecificationTerminalTemplate) => {
+            assert(!eds.hasOwnProperty("dataSpecificationContent"), "the EmbeddedDataSpecificationType Object already contains a Component with Browsename dataSpecificationContent");
+
+            const dataSpec = this.coreaas.addDataSpecificationTerminalTemplate(options);
+            eds.addReference({ referenceType: "HasComponent", nodeId: dataSpec });
+
             return eds;
         }
 

@@ -38,6 +38,7 @@ class CoreAASExtension {
         this._submodelPropertyBuilder = new builder_1.SubmodelPropertyBuilder(this);
         this._submodelBuilder = new builder_1.SubmodelBuilder(this);
         this._dataSpecificationIECBuilder = new builder_1.DataSpecificationIEC61360Builder(this);
+        this._dataSpecificationTemplateBuilder = new builder_1.DataSpecificationTemplateBuilder(this);
         this._edsBuilder = new builder_1.EmbeddedDataSpecificationBuilder(this);
         this._conceptDescriptionBuilder = new builder_1.ConceptDescriptionBuilder(this);
         this._conceptDictionaryBuilder = new builder_1.ConceptDictionaryBuilder(this);
@@ -122,6 +123,10 @@ class CoreAASExtension {
     /** Create an instance of DataSpecificationIEC61360Type ObjectType in the AddressSpace. */
     addDataSpecificationIEC61360(options) {
         return this._dataSpecificationIECBuilder.addDataSpecificationIEC61360(options);
+    }
+    /** Create an instance of addDataSpecificationTerminalTemplate ObjectType in the AddressSpace. */
+    addDataSpecificationTerminalTemplate(options) {
+        return this._dataSpecificationTemplateBuilder.addDataSpecificationTerminalTemplate(options);
     }
     /** Create an instance of EmbeddedDataSpecificationType ObjectType in the AddressSpace. */
     addEmbeddedDataSpecification(options) {
@@ -313,7 +318,23 @@ class CoreAASExtension {
         return submodel;
     }
     /** Creates a submodel property and adds it to its submodel */
-    createSubmodelProperty(server, browseName, kind, idShort, submodel, semanticElementType, semanticId, category, valueType, dataType1, dataType2, value) {
+    createSubmodelProperty(server, browseName, kind, idShort, submodel, semanticElementType, semanticId, category, valueType, dataType1, dataType2, value, templateData, templateURI) {
+        let embedded = undefined;
+        if (templateURI != undefined && templateData != undefined) {
+            embedded = server.coreaas.addEmbeddedDataSpecification({
+                browseName: "EmbeddedDS",
+                hasDataSpecification: [new server.coreaas.Key({
+                        idType: _1.KeyType.URI,
+                        local: true,
+                        type: _1.KeyElements.GlobalReference,
+                        value: templateURI // templateURI = URI del template (locale)
+                    })],
+            });
+            if (templateData.terminalNumber != undefined) {
+                console.log("exec addDataSpecificationTerminalTemplate");
+                embedded = embedded.addDataSpecificationTerminalTemplate(templateData); // templateData = object con i campi aggiuntivi
+            }
+        }
         const property = server.coreaas.addSubmodelProperty({
             browseName: browseName,
             kind: kind,
@@ -336,8 +357,11 @@ class CoreAASExtension {
                         return new _1.Variant({ dataType: dataType2, value: value });
                     }
                 }
-            }
+            },
+            hasEmbeddedDataSpecifications: embedded
         });
+        if (embedded != undefined)
+            console.log(property);
         return property;
     }
     /** Creates a submodel file and adds it to its submodel */
@@ -380,7 +404,7 @@ class CoreAASExtension {
                 idType: _1.KeyType.URI,
                 local: true,
                 type: _1.KeyElements.Submodel,
-                value: submodel.identification.readValue().value.value.id // TODO: Check
+                value: submodel.identification.readValue().value.value.id
             })
         ]).addElements(values);
         return collection;
@@ -468,7 +492,7 @@ class CoreAASExtension {
     /** Creates a Concept Description and adds it to its Concept Dictionary */
     createConceptDescription(server, conceptDictionary, elements, browseName, preferredName, description, unit, id) {
         const embedded = server.coreaas.addEmbeddedDataSpecification({
-            browseName: "EmbeddedDS_1",
+            browseName: "EmbeddedDS",
             hasDataSpecification: [new server.coreaas.Key({
                     idType: _1.KeyType.URI,
                     local: false,

@@ -42,6 +42,12 @@ class EmbeddedDataSpecificationBuilder extends builder_1.Builder {
             }
             return eds;
         };
+        eds.addDataSpecificationTerminalTemplate = (options) => {
+            assert(!eds.hasOwnProperty("dataSpecificationContent"), "the EmbeddedDataSpecificationType Object already contains a Component with Browsename dataSpecificationContent");
+            const dataSpec = this.coreaas.addDataSpecificationTerminalTemplate(options);
+            eds.addReference({ referenceType: "HasComponent", nodeId: dataSpec });
+            return eds;
+        };
         return eds;
     }
 }

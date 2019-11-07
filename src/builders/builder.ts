@@ -16,6 +16,7 @@ export * from "./AASReferenceBuilder";
 export * from "./AdministrativeInformationBuilder";
 export * from "./AssetBuilder";
 export * from "./DataSpecificationIEC61360Builder";
+export * from "./DataSpecificationTemplateBuilder";
 export * from "./EmbeddedDataSpecificationBuilder";
 export * from "./ConceptDescriptionBuilder"
 export * from "./ConceptDictionaryBuilder";

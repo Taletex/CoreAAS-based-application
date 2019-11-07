@@ -240,7 +240,7 @@ function postInitialize() {
     
     // PLC IO instance
     const submodel_IO_instance = server.coreaas.createSubmodel(server, "IO Instance", Kind.Instance, "IO", "http://www.test.com/IO5", KeyElements.Submodel, "http://www.test.com/IOType", aas_plc);
-    server.coreaas.createSubmodelProperty(server, "Terminal Q0.0 Instance", Kind.Instance, "Terminal-Q0.0", [submodel_IO_instance], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
+    server.coreaas.createSubmodelProperty(server, "Terminal Q0.0 Instance", Kind.Instance, "Terminal-Q0.0", [submodel_IO_instance], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0, {terminalType: 'Digital Output (Q0.0)', terminalNumber: '1'}, "http://www.test.com/terminalDataTemplate"); 
     server.coreaas.createSubmodelProperty(server, "Terminal I0.0 Instance", Kind.Instance, "Terminal-I0.0", [submodel_IO_instance], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
     server.coreaas.createSubmodelProperty(server, "Terminal IW64 Instance", Kind.Instance, "Terminal-IW64", [submodel_IO_instance], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 
     server.coreaas.createSubmodelProperty(server, "Terminal QW80 Instance", Kind.Instance, "Terminal-QW80", [submodel_IO_instance], KeyElements.ConceptDescription, "", PropertyCategory.VARIABLE, PropertyValueType.Float, "Float", DataType.Float, 0.0); 

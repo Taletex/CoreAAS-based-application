@@ -16,6 +16,7 @@ __export(require("./AASReferenceBuilder"));
 __export(require("./AdministrativeInformationBuilder"));
 __export(require("./AssetBuilder"));
 __export(require("./DataSpecificationIEC61360Builder"));
+__export(require("./DataSpecificationTemplateBuilder"));
 __export(require("./EmbeddedDataSpecificationBuilder"));
 __export(require("./ConceptDescriptionBuilder"));
 __export(require("./ConceptDictionaryBuilder"));

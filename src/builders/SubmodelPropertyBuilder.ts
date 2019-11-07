@@ -1,7 +1,8 @@
-import { UAObject, Variant, DataType } from "node-opcua";
-import { CoreAASExtension } from "../CoreAASExtension";
 import { Builder } from "./builder";
-import { RefArgument, SubmodelPropertyObject, isKey, SubmodelObject } from "../types";
+import { CoreAASExtension } from "../CoreAASExtension";
+import { UAObject, Variant, DataType } from "node-opcua";
+import { UAObject as UAObjectClass } from "node-opcua-address-space/dist/src/ua_object";
+import { RefArgument, SubmodelPropertyObject, isKey, SubmodelObject, EDSObject } from "../types";
 import assert = require("assert");
 import { get_description_creator, get_kind_creator, get_category_creator, get_semanticId_creator, get_parent_creator } from "./builder_utilities";
 import { SubmodelPropertyOptions } from "../options_types";
@@ -104,6 +105,11 @@ export class SubmodelPropertyBuilder extends Builder  {
                 }
             });
         }
+        
+        //Add EmbeddedDataSpecification
+        if (options.hasEmbeddedDataSpecifications != null) {
+            this._create_hasEmbeddedDataSpecifications(property)(options.hasEmbeddedDataSpecifications);
+        }
 
         property.addSemanticId = get_semanticId_creator<SubmodelPropertyObject>(this.coreaas, property);
 
@@ -116,6 +122,8 @@ export class SubmodelPropertyBuilder extends Builder  {
             }
 
         })(this.coreaas)
+
+        property.hasEmbeddedDataSpecifications = this._create_hasEmbeddedDataSpecifications(property);
 
         property.addParent = get_parent_creator<SubmodelPropertyObject>(this.coreaas, property);
 
@@ -149,4 +157,20 @@ export class SubmodelPropertyBuilder extends Builder  {
             return obj;
         }
     }
+
+    private _create_hasEmbeddedDataSpecifications(conceptDes: SubmodelPropertyObject): (eds: EDSObject | EDSObject[]) => SubmodelPropertyObject {
+        const coreaas = this.coreaas;
+        return function (eds: EDSObject | EDSObject[]): SubmodelPropertyObject {
+            let embedds: EDSObject[] = [];
+            embedds = embedds.concat(embedds, eds)
+            embedds.forEach((e) => {
+                assert(e instanceof UAObjectClass, "eds contains some element that is not UAObject.");
+            });            
+            const hasEmbeddedDataSpecificationRefType = coreaas.findCoreAASReferenceType("HasEmbeddedDataSpecification")!;
+
+            embedds.forEach((e) => conceptDes.addReference({ referenceType: hasEmbeddedDataSpecificationRefType, nodeId: e }));
+            return conceptDes;
+        }
+    }
+
 }

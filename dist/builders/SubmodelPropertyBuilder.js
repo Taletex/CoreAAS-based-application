@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_opcua_1 = require("node-opcua");
 const builder_1 = require("./builder");
+const node_opcua_1 = require("node-opcua");
+const ua_object_1 = require("node-opcua-address-space/dist/src/ua_object");
 const types_1 = require("../types");
 const assert = require("assert");
 const builder_utilities_1 = require("./builder_utilities");
@@ -89,6 +90,10 @@ class SubmodelPropertyBuilder extends builder_1.Builder {
                 }
             });
         }
+        //Add EmbeddedDataSpecification
+        if (options.hasEmbeddedDataSpecifications != null) {
+            this._create_hasEmbeddedDataSpecifications(property)(options.hasEmbeddedDataSpecifications);
+        }
         property.addSemanticId = builder_utilities_1.get_semanticId_creator(this.coreaas, property);
         property.hasSemantic = (function (coreaas) {
             const hasSemanticRefType = coreaas.findCoreAASReferenceType("HasSemantic");
@@ -97,6 +102,7 @@ class SubmodelPropertyBuilder extends builder_1.Builder {
                 return property;
             };
         })(this.coreaas);
+        property.hasEmbeddedDataSpecifications = this._create_hasEmbeddedDataSpecifications(property);
         property.addParent = builder_utilities_1.get_parent_creator(this.coreaas, property);
         property.addValueId = this._create_valueId(property);
         return property;
@@ -118,6 +124,19 @@ class SubmodelPropertyBuilder extends builder_1.Builder {
                 obj.addReference({ referenceType: "HasComponent", nodeId: valueId });
             }
             return obj;
+        };
+    }
+    _create_hasEmbeddedDataSpecifications(conceptDes) {
+        const coreaas = this.coreaas;
+        return function (eds) {
+            let embedds = [];
+            embedds = embedds.concat(embedds, eds);
+            embedds.forEach((e) => {
+                assert(e instanceof ua_object_1.UAObject, "eds contains some element that is not UAObject.");
+            });
+            const hasEmbeddedDataSpecificationRefType = coreaas.findCoreAASReferenceType("HasEmbeddedDataSpecification");
+            embedds.forEach((e) => conceptDes.addReference({ referenceType: hasEmbeddedDataSpecificationRefType, nodeId: e }));
+            return conceptDes;
         };
     }
 }

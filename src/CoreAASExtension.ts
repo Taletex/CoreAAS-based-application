@@ -2,13 +2,13 @@ import { AddressSpace, ConstructorFunc, Namespace, UADataType, UAObject, UAObjec
 import * as path from "path";
 import { AssetObject, AASObject, EDSObject, SubmodelPropertyObject, SubmodelObject, ConceptDescriptionObject, ConceptDictionaryObject, 
         DataSpecificationIEC61360, ReferenceElementObject, AASFileObject, SubmodelElementCollectionObject, ViewObject, Identifier, Key, 
-        AASReferenceObject, ReferableNamespaceObject, AdministrativeInformationObject, SubmodelElementObject, SubmodelRelationshipElementObject, SubmodelOperationObject } from "./types";
+        AASReferenceObject, ReferableNamespaceObject, AdministrativeInformationObject, SubmodelElementObject, SubmodelRelationshipElementObject, SubmodelOperationObject, DataSpecificationTerminalTemplate } from "./types";
 import { AASBuilder, AdministrativeInformationBuilder, AASReferenceBuilder, AssetBuilder, DataSpecificationIEC61360Builder, 
         EmbeddedDataSpecificationBuilder, SubmodelPropertyBuilder, SubmodelBuilder, ConceptDescriptionBuilder, 
-        ConceptDictionaryBuilder, SubmodelElementsBuilder, ViewBuilder } from "./builders/builder";
+        ConceptDictionaryBuilder, SubmodelElementsBuilder, ViewBuilder, DataSpecificationTemplateBuilder } from "./builders/builder";
 import { AASOptions, AASReferenceOptions, AdministrativeInformationOptions, AssetOptions, ConceptDescriptionOptions, ConceptDictionaryOptions, 
         DataSpecificationIECOptions, EmbeddedDataSpecificationOptions, SubmodelOptions, ReferenceElementOptions, FileOptions, SubmodelElementCollectionOptions, 
-        SubmodelPropertyOptions, ViewOptions, SubmodelRelationshipElementOptions, SubmodelOperationOptions } from "./options_types";
+        SubmodelPropertyOptions, ViewOptions, SubmodelRelationshipElementOptions, SubmodelOperationOptions, DataSpecificationTerminalTemplateOptions } from "./options_types";
 import assert = require("assert");
 import { CoreServer, LocalizedText, KeyElements, KeyType, IdentifierType, Kind, PropertyCategory, PropertyValueType, Variant, DataType } from ".";
 
@@ -26,6 +26,7 @@ export class CoreAASExtension {
     private _submodelPropertyBuilder: SubmodelPropertyBuilder;
     private _submodelBuilder: SubmodelBuilder;
     private _dataSpecificationIECBuilder: DataSpecificationIEC61360Builder;
+    private _dataSpecificationTemplateBuilder: DataSpecificationTemplateBuilder;
     private _edsBuilder: EmbeddedDataSpecificationBuilder;
     private _conceptDescriptionBuilder: ConceptDescriptionBuilder;
     private _conceptDictionaryBuilder: ConceptDictionaryBuilder;
@@ -54,6 +55,7 @@ export class CoreAASExtension {
         this._submodelPropertyBuilder = new SubmodelPropertyBuilder(this);
         this._submodelBuilder = new SubmodelBuilder(this);
         this._dataSpecificationIECBuilder = new DataSpecificationIEC61360Builder(this);
+        this._dataSpecificationTemplateBuilder = new DataSpecificationTemplateBuilder(this);
         this._edsBuilder = new EmbeddedDataSpecificationBuilder(this);
         this._conceptDescriptionBuilder = new ConceptDescriptionBuilder(this);
         this._conceptDictionaryBuilder = new ConceptDictionaryBuilder(this);
@@ -156,6 +158,11 @@ export class CoreAASExtension {
     /** Create an instance of DataSpecificationIEC61360Type ObjectType in the AddressSpace. */
     addDataSpecificationIEC61360(options: DataSpecificationIECOptions): DataSpecificationIEC61360 {
         return this._dataSpecificationIECBuilder.addDataSpecificationIEC61360(options);
+    }
+
+    /** Create an instance of addDataSpecificationTerminalTemplate ObjectType in the AddressSpace. */
+    addDataSpecificationTerminalTemplate(options: DataSpecificationTerminalTemplateOptions): DataSpecificationTerminalTemplate {
+        return this._dataSpecificationTemplateBuilder.addDataSpecificationTerminalTemplate(options);
     }
 
     /** Create an instance of EmbeddedDataSpecificationType ObjectType in the AddressSpace. */
@@ -370,7 +377,26 @@ export class CoreAASExtension {
     }
 
     /** Creates a submodel property and adds it to its submodel */
-    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject[] | undefined, semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any): SubmodelPropertyObject {
+    createSubmodelProperty(server: CoreServer, browseName: string, kind: Kind, idShort: string, submodel: SubmodelObject[] | undefined, semanticElementType: number, semanticId: string, category: PropertyCategory, valueType: PropertyValueType, dataType1: string, dataType2: DataType, value: any, templateData?: object, templateURI?: string): SubmodelPropertyObject {
+        let embedded = undefined;
+
+        if(templateURI != undefined && templateData != undefined) {
+            embedded = server.coreaas.addEmbeddedDataSpecification({
+                browseName: "EmbeddedDS",
+                hasDataSpecification: [ new server.coreaas.Key({
+                    idType: KeyType.URI,
+                    local: true,
+                    type: KeyElements.GlobalReference,                              // TODO: GlobalReference? Check it!
+                    value: templateURI                                              // templateURI = URI del template (locale)
+                }) ],
+            })
+
+            if((templateData as DataSpecificationTerminalTemplate).terminalNumber != undefined) {
+                console.log("exec addDataSpecificationTerminalTemplate")
+                embedded = embedded.addDataSpecificationTerminalTemplate(templateData as DataSpecificationTerminalTemplate);        // templateData = object con i campi aggiuntivi
+            }
+        }
+        
         const property = server.coreaas.addSubmodelProperty({
             browseName: browseName,
             kind: kind,
@@ -394,9 +420,11 @@ export class CoreAASExtension {
                         return new Variant({ dataType: dataType2, value: value});
                     }
                 }
-            }
+            },
+            hasEmbeddedDataSpecifications: embedded
         });
-
+        if(embedded != undefined)
+            console.log(property)
         return property;
     }
 
@@ -444,7 +472,7 @@ export class CoreAASExtension {
             idType: KeyType.URI,
             local: true,
             type: KeyElements.Submodel,
-            value: submodel.identification.readValue().value.value.id // TODO: Check
+            value: submodel.identification.readValue().value.value.id
             })
         ]).addElements(values);
 
@@ -542,7 +570,7 @@ export class CoreAASExtension {
     /** Creates a Concept Description and adds it to its Concept Dictionary */
     createConceptDescription(server: CoreServer, conceptDictionary: ConceptDictionaryObject, elements: UAObject[], browseName: string, preferredName: string, description: string, unit: string, id: string): ConceptDescriptionObject {
         const embedded = server.coreaas.addEmbeddedDataSpecification({
-            browseName: "EmbeddedDS_1",
+            browseName: "EmbeddedDS",
             hasDataSpecification: [ new server.coreaas.Key({
                 idType: KeyType.URI,
                 local: false,

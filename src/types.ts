@@ -1,4 +1,4 @@
-import { LocalizedText, ObjectsFolder, Folder, UAObject, NodeIdLike } from "node-opcua";
+import { LocalizedText, ObjectsFolder, Folder, UAObject, NodeIdLike, Int16 } from "node-opcua";
 import { IdentifierType, KeyElements } from "./CoreAAS_enums";
 import { BaseUAObject } from "node-opcua-factory";
 import { UAVariable } from "node-opcua-address-space/dist/src/ua_variable";
@@ -120,12 +120,22 @@ export type DataSpecificationIEC61360 = UAObject & {
     nodeId?: NodeIdLike;
 }
 
+/* DS TERMINAL TEMPLATE TYPE */
+export type DataSpecificationTerminalTemplate = UAObject & {
+    terminalType: string;
+    terminalNumber: Int16;
+    browseName?: string;
+    description?: string;
+    nodeId?: NodeIdLike;  
+}
+
 /* EMBEDDED DATA SPECIFICATION TYPE */
 export interface EDSObject extends UAObject {
     hasDataSpecification: Key[];
     dataSpecificationContent?: UAObject;
 
     addDataSpecificationIEC61360(options: DataSpecificationIEC61360 | DataSpecificationIECOptions): EDSObject;
+    addDataSpecificationTerminalTemplate(options: DataSpecificationTerminalTemplate): EDSObject;
 }
 
 /* SUBMODEL TYPE */
@@ -145,7 +155,7 @@ export interface SubmodelObject extends UAObject, ReferableNamespaceObject {
     addElements(elemArray: SubmodelElementObject[]): SubmodelObject;
 }
 
-/* SUBMODEL PROPERTY TYPE */
+/* SUBMODEL ELEMENT TYPE */
 export interface SubmodelElementObject extends UAObject {
     idShort: UAVariable;
     kind?: UAVariable;
@@ -163,6 +173,7 @@ export interface SubmodelPropertyObject extends SubmodelElementObject {
     hasSemantic(semanticElem: ConceptDescriptionObject): SubmodelPropertyObject;
     addParent(parent: RefArgument): SubmodelPropertyObject; 
     addValueId(valueId: RefArgument): SubmodelPropertyObject;
+    hasEmbeddedDataSpecifications(eds: EDSObject | EDSObject[]): SubmodelPropertyObject;
 }
 
 /* CONCEPT DESCRIPTION TYPE */

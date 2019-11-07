@@ -1,6 +1,6 @@
 import { BaseUAObject } from "node-opcua-factory";
 import { Description, RefArgument, ConceptDictionaryObject, EDSObject, AdministrativeInformationObject, AASObject, SubmodelObject, Identifier, Key, ConceptDescriptionObject, AASReferenceObject } from "./types";
-import { NodeIdLike, UAObject, LocalizedText, UADataType, BindVariableOptions } from "node-opcua";
+import { NodeIdLike, UAObject, LocalizedText, UADataType, BindVariableOptions, Int16 } from "node-opcua";
 import { Kind, PropertyCategory, PropertyValueType } from "./CoreAAS_enums";
 
 /**
@@ -179,6 +179,16 @@ export interface DataSpecificationIECOptions {
     valueFormat?: string;
     version?: string;
     revision?: string;
+    browseName?: string;
+    description?: string;
+    nodeId?: NodeIdLike;  
+}
+
+export interface DataSpecificationTerminalTemplateOptions {
+    /* The terminal type for the created Object (e.g. DI, DO, AI, AO) */
+    terminalType: string;
+    /* The terminal number for the created Object */
+    terminalNumber: Int16;
     browseName?: string;
     description?: string;
     nodeId?: NodeIdLike;  
@@ -391,6 +401,8 @@ export interface SubmodelPropertyOptions {
     value?: SPValue;
     /** The type of the value of this SubmodelProperty. */
     valueType?: PropertyValueType;
+    /** One or more instances of EmbeddeddataSpecificatrionType for the Property to be created. */
+    hasEmbeddedDataSpecifications?: EDSObject | EDSObject[];
 }
 
 /** 
