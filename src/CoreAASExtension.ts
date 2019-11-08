@@ -392,7 +392,6 @@ export class CoreAASExtension {
             })
 
             if((templateData as DataSpecificationTerminalTemplate).terminalNumber != undefined) {
-                console.log("exec addDataSpecificationTerminalTemplate")
                 embedded = embedded.addDataSpecificationTerminalTemplate(templateData as DataSpecificationTerminalTemplate);        // templateData = object con i campi aggiuntivi
             }
         }
@@ -423,8 +422,6 @@ export class CoreAASExtension {
             },
             hasEmbeddedDataSpecifications: embedded
         });
-        if(embedded != undefined)
-            console.log(property)
         return property;
     }
 

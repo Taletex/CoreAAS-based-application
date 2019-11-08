@@ -331,7 +331,6 @@ class CoreAASExtension {
                     })],
             });
             if (templateData.terminalNumber != undefined) {
-                console.log("exec addDataSpecificationTerminalTemplate");
                 embedded = embedded.addDataSpecificationTerminalTemplate(templateData); // templateData = object con i campi aggiuntivi
             }
         }
@@ -360,8 +359,6 @@ class CoreAASExtension {
             },
             hasEmbeddedDataSpecifications: embedded
         });
-        if (embedded != undefined)
-            console.log(property);
         return property;
     }
     /** Creates a submodel file and adds it to its submodel */
