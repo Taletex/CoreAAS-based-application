@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" class="text-left"></th>
+            <th scope="col" class="text-left">Browse name</th>
+            <th scope="col" class="text-left">Preferred name</th>
+            <th scope="col" class="text-left">Description</th>
+            <th scope="col" class="text-left">Unit</th>
+            <th scope="col" class="text-left">Id</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="elem in elements.conceptDescriptions track by $index">
+            <th class="text-left">{{$index}}</th>
+            <td class="text-left">{{elem.browseName}}</td>
+            <td class="text-left">{{elem.preferredName}}</td>
+            <td class="text-left">{{elem.description}}</td>
+            <td class="text-left">{{elem.unit}}</td>
+            <td class="text-left">{{elem.id}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CoreAAS Implementation WebApp</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <!-- Font awesome import -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+        
+        <!-- Bootstrap import -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <!-- AngularJs import -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+        
+        <!-- main css -->
+        <link rel="stylesheet" href="main.css">
+        
+        <!-- main controller import -->
+        <script src="mainController.js"></script>
+        
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="rsc/img/favicon.ico">
+    </head>
+    <body>
+        <div ng-app="myApp" ng-controller="mainCtrl"> 
+            <div class="row m-0"> 
+                <!-- MENU -->
+                <div class="col-md-3 p-0"> 
+                    <div style="text-align:center; padding:0px; background-color: rgba(0, 10, 78, 0.9); height:90px; overflow: hidden;" class="d-flex align-items-center text-left">
+                        <img style="height: 150px;" src="rsc/img/logo.png">
+                        <h2 class="mb-0 ml-2 text-light">CoreAAS Web Application</h1>
+                    </div>
+                    <div class="card p-0 border-radius-0 h-100" style="background-color: rgba(0, 10, 78, 0.9);">
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 212px);">
+                            <div class="list-group-item p-0 border-dark">
+                                <div class="btn btn-dark w-100 border-radius-0 text-left" ng-click="bShow1 = !bShow1">Concept Descriptions</div>
+                                <ul class="w-100 h-100 p-0 m-0" ng-show="bShow1">
+                                    <li ng-show="!elements.conceptDescriptions.length" class="list-group-item">Nessuna concept description presente!</li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
+                                        ng-repeat="elem in elements.conceptDescriptions track by $index" ng-click="redirectTo('Concept Description', elem)">
+                                        <div>{{elem.browseName}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list-group-item py-2 cursor-pointer" ng-click="bShow2 = !bShow2">
+                                <div><span class="ml-2">Submodels</span></div>
+                                <ul class="w-100 h-100 p-0 m-0" ng-show="bShow2">
+                                    <li ng-show="!elements.submodels.length" class="list-group-item">Nessun submodel presente!</li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="elem in elements.submodels track by $index">
+                                        <div>
+                                            <span class="ml-2">{{elem.browseName}}</span>
+                                        </div>
+                                        <div class="ml-3">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list-group-item py-2 cursor-pointer" ng-click="bShow3 = !bShow3">
+                                <div><span class="ml-2">Assets</span></div>
+                                <ul class="w-100 h-100 p-0 m-0" ng-show="bShow3">
+                                    <li ng-show="!elements.assets.length" class="list-group-item">Nessun asset presente!</li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="elem in elements.assets track by $index">
+                                        <div>
+                                            <span class="ml-2">{{elem.browseName}}</span>
+                                        </div>
+                                        <div class="ml-3">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list-group-item py-2 cursor-pointer" ng-click="bShow4 = !bShow4">
+                                <div><span class="ml-2">Asset Administration Shells</span></div>
+                                <ul class="w-100 h-100 p-0 m-0" ng-show="bShow4">
+                                    <li ng-show="!elements.aas.length" class="list-group-item">Nessun AAS presente!</li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="elem in elements.aas track by $index">
+                                        <div>
+                                            <span class="ml-2">{{elem.browseName}}</span>
+                                        </div>
+                                        <div class="ml-3">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CONTENT -->
+                <div class="col-md-9 p-0"> 
+                    <div style="text-align:center; padding:20px; height: 90px" class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex">
+                            <h1 class="mb-0 ml-2"></h1>
+                        </div>
+                        <div>
+                            <a href="https://github.com/Taletex/CoreAAS-based-application" target="_blank"><button class="btn btn-success">Go to Official Repo (GIT)</button></a>
+                        </div>
+                    </div>
+                    <hr class="m-0">
+                    <div style="text-align:center; padding: 20px;">
+                        <div class="row m-0">
+                            <div class="col-md-12 card p-0 border-radius-0 h-100">
+                                <div class="card-header d-flex align-items-center justify-content-between py-2">
+                                    <h4 class="m-0">{{section}}</h4>
+                                </div>
+                                <div class="card-body" style="overflow:auto; height: calc(100vh - 233px);">
+                                    <div ng-view></div>
+                                </div>
+                                <div class="card-footer">&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
