@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>CoreAAS Implementation WebApp</title>
+        <title>CoreAAS Web Application</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <!-- Font awesome import -->
@@ -38,11 +38,16 @@
                     <div class="card p-0 border-radius-0 h-100" style="background-color: rgba(0, 10, 78, 0.9);">
                         <div class="card-body" style="overflow:auto; height: calc(100vh - 212px);">
                             <div class="list-group-item p-0 border-dark">
-                                <div class="btn btn-dark w-100 border-radius-0 text-left" ng-click="bShow1 = !bShow1">Concept Descriptions</div>
+                                <div class="d-flex btn btn-dark w-100 border-radius-0 text-left" ng-click="bShow1 = !bShow1">
+                                    <div>Concept Descriptions</div>
+                                    <div class="ml-auto">
+                                        <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
+                                    </div>
+                                </div>
                                 <ul class="w-100 h-100 p-0 m-0" ng-show="bShow1">
-                                    <li ng-show="!elements.conceptDescriptions.length" class="list-group-item">Nessuna concept description presente!</li>
+                                    <li ng-show="!elements.descriptions.length" class="list-group-item">Nessuna concept description presente!</li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
-                                        ng-repeat="elem in elements.conceptDescriptions track by $index" ng-click="redirectTo('Concept Description', elem)">
+                                        ng-repeat="elem in elements.descriptions track by $index" ng-click="redirectTo(elem)">
                                         <div>{{elem.browseName}}</div>
                                     </li>
                                 </ul>
@@ -104,7 +109,7 @@
                         <div class="row m-0">
                             <div class="col-md-12 card p-0 border-radius-0 h-100">
                                 <div class="card-header d-flex align-items-center justify-content-between py-2">
-                                    <h4 class="m-0">{{section}}</h4>
+                                    <h4 class="m-0">{{currentSection}}</h4>
                                 </div>
                                 <div class="card-body" style="overflow:auto; height: calc(100vh - 233px);">
                                     <div ng-view></div>
