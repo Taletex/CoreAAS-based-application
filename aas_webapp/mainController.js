@@ -34,6 +34,10 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/elementTemplate.html",
             controller: "elementCtrl"
         })
+        .when("/index.html", {
+            templateUrl: "/templates/homeTemplate.html",
+            controller: "mainCtrl"
+        })
         .otherwise({redirectTo: "index.html"});
     $locationProvider.hashPrefix('coreaas'); 
 });

@@ -35,15 +35,19 @@ li{
 
 .main-logo {
     text-align:center; 
-    padding:0px; 
-    background-color: rgba(0, 10, 78, 0.9); 
-    height:90px; 
     overflow: hidden;
 }
 
+.main-header {
+    background-color: #040039f7; 
+    height:110px; 
+    box-shadow: 2px 2px 4px black;
+    
+}
+
 .menu-card-body {
-    background-color: rgba(0, 10, 78, 0.9); 
-    height: calc(100vh - 90px);
+    background-color: rgb(25, 34, 95); 
+    height: calc(100vh - 110px);
     border-radius: 0px;
 }
 
@@ -62,7 +66,7 @@ li{
 
 .menu-item-body {
     overflow:auto; 
-    max-height: calc(100vh - 296px);
+    max-height: calc(100vh - 316px);
     /*
      -webkit-transition: all linear 0.5s;
      transition: all linear 0.5s;
@@ -78,5 +82,5 @@ li{
 
 .content-card-body {
     overflow:auto; 
-    height: calc(100vh - 228px);
+    height: calc(100vh - 248px);
 }

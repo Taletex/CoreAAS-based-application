@@ -30,12 +30,26 @@
     <body>
         <div ng-app="myApp" ng-controller="mainCtrl"> 
             <div class="row m-0"> 
-                <!-- MENU -->
-                <div class="col-md-3 p-0 h-100"> 
-                    <div class="main-logo d-flex align-items-center text-left cursor-pointer" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/index'})">
-                        <img style="height: 150px;" src="rsc/img/logo.png">
-                        <h2 class="mb-0 ml-2 text-light">CoreAAS Web Application</h1>
+                
+                <!-- HEADER -->
+                <div class="col-md-12 " style="z-index:1">
+                    <div class="row main-header">
+                        <div class="col-md-3 h-100 p-0 p-0 d-flex align-items-center cursor-pointer" style="overflow: hidden" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/index'})" data-toggle="tooltip" data-placement="bottom" title="Go to the main page"> 
+                            <img style="height: 175px;" src="rsc/img/logo.png">
+                            <h2 class="mb-0 ml-2 text-light">CoreAAS Web Application</h1>
+                        </div>
+                        <div class="col-md-9 h-100 p-0 d-flex align-items-center justify-content-end"> 
+                            <div class="mr-4">
+                                <a href="https://github.com/Taletex/CoreAAS-based-application" target="_blank"><button class="btn btn-success">Go to Official Repo (GIT)</button></a>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                
+
+                <!-- MENU -->
+                <div class="col-md-3 p-0 h-100" > 
+                    
                     <div class="card p-0 menu-card-body">
                         <div class="card-body">
 
@@ -44,13 +58,14 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 4px 4px 0px 0px !important;" ng-click="setShow('bShow1')">
                                     <b>Concept Descriptions</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/descriptions'})">
+                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/descriptions'})" data-toggle="tooltip" data-placement="top" title="Open descriptions">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow1">
                                     <li ng-show="!elements.descriptions.length" class="list-group-item">Nessuna concept description presente!</li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
-                                        ng-repeat="elem in elements.descriptions | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)">
+                                        ng-repeat="elem in elements.descriptions | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)" style="border-radius: 0px !important">
+                                        
                                         <div>{{elem.browseName}}</div>
                                     </li>
                                 </ul>
@@ -61,13 +76,13 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px !important;" ng-click="setShow('bShow2')">
                                     <b>Submodels</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/submodels'})">
+                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/submodels'})" data-toggle="tooltip" data-placement="top" title="Open submodels">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow2">
                                     <li ng-show="!elements.submodels.length" class="list-group-item">Nessun submodel presente!</li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
-                                        ng-repeat="elem in elements.submodels | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)">
+                                        ng-repeat="elem in elements.submodels | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)" style="border-radius: 0px !important">
                                         <div>{{elem.browseName}}</div>
                                     </li>
                                 </ul>
@@ -75,16 +90,16 @@
 
                             <!-- Assets Item-->
                             <div class="card p-0 border-0">
-                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px !important;" ng-click="setShow('bShow3')">
+                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px !important;" ng-click="setShow('bShow3')" >
                                     <b>Assets</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/assets'})">
+                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/assets'})" data-toggle="tooltip" data-placement="top" title="Open assets">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow3">
                                     <li ng-show="!elements.assets.length" class="list-group-item">Nessun submodel presente!</li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
-                                        ng-repeat="elem in elements.assets | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)">
+                                        ng-repeat="elem in elements.assets | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)" style="border-radius: 0px !important">
                                         <div>{{elem.browseName}}</div>
                                     </li>
                                 </ul>
@@ -92,10 +107,10 @@
 
                             <!-- AAS Item-->
                             <div class="card p-0 border-0">
-                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" ng-click="setShow('bShow4')">
+                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" ng-click="setShow('bShow4')" >
                                     <b>Asset Administration Shells</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/aas'})">
+                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/aas'})" data-toggle="tooltip" data-placement="top" title="Open AAS">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow4">
@@ -109,31 +124,24 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- CONTENT -->
                 <div class="col-md-9 p-0 h-100"> 
-                    <div style="text-align:center; padding:20px; height: 90px" class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex">
-                            <h1 class="mb-0 ml-2"></h1>
-                        </div>
-                        <div>
-                            <a href="https://github.com/Taletex/CoreAAS-based-application" target="_blank"><button class="btn btn-success">Go to Official Repo (GIT)</button></a>
-                        </div>
-                    </div>
-                    <hr class="m-0">
                     <div style="text-align:center; padding: 20px;" class="h-100">
                         <div class="row m-0 h-100">
                             <div class="col-md-12 card p-0 border-radius-0 h-100">
                                 <div class="card-header d-flex align-items-center justify-content-between py-2">
-                                    <h4 class="m-0">{{currentSection}}</h4>
+                                    <h4 class="m-0">{{(currentSection != undefined && currentSection != "") ? currentSection : "Home"}}</h4>
                                 </div>
                                 <div class="card-body content-card-body w-100">
-                                    <div ng-view class="w-100"></div>
+                                    <div ng-view class="h-100 w-100"></div>
                                 </div>
                                 <div class="card-footer">&nbsp;</div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </body>
