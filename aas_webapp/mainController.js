@@ -1,13 +1,37 @@
-var app = angular.module('myApp', ["ngRoute"]);
+var app = angular.module('myApp', ["ngRoute", "ngAnimate"]);
 
 app.config(function($routeProvider, $locationProvider) {
     $routeProvider
         .when("/descriptions", {
-            templateUrl: "/templates/conceptDescriptionList.html",
-            controller: ""
+            templateUrl: "/templates/elementListTemplate.html",
+            controller: "elementListCtrl"
         })
         .when("/descriptions/:number", {
-            templateUrl: "/templates/conceptDescription.html",
+            templateUrl: "/templates/elementTemplate.html",
+            controller: "elementCtrl"
+        })
+        .when("/submodels", {
+            templateUrl: "/templates/elementListTemplate.html",
+            controller: "elementListCtrl"
+        })
+        .when("/submodels/:number", {
+            templateUrl: "/templates/elementTemplate.html",
+            controller: "elementCtrl"
+        })
+        .when("/assets", {
+            templateUrl: "/templates/elementListTemplate.html",
+            controller: "elementListCtrl"
+        })
+        .when("/assets/:number", {
+            templateUrl: "/templates/elementTemplate.html",
+            controller: "elementCtrl"
+        })
+        .when("/aas", {
+            templateUrl: "/templates/elementListTemplate.html",
+            controller: "elementListCtrl"
+        })
+        .when("/aas/:number", {
+            templateUrl: "/templates/elementTemplate.html",
             controller: "elementCtrl"
         })
         .otherwise({redirectTo: "index.html"});
@@ -17,6 +41,7 @@ app.config(function($routeProvider, $locationProvider) {
 app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService) {
     $scope.currentSection;
     $scope.elements;
+    $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false};
 
     $scope.init = function(){
         elementsService.init();
@@ -30,27 +55,38 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
         $window.location.href = elem.id;
     }
 
+    $scope.setShow = function(bShowToSet){
+        var actualVal = $scope.showList[bShowToSet];
+        $scope.showList.bShow1 = $scope.showList.bShow2 = $scope.showList.bShow3 = $scope.showList.bShow4 = false;
+        if(actualVal==false) $scope.showList[bShowToSet] = true;
+    }
+
     $scope.init();
 });
 
 app.controller('elementCtrl', function($scope, $routeParams, $location, mainService, elementsService) {
     $scope.elements;
     $scope.currentElement;
+    $scope.currentSection;
     
     $scope.init = function() {
         $scope.elements = elementsService.getElements();
-        $scope.currentElement = $scope.getElementById($location.absUrl());
+        $scope.currentElement = elementsService.getCurrentElement();
+        $scope.currentSection = elementsService.getCurrentSection();
     }
 
-    $scope.getElementById = function(id){
-        var idpieces = id.split("/");
-        var elementList = $scope.elements[idpieces[4]];
-        for(var i=0; i<=elementList.length; i++) {
-            if(elementList[i].id === id)
-                return elementList[i];
-        }
+    $scope.init();
+});
 
-        console.error("Nessun elemento con id " + id + "trovato dentro la sua lista");
+app.controller('elementListCtrl', function($scope, $location, mainService, elementsService) {
+    $scope.elements;
+    $scope.currentList;
+    $scope.currentSection;
+
+    $scope.init = function() {
+        $scope.elements = elementsService.getElements();
+        $scope.currentList = elementsService.getCurrentElementList();
+        $scope.currentSection = elementsService.getCurrentSection();
     }
 
     $scope.init();
@@ -58,10 +94,10 @@ app.controller('elementCtrl', function($scope, $routeParams, $location, mainServ
 
 app.service("mainService", function() {
     this.baseUrl = "http://localhost:8080/#coreaas/";
-    this.sections = {descriptions: "Concept Description", submodels: "Submodel", aas: "Asset Administration Shell", assets: "Asset"};
+    this.sections = {index: "Home", descriptions: "Concept Description", submodels: "Submodel", aas: "Asset Administration Shell", assets: "Asset"};
 });
 
-app.service("elementsService", function(mainService) {
+app.service("elementsService", function($location, mainService) {
    
     /* === VARIABLES === */
     this.elements = {descriptions: [], submodels: [], assets: [], aas: []};
@@ -82,6 +118,25 @@ app.service("elementsService", function(mainService) {
     this.addAAS = function(browseName, revision, version, description, id, assetRef, submodelsRef) {
         this.elements.aas.push({browseName: browseName, revision: revision, version: version, description: description, id: id, assetRef: assetRef, submodelsRef: submodelsRef});
     };
+
+    this.getCurrentSection = function() {
+        return $location.absUrl().split("/")[4]
+    }
+
+    this.getCurrentElementList = function(){
+        return this.elements[this.getCurrentSection()];
+    };
+
+    this.getCurrentElement = function(){
+        var elementList = this.getCurrentElementList();
+        for(var i=0; i<=elementList.length; i++) {
+            if(elementList[i].id === $location.absUrl())
+                return elementList[i];
+        }
+
+        console.error("Nessun elemento con id " + id + "trovato dentro la sua lista");
+    };
+
 
     this.init = function() {
         this.addConceptDescription("Submodel - Identification", "Identification", "Submodel contenente informazioni sull'identificazione dell'asset", "", mainService.baseUrl + "descriptions/001");

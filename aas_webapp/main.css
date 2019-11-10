@@ -32,3 +32,51 @@ li{
 .border-radius-0 {
     border-radius: 0;
 }
+
+.main-logo {
+    text-align:center; 
+    padding:0px; 
+    background-color: rgba(0, 10, 78, 0.9); 
+    height:90px; 
+    overflow: hidden;
+}
+
+.menu-card-body {
+    background-color: rgba(0, 10, 78, 0.9); 
+    height: calc(100vh - 90px);
+    border-radius: 0px;
+}
+
+.menu-list-button {
+    position:absolute;
+    z-index: 1;
+    right: 4px;
+    top: 4px;
+}
+
+.menu-item-header {
+    background-color: rgb(0, 81, 158); 
+    box-shadow: 3px 3px 4px black;
+}
+
+
+.menu-item-body {
+    overflow:auto; 
+    max-height: calc(100vh - 296px);
+    /*
+     -webkit-transition: all linear 0.5s;
+     transition: all linear 0.5s;
+    */
+   
+}
+
+/* 
+.menu-item-body.ng-hide {
+    opacity:0;
+  }
+*/
+
+.content-card-body {
+    overflow:auto; 
+    height: calc(100vh - 228px);
+}

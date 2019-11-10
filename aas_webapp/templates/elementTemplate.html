@@ -1,12 +1,12 @@
 <table class="table">
     <thead>
-        <tr class="row">
+        <tr class="row  m-0">
             <th class="text-left col-3">Proprietà</th>
             <th class="text-left col-9">Valore</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="(key, value) in currentElement track by $index" class="row">
+        <tr ng-repeat="(key, value) in currentElement track by $index" class="row m-0">
             <td class="text-left col-3">{{key}}</th>
             <td class="text-left col-9">{{(value != undefined && value != "") ? value : "n.d."}}</td>
         </tr>
