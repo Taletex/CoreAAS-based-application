@@ -7,7 +7,10 @@
     </thead>
         <tr ng-repeat="(key, value) in currentElement track by $index" class="row m-0">
             <td class="text-left col-3">{{key}}</th>
-            <td class="text-left col-9">{{(value != undefined && value != "") ? value : "n.d."}}</td>
+            <td class="text-left col-9" ng-show="key != 'additionalProperties'">{{(value != undefined && value != "") ? value : "n.d."}}</td>
+            <td class="text-left col-9" ng-show="key == 'additionalProperties'">
+                <div ng-repeat="innerValue in value track by $index">{{innerValue.name}} ({{innerValue.dataType}})</div>
+            </td>
         </tr>
     </tbody>
 </table>

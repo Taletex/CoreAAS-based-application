@@ -53,6 +53,22 @@
                     <div class="card p-0 menu-card-body">
                         <div class="card-body">
 
+                            <!-- Home Item -->
+                            <div class="card p-0 border-0">
+                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 4px 4px 0px 0px !important;" 
+                                    ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/index'})" data-toggle="tooltip" data-placement="top" title="Open homepage">
+                                    <b>Homepage</b>
+                                </div>
+                            </div>
+
+                            <!-- Resources Item -->
+                            <div class="card p-0 border-0 mb-3">
+                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" 
+                                    ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/resources'})" data-toggle="tooltip" data-placement="top" title="Open resources">
+                                    <b>Resources</b>
+                                </div>
+                            </div>
+                            
                             <!-- Concept Descriptions Item-->
                             <div class="card p-0 border-0">
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 4px 4px 0px 0px !important;" ng-click="setShow('bShow1')">
@@ -97,7 +113,7 @@
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow3">
-                                    <li ng-show="!elements.assets.length" class="list-group-item">Nessun submodel presente!</li>
+                                    <li ng-show="!elements.assets.length" class="list-group-item">Nessun asset presente!</li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
                                         ng-repeat="elem in elements.assets | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)" style="border-radius: 0px !important">
                                         <div>{{elem.browseName}}</div>
@@ -107,16 +123,33 @@
 
                             <!-- AAS Item-->
                             <div class="card p-0 border-0">
-                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" ng-click="setShow('bShow4')" >
+                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 0px 0px !important;" ng-click="setShow('bShow4')" >
                                     <b>Asset Administration Shells</b>
                                 </div>
                                 <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/aas'})" data-toggle="tooltip" data-placement="top" title="Open AAS">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow4">
-                                    <li ng-show="!elements.aas.length" class="list-group-item">Nessun submodel presente!</li>
+                                    <li ng-show="!elements.aas.length" class="list-group-item">Nessun AAS presente!</li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
                                         ng-repeat="elem in elements.aas | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)">
+                                        <div>{{elem.browseName}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Data Specifications Item-->
+                            <div class="card p-0 border-0">
+                                <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" ng-click="setShow('bShow5')" >
+                                    <b>Data Specifications</b>
+                                </div>
+                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/dataspecs'})" data-toggle="tooltip" data-placement="top" title="Open Data Specifications">
+                                    <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
+                                </div>
+                                <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow5">
+                                    <li ng-show="!elements.dataspecs.length" class="list-group-item">Nessuna data specification presente!</li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item list-group-item-action py-2 cursor-pointer" 
+                                        ng-repeat="elem in elements.dataspecs | orderBy: elem.browseName track by $index" ng-click="redirectTo(elem)">
                                         <div>{{elem.browseName}}</div>
                                     </li>
                                 </ul>

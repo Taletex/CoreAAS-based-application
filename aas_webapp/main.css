@@ -65,12 +65,11 @@ li{
 
 .menu-item-body {
     overflow:auto; 
-    max-height: calc(100vh - 316px);
+    max-height: calc(100vh - 454px);
     /*
      -webkit-transition: all linear 0.5s;
      transition: all linear 0.5s;
     */
-   
 }
 
 /* 
@@ -100,4 +99,12 @@ li{
 
 .webapp-title {
     font-weight: 700;
+}
+
+.display-none {
+    display: none !important;
+}
+
+.display-block {
+    display: block !important;
 }

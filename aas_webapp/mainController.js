@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ["ngRoute", "ngAnimate"]);
+var app = angular.module('myApp', ["ngRoute"]);
 
 app.config(function($routeProvider, $locationProvider) {
     $routeProvider
@@ -6,7 +6,7 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/elementListTemplate.html",
             controller: "elementListCtrl"
         })
-        .when("/descriptions/:number", {
+        .when("/descriptions/:name", {
             templateUrl: "/templates/elementTemplate.html",
             controller: "elementCtrl"
         })
@@ -14,7 +14,7 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/elementListTemplate.html",
             controller: "elementListCtrl"
         })
-        .when("/submodels/:number", {
+        .when("/submodels/:name", {
             templateUrl: "/templates/elementTemplate.html",
             controller: "elementCtrl"
         })
@@ -22,7 +22,7 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/elementListTemplate.html",
             controller: "elementListCtrl"
         })
-        .when("/assets/:number", {
+        .when("/assets/:name", {
             templateUrl: "/templates/elementTemplate.html",
             controller: "elementCtrl"
         })
@@ -30,25 +30,38 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/elementListTemplate.html",
             controller: "elementListCtrl"
         })
-        .when("/aas/:number", {
+        .when("/aas/:name", {
             templateUrl: "/templates/elementTemplate.html",
             controller: "elementCtrl"
+        })
+        .when("/dataspecs", {
+            templateUrl: "/templates/elementListTemplate.html",
+            controller: "elementListCtrl"
+        })
+        .when("/dataspecs/:name", {
+            templateUrl: "/templates/elementTemplate.html",
+            controller: "elementCtrl"
+        })
+        .when("/resources", {
+            templateUrl: "/templates/resourcesTemplate.html",
+            controller: "rscCtrl"
         })
         .when("/index.html", {
             templateUrl: "/templates/homeTemplate.html",
             controller: "mainCtrl"
         })
         .otherwise({redirectTo: "index.html"});
-    $locationProvider.hashPrefix('coreaas'); 
+        $locationProvider.hashPrefix('coreaas'); 
 });
 
 app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService) {
     $scope.currentSection;
     $scope.elements;
-    $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false};
+    $scope.showList;
 
     $scope.init = function(){
         elementsService.init();
+        $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false, bShow5: false};
         $scope.elements = elementsService.getElements();
         $scope.currentSection = mainService.sections[$location.absUrl().split("/")[4]];
     }
@@ -61,7 +74,7 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
 
     $scope.setShow = function(bShowToSet){
         var actualVal = $scope.showList[bShowToSet];
-        $scope.showList.bShow1 = $scope.showList.bShow2 = $scope.showList.bShow3 = $scope.showList.bShow4 = false;
+        $scope.showList.bShow1 = $scope.showList.bShow2 = $scope.showList.bShow3 = $scope.showList.bShow4 = $scope.showList.bShow5 = false;
         if(actualVal==false) $scope.showList[bShowToSet] = true;
     }
 
@@ -96,15 +109,39 @@ app.controller('elementListCtrl', function($scope, $location, mainService, eleme
     $scope.init();
 });
 
+app.controller('rscCtrl', function($scope, $location, mainService, elementsService) {
+    $scope.showList;
+    $scope.resourceList;
+
+    $scope.init = function() {
+        $scope.resourceList = [
+            {name: "Details of the administration shell", path: "rsc/pdf/2018-details-of-the-asset-administration-shell.pdf", alt: "Details of the administration shell pdf", bShow: true},
+            {name: "Vacuum Gripper Robot datasheet", path: "rsc/datasheets/536630-Vacuum_Gripper_Robot_24V.pdf", alt: "Vacuum gripper robot datasheet pdf", bShow: false},
+            {name: "Automated High Bay Warehouse datasheet", path: "rsc/datasheets/536631-Automated_High-Bay_Warehouse_24V.pdf", alt: "Automated high bay warehouse datasheet pdf", bShow: false},
+            {name: "Multi Processing Station datasheet", path: "rsc/datasheets/536632-Multi_Processing_Station_24V.pdf", alt: "Multi processing station datasheet pdf", bShow: false},
+            {name: "Sortier Line datasheet", path: "rsc/datasheets/536633-Sortier_Line_24V.pdf", alt: "Sortier line datasheet pdf", bShow: false},
+            {name: "PLC 1214C DC/DC/DC datasheet", path: "rsc/datasheets/6ES72141AG400XB0_datasheet_en.pdf", alt: "PLC 1214C DC/DC/DC datasheet pdf", bShow: false},
+        ];
+    }
+    
+    $scope.setShow = function(index){
+        for(var i=0; i<$scope.resourceList.length; i++) {
+            $scope.resourceList[i].bShow = (i==index);
+        }
+    }
+
+    $scope.init();
+});
+
 app.service("mainService", function() {
     this.baseUrl = "http://localhost:8080/#coreaas/";
-    this.sections = {index: "Home", descriptions: "Concept Description", submodels: "Submodel", aas: "Asset Administration Shell", assets: "Asset"};
+    this.sections = {index: "Home", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
 });
 
 app.service("elementsService", function($location, mainService) {
    
     /* === VARIABLES === */
-    this.elements = {descriptions: [], submodels: [], assets: [], aas: []};
+    this.elements = {descriptions: [], submodels: [], assets: [], aas: [], dataspecs: []};
 
     /* === FUNCTIONS === */
     this.addConceptDescription = function(browseName, preferredName, description, unit, id) {
@@ -121,6 +158,10 @@ app.service("elementsService", function($location, mainService) {
 
     this.addAAS = function(browseName, revision, version, description, id, assetRef, submodelsRef) {
         this.elements.aas.push({browseName: browseName, revision: revision, version: version, description: description, id: id, assetRef: assetRef, submodelsRef: submodelsRef});
+    };
+
+    this.addDataSpecs = function(browseName, revision, version, description, id, additionalProperties) {
+        this.elements.dataspecs.push({browseName: browseName, revision: revision, version: version, description: description, id: id, additionalProperties: additionalProperties});
     };
 
     this.getCurrentSection = function() {
@@ -143,6 +184,7 @@ app.service("elementsService", function($location, mainService) {
 
 
     this.init = function() {
+        this.elements = {descriptions: [], submodels: [], assets: [], aas: [], dataspecs: []};
         this.addConceptDescription("Submodel - Identification", "Identification", "Submodel contenente informazioni sull'identificazione dell'asset", "", mainService.baseUrl + "descriptions/001");
         this.addConceptDescription("Property - Asset serial number", "Asset serial number", "Numero seriale dell'asset", "", mainService.baseUrl + "descriptions/002");
         this.addConceptDescription("Submodel - Configuration", "Configuration", "Submodel contenente informazioni sulla configurazione dell'asset", "", mainService.baseUrl + "descriptions/003");
@@ -227,6 +269,8 @@ app.service("elementsService", function($location, mainService) {
         this.addSubmodel("IEC Program Type", "1", "1", "IECProgram", mainService.baseUrl + "submodels/IECProgramType");
         this.addSubmodel("IEC Task Type", "1", "1", "IECTask", mainService.baseUrl + "submodels/IECTaskType");
         this.addSubmodel("IEC Communication Type", "1", "1", "IECCommunication", mainService.baseUrl + "submodels/IECCommunicationType");
+        
+        this.addDataSpecs("Terminal Template", "1", "1", "Template for Terminal Property", mainService.baseUrl + "dataspecs/terminalDataTemplate", [{name: "TerminalType", dataType: "String"}, {name: "TerminalNumber", dataType: "Int16"}] );
     }
 
     this.getElements = function() {
