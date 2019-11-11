@@ -1,7 +1,7 @@
 {
-  "name": "opcua-coreaas",
+  "name": "opcua-coreaas-based-application",
   "version": "1.0.1",
-  "description": "An extension for node-opcua implementing coreAAS Information Model",
+  "description": "An extension for opcua-coreaas implementing coreAAS Address Space",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
@@ -17,11 +17,11 @@
     "aas",
     "industry4.0"
   ],
-  "author": "Marco Salafia",
-  "license": "Apache-2.0",
+  "authors": ["Alessandro Messina", "Marco Pisasale"],
+  "license": "GNU General Public License v3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OPCUAUniCT/node-opcua-coreaas.git"
+    "url": "git+https://github.com/Taletex/CoreAAS-based-application"
   },
   "devDependencies": {
     "typedoc": "^0.15.0",
@@ -32,10 +32,10 @@
     "node-opcua-coreaas": "^1.0.1"
   },
   "bugs": {
-    "url": "https://github.com/OPCUAUniCT/node-opcua-coreaas/issues"
+    "url": "https://github.com/Taletex/CoreAAS-based-application/issues"
   },
-  "homepage": "https://github.com/OPCUAUniCT/node-opcua-coreaas#readme",
+  "homepage": "https://github.com/Taletex/CoreAAS-based-application#readme",
   "directories": {
-    "doc": "doc"
+    "doc": "docs"
   }
 }
