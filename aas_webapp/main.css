@@ -63,7 +63,6 @@ li{
     box-shadow: 3px 3px 4px black;
 }
 
-
 .menu-item-body {
     overflow:auto; 
     max-height: calc(100vh - 316px);
@@ -83,4 +82,22 @@ li{
 .content-card-body {
     overflow:auto; 
     height: calc(100vh - 248px);
+}
+
+/* If the screen size is 1367px wide or more, set the font-size of <div> to 80px */
+@media screen and (min-width: 1400px) {
+    .webapp-title {
+        font-size: 30px;
+    }
+}
+
+/* If the screen size is 1366px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 1400px) {
+    .webapp-title {
+        font-size: 20px;
+    }
+}
+
+.webapp-title {
+    font-weight: 700;
 }
