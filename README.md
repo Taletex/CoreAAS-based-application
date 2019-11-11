@@ -61,20 +61,20 @@ The application has the following dependencies (libraries and packages)
 After having installed all the requirements it is possible to clone this project and run it by following the next steps. 
 
 #### 1 - Clone the project from master branch
-Open a terminal and write
+Open a terminal and write:
 ```
 git clone https://github.com/Taletex/CoreAAS-based-application
 ```
 
 #### 2 - Build and run the OPC UA CoreAAS based Server
-Open a terminal and write (from the root folder of the project)
+Open a terminal and write (from the root folder of the project):
 ```
 cd aas_server
 npm run uaIndustryServer
 ```
 
 #### 3 - Run the Web Application
-Open a terminal and write (from the root folder of the project)
+Open a terminal and write (from the root folder of the project):
 ```
 cd aas_webapp
 http-server -o
