@@ -1,19 +1,87 @@
-TODO
-
-Procedura per far partire il server.
-Col terminale spostarsi dentro aas_server e digitare i comandi:
-1. npm install node-opcua-coreaas --save 
-
-Citare che il server è stat fatto a partire dalla repo di OPCUA-CoreAAS a cui abbiamo aggiunto diverse cose (tra cui l'address space popolato, implementazione di template, mapping di Operation e RelationshipElement, library per l'instanziazione rapida di elementi dell'address space)
+# CoreAAS-based-application
+Definition of the digital twin of a smart factory by Asset Administration Shell and an application using it.
 
 
-TODO: cambiare il package.json
+## Table of Contents
+- [References](#References)
+- [Screenshots](#screenshots)
+- [Requirements](#Requirements)
+- [Dependencies](#Dependencies)
+- [Running for test](#Running-for-test)
+- [Future developments](#Future-developments)
 
-DIPENDENZE:
-1. NodeJS
-2. Typescript
-3. "npm install -g http-server@0.9.0"     e    per partire il server → nella folder del server (webapp) digitare in terminale "http-server -o -a 127.0.0.1"
+
+## References
+References available (italian only) at:
+- docs/UML
 
 
-REG EXPR per refactor di func per la concept description da Typescript a Javascript: server, conceptDictionary, ([\[])([_a-zA-Z0-9, ])*([\]])([,])([ ])
-REG EXPR per refactor di func per i nomi delle const da Typescript a Javascript: const ([a-zA-Z0-9_])*([ = ])*
+
+## Screenshots
+- **Web Application**
+![screenshot](screenshots/webapp1.png)
+
+
+
+## Requirements
+The application has the following requirements (needed to run the project)
+Note: this app was successfully tested on Windows 10. The following links refer to Windows 10. If using a different Operative System, it is necessary to search and download the proper software. 
+- **OPC UA CoreAAS based Server**:
+  1. NodeJS (https://nodejs.org/it/)
+  2. Typescript. Open a terminal and write:
+		```
+		npm install -g typescript
+		```
+  3. OPC UA CoreAAS Server. Open a terminal and write (from the root folder of the project):
+		```
+		cd aas_server
+		npm install node-opcua-coreaas --save
+		```
+- **Web Application**:
+  1. Nodejs.
+  2. Http server. Open a terminal and write:
+		```
+		npm install -g http-server@0.9.0
+		```
+
+
+
+## Dependencies
+The application has the following dependencies (libraries and packages)
+- **OPC UA CoreAAS based Server**:
+  1. node-opcua-coreaas https://github.com/OPCUAUniCT/node-opcua-coreaas.
+- **Web Application**:
+  1. AngularJS 1.6.9 https://angularjs.org/.
+  2. Bootstrap 4.0.0 https://getbootstrap.com/docs/4.0/getting-started/download/.
+  3. FontAwesome 5.6.1 https://fontawesome.com/.
+
+
+
+## Running for test
+After having installed all the requirements it is possible to clone this project and run it by following the next steps. 
+
+#### 1 - Clone the project from master branch
+Open a terminal and write
+```
+git clone https://github.com/Taletex/CoreAAS-based-application
+```
+
+#### 2 - Build and run the OPC UA CoreAAS based Server
+Open a terminal and write (from the root folder of the project)
+```
+cd aas_server
+npm run uaIndustryServer
+```
+
+#### 3 - Run the Web Application
+Open a terminal and write (from the root folder of the project)
+```
+cd aas_webapp
+http-server -o
+```
+A new browser tab at the address where the web application is running will open.
+
+
+
+## Future developments
+- TODO
