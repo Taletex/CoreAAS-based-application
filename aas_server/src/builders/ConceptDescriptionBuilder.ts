@@ -61,11 +61,11 @@ export class ConceptDescriptionBuilder extends Builder {
 
         //Add this Asset to the AAS
         if (options.conceptDescriptionOf != null) {
-            assert(options.conceptDescriptionOf instanceof UAObject, "options.conceptDescriptionOf is not an UAObject.");          
-            
-            const hasConceptDescriptionRefType = this.coreaas.findCoreAASReferenceType("HasConceptDescription")!;
-
-            options.conceptDescriptionOf.addReference({ referenceType: hasConceptDescriptionRefType, nodeId: conceptDescription });            
+            for(var i=0; i<options.conceptDescriptionOf.length; i++) {
+                assert(options.conceptDescriptionOf[i] instanceof UAObject, "options.conceptDescriptionOf[" + i + "] is not an UAObject.");          
+                const hasConceptDescriptionRefType = this.coreaas.findCoreAASReferenceType("HasConceptDescription")!;
+                options.conceptDescriptionOf[i].addReference({ referenceType: hasConceptDescriptionRefType, nodeId: conceptDescription });  
+            }          
         }
 
         //Add EmbeddedDataSpecification

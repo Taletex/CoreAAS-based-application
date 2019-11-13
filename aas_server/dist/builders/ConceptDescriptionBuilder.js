@@ -49,9 +49,11 @@ class ConceptDescriptionBuilder extends builder_1.Builder {
         }
         //Add this Asset to the AAS
         if (options.conceptDescriptionOf != null) {
-            assert(options.conceptDescriptionOf instanceof ua_object_1.UAObject, "options.conceptDescriptionOf is not an UAObject.");
-            const hasConceptDescriptionRefType = this.coreaas.findCoreAASReferenceType("HasConceptDescription");
-            options.conceptDescriptionOf.addReference({ referenceType: hasConceptDescriptionRefType, nodeId: conceptDescription });
+            for (var i = 0; i < options.conceptDescriptionOf.length; i++) {
+                assert(options.conceptDescriptionOf[i] instanceof ua_object_1.UAObject, "options.conceptDescriptionOf[" + i + "] is not an UAObject.");
+                const hasConceptDescriptionRefType = this.coreaas.findCoreAASReferenceType("HasConceptDescription");
+                options.conceptDescriptionOf[i].addReference({ referenceType: hasConceptDescriptionRefType, nodeId: conceptDescription });
+            }
         }
         //Add EmbeddedDataSpecification
         if (options.hasEmbeddedDataSpecifications != null) {

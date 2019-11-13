@@ -137,7 +137,7 @@ export interface ConceptDescriptionOptions {
     /** 
      * A ConceptDictionaryType instance containing the ConceptDescription to be created. A HasConceptDescription Reference
      * connect the ConceptDicitonary to the ConceptDescription.  */
-    conceptDescriptionOf?: ConceptDictionaryObject;
+    conceptDescriptionOf?: ConceptDictionaryObject[];
     /** One or more instances of EmbeddeddataSpecificatrionType for the Concept Dictionary to be created. */
     hasEmbeddedDataSpecifications?: EDSObject | EDSObject[];
     /** An AdministrativeInformation Object containing information relevant to this ConceptDescription. */
@@ -154,8 +154,8 @@ export interface ConceptDictionaryOptions {
     idShort: string;
     /** The node id for the created Object. */
     nodeId?: NodeIdLike;
-    /** The AASs owning this Concept Dicitonary. */
-    conceptDictionaryOf?: AASObject[];
+    /** The AAS owning this Concept Dicitonary. */
+    conceptDictionaryOf?: AASObject;
     /** An AAS reference to the parent entity of this Object. */
     parent?: RefArgument;
     /** A description of the Concept Dictionary. */

@@ -543,7 +543,7 @@ export class CoreAASExtension {
     }
     
     /** Creates a Concept Dictionary and adds it to its AAS */
-    createConceptDictionary(server: CoreServer, aas: AASObject[], dictionarySize: number, browseName: string, idShort: string, enDescription: string, itDescription: string): ConceptDictionaryObject {
+    createConceptDictionary(server: CoreServer, aas: AASObject, browseName: string, idShort: string, enDescription: string, itDescription: string): ConceptDictionaryObject {
         const conceptDictionary = server.coreaas.addConceptDictionary({
             browseName: browseName,
             idShort: idShort,
@@ -552,20 +552,11 @@ export class CoreAASExtension {
                         new LocalizedText({locale: "it", text: itDescription})]
             })
 
-        for(let i = 0; i++; i<=dictionarySize) {
-            conceptDictionary.addConceptDescriptionRef([new server.coreaas.Key({
-                idType: KeyType.URI, 
-                local: true,
-                type: KeyElements.ConceptDescription, 
-                value: "www.test.com/0" + ("0" ? i<10 : "") + i.toString() 
-                }) 
-            ])
-        }
         return conceptDictionary; 
     }
 
     /** Creates a Concept Description and adds it to its Concept Dictionary */
-    createConceptDescription(server: CoreServer, conceptDictionary: ConceptDictionaryObject, elements: UAObject[], browseName: string, preferredName: string, description: string, unit: string, id: string): ConceptDescriptionObject {
+    createConceptDescription(server: CoreServer, conceptDictionaries: ConceptDictionaryObject[], elements: UAObject[], browseName: string, preferredName: string, description: string, unit: string, id: string): ConceptDescriptionObject {
         const embedded = server.coreaas.addEmbeddedDataSpecification({
             browseName: "EmbeddedDS",
             hasDataSpecification: [ new server.coreaas.Key({
@@ -588,9 +579,21 @@ export class CoreAASExtension {
                 idType: IdentifierType.URI
             }),
             hasEmbeddedDataSpecifications: embedded,
-            conceptDescriptionOf: conceptDictionary,
+            conceptDescriptionOf: conceptDictionaries,
         })
         .semanticOf(elements);
+
+        for(var i=0; i<conceptDictionaries.length; i++) {
+            conceptDictionaries[i].addConceptDescriptionRef(
+                [ new server.coreaas.Key({
+                    idType: KeyType.URI,
+                    local: true,
+                    type: KeyElements.ConceptDescription,
+                    value: id
+                }) ]
+            );
+        }
+        
 
         return conceptDescription;
     }
