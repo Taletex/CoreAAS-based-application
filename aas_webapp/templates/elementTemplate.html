@@ -5,11 +5,16 @@
             <th class="text-left col-9">Valore</th>
         </tr>
     </thead>
+    <tbody>
         <tr ng-repeat="(key, value) in currentElement track by $index" class="row m-0">
             <td class="text-left col-3">{{key}}</th>
-            <td class="text-left col-9" ng-show="key != 'additionalProperties'">{{(value != undefined && value != "") ? value : "n.d."}}</td>
-            <td class="text-left col-9" ng-show="key == 'additionalProperties'">
+            <td class="text-left col-9" ng-if="key != 'additionalProperties' && key != 'id' && key != 'assetRef' && key != 'submodelsRef'">{{(value != undefined && value != "") ? value : "n.d."}}</td>
+            <td class="text-left col-9" ng-if="key == 'id' || key == 'assetRef'"><a href="{{value}}">{{(value != undefined && value != "") ? value : "n.d."}}</a></td>
+            <td class="text-left col-9" ng-if="key == 'additionalProperties'">
                 <div ng-repeat="innerValue in value track by $index">{{innerValue.name}} ({{innerValue.dataType}})</div>
+            </td>
+            <td class="text-left col-9" ng-if="key == 'submodelsRef'">
+                <div ng-repeat="innerValue in value track by $index">{{innerValue}}</div>
             </td>
         </tr>
     </tbody>

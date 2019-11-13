@@ -174,12 +174,12 @@ app.service("elementsService", function($location, mainService) {
 
     this.getCurrentElement = function(){
         var elementList = this.getCurrentElementList();
-        for(var i=0; i<=elementList.length; i++) {
+        for(var i=0; i<elementList.length; i++) {
             if(elementList[i].id === $location.absUrl())
                 return elementList[i];
         }
 
-        console.error("Nessun elemento con id " + id + "trovato dentro la sua lista");
+        console.error("Nessun elemento con id " + $location.absUrl() + " trovato dentro la sua lista");
     };
 
 
