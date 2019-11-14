@@ -204,11 +204,14 @@ app.service("elementsService", function($location, mainService) {
         this.addConceptDescription("Submodel - Sorting Line", "Sorting Line", "Elemento responsabile del riconoscimento del colore dei blocchi di produzione e del loro smistamento nei rispettivi magazzini", "", mainService.baseUrl + "descriptions/022");
         this.addConceptDescription("Operation - Color Detection", "Color Detection", "Operazione di riconoscimento del colore del blocco di produzione", "", mainService.baseUrl + "descriptions/023");
         this.addConceptDescription("Operation - Ejection", "Ejection", "Operazione di espulsione di un blocco di produzione verso un magazzino", "", mainService.baseUrl + "descriptions/024");
+        this.addConceptDescription("Property - Valve Terminal", "Valve Terminal", "Terminale relativo ad una valvola", "V", mainService.baseUrl + "descriptions/025");
         this.addConceptDescription("Submodel - AHBWarehouse", "AHB Warehouse", "Submodel per la gestione dei pezzi nel magazzino", "", mainService.baseUrl + "descriptions/026");
+        this.addConceptDescription("Property - Compressor Terminal", "Compressor Terminal", "Terminale relativo ad un compressore", "V", mainService.baseUrl + "descriptions/027");
         this.addConceptDescription("Operation - Retrieving", "Retrieving", "Operazione di recupero di un blocco di produzione dal magazzino", "", mainService.baseUrl + "descriptions/028");
         this.addConceptDescription("Operation - Move", "Move", "Operazione di spostamento del braccio del vacuum gripper. Prende in input le coordinate di destinazione (x,y,z)", "", mainService.baseUrl + "descriptions/029");
         this.addConceptDescription("Operation - Move", "Move", "Operazione di spostamento del braccio del vacuum gripper dalla posizione iniziale a quella finale", "", mainService.baseUrl + "descriptions/030");
         this.addConceptDescription("Operation - Turn", "Turn", "Operazione di rotazione della turntable per portare il blocco in prossimità della sega", "", mainService.baseUrl + "descriptions/031");
+        this.addConceptDescription("Property - Light Terminal", "Light Terminal", "Terminale relativo ad una luce", "V", mainService.baseUrl + "descriptions/032");
         this.addConceptDescription("Property - Switch Terminal", "Switch Terminal", "Terminale relativo ad uno switch", "V", mainService.baseUrl + "descriptions/040");
         this.addConceptDescription("Property - Light barrier Terminal", "Light barrier Terminal", "Terminale relativo ad un sensore luminoso", "V", mainService.baseUrl + "descriptions/041");
         this.addConceptDescription("File - Program File", "Program File", "Link ad un file contenente un programma IEC", "", mainService.baseUrl + "descriptions/052");
