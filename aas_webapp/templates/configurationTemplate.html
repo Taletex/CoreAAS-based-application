@@ -1,0 +1,67 @@
+<div class="card m-0 h-100">
+    <!-- Header -->
+    <div class="card-header text-left">
+        <div class="btn btn-primary" ng-class="{'active': steps == STEP_ENUM.STEP1, 'disabled': steps != STEP_ENUM.STEP1}"><span class="badge badge-info">1</span> Selezione isole</div>
+        <div class="btn btn-primary" ng-class="{'active': steps == STEP_ENUM.STEP2, 'disabled': steps != STEP_ENUM.STEP2}"><span class="badge badge-info">2</span> Mapping terminali</div>
+        <div class="btn btn-primary" ng-class="{'active': steps == STEP_ENUM.STEP3, 'disabled': steps != STEP_ENUM.STEP3}"><span class="badge badge-info">3</span> Selezione processi</div>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body h-100">
+        <!-- Init -->
+        <div class="h-100" ng-show="steps == STEP_ENUM.INIT">
+            <div class="text-left">
+                <h6>Configura la fabbrica Fischertechnik a tuo piacimento tramite la wizard guidata</h6>
+                <span>La wizard ti consentirà di personalizzare il tuo processo produttivo sulla base degli elementi disponibili. <br>
+                        • Nel primo passo potrai scegliere le sottoisole da considerare durante il processo produttivo. <br>
+                        • Nel secondo passo potrai configurare il mapping tra i terminali del PLC e i terminali delle varie sottoisole (comunicazione sottoisole) <br>
+                        • Nel terzo e ultimo passo potrai configurare quali elementi di ogni sottoisola tenere attivi durante il processo produttivo <br>
+                        Al termine della wizard potrai salvare la tua configurazione personalizzata e scegliere se caricarla nella fabbrica Fischertechnik! <br>
+                </span>
+            </div>
+            <div class="btn btn-info mt-4" ng-click="nextStep()">Inizia</div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="h-100 row" ng-show="steps == STEP_ENUM.STEP1">
+            <div class="col-4 text-left">
+                <h5>Step 1 - Selezione isole di produzione</h5>
+                <span>Clicca sulle isole desiderate per inserirle nella configurazione. Clicca nuovamente per rimuoverle.</span><br><br>
+                <span>Isole selezionate:</span><br>
+                <span ng-class="{'fa fa-times-circle text-danger': !selectedIsland.multiProcessingStation, 'fa fa-check-circle text-success': selectedIsland.multiProcessingStation}"></span> Multi Processing Station <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !selectedIsland.sortingLine, 'fa fa-check-circle text-success': selectedIsland.sortingLine}"></span> Sorting Line <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !selectedIsland.vacuumGripper, 'fa fa-check-circle text-success': selectedIsland.vacuumGripper}"></span> Vacuum Gripper <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !selectedIsland.automatedHighBayWarehouse, 'fa fa-check-circle text-success': selectedIsland.automatedHighBayWarehouse}"></span> Automated High Bay Warehouse <br>
+            </div>
+            <div class="col-8">
+                <img id="factoryImageMap" src="rsc/img/factory2.png" alt="Fabbrica" usemap="#workmap" style="max-width:100%; height:auto">
+                <map name="workmap">
+                    <area shape="poly" href="#" island="MPS" coords="425, 405, 270,350, 440,165, 500,185, 500,255, 550,275" alt="Multi Processing Station" ng-click="selectIsland(ISLAND_ENUM.MPS)">
+                    <area shape="poly" href="#" island="SL" coords="30,300, 45,265, 110,215, 325,285, 225,365" alt="Sorting Line" ng-click="selectIsland(ISLAND_ENUM.SL)" ng-class="{'opacity50': selectedIsland.sortingLine}">
+                    <area shape="poly" href="#" island="VG" coords="200,235, 235,195, 230,130, 120,140, 190,100, 220,60, 265,50, 330,90, 330,135, 285,140, 290,190, 380,215, 325,275" alt="Vacuum Gripper" ng-click="selectIsland(ISLAND_ENUM.VG)">
+                    <area shape="poly" href="#" island="AHBW" coords="330,80, 335,135, 305,170, 400,195, 440,160, 500,180, 505,225, 555,240, 610,175, 570,150, 515,135, 555,50, 490,15, 455,60, 370,40, 365,85" alt="Warehouse" ng-click="selectIsland(ISLAND_ENUM.AHBW)">
+                </map>
+            </div>
+            
+        </div>
+
+        <!-- Step 2 -->
+        <div class="h-100" ng-show="steps == STEP_ENUM.STEP2">
+            <span>Step 2</span>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="h-100" ng-show="steps == STEP_ENUM.STEP3">
+            <span>Step 3</span>
+        </div>
+    </div>
+    
+
+    <!-- Footer -->
+    <div class="card-footer text-right">
+        <button class="btn btn-secondary" ng-show="steps != STEP_ENUM.INIT" ng-disabled="steps == STEP_ENUM.STEP1" ng-click="previousStep()">Back</button>
+        <button class="btn btn-primary" ng-show="steps != STEP_ENUM.INIT" 
+            ng-disabled="steps == STEP_ENUM.STEP3 || (!selectedIsland.multiProcessingStation && !selectedIsland.sortingLine && !selectedIsland.vacuumGripper && !selectedIsland.automatedHighBayWarehouse)" 
+            ng-click="nextStep()">Next</button>
+    </div>
+</div>

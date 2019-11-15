@@ -46,6 +46,10 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/resourcesTemplate.html",
             controller: "rscCtrl"
         })
+        .when("/configuration", {
+            templateUrl: "/templates/configurationTemplate.html",
+            controller: "configCtrl"
+        })
         .when("/index.html", {
             templateUrl: "/templates/homeTemplate.html",
             controller: "mainCtrl"
@@ -133,9 +137,47 @@ app.controller('rscCtrl', function($scope, $location, mainService, elementsServi
     $scope.init();
 });
 
+app.controller('configCtrl', function($scope, $location, mainService, elementsService) {
+    $scope.steps;
+    $scope.STEP_ENUM;
+    $scope.ISLAND_ENUM;
+    $scope.stepsLength;
+    $scope.selectedIsland;
+
+    $scope.init = function() {
+        $scope.steps = 0;
+        $scope.STEP_ENUM = {INIT: 0, STEP1: 1, STEP2: 2, STEP3: 3};
+        $scope.ISLAND_ENUM = {MPS: "multiProcessingStation", SL: "sortingLine", VG: "vacuumGripper", AHBW: "automatedHighBayWarehouse"};
+        $scope.stepsLength = Object.values($scope.STEP_ENUM).length;
+        $scope.selectedIsland = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
+
+    }
+
+    $scope.nextStep = function() {
+        if($scope.steps+1 < $scope.stepsLength) 
+            $scope.steps++;
+    }
+
+    $scope.previousStep = function() {
+        if($scope.steps > 1) 
+            $scope.steps--;
+    }
+
+    $scope.selectIsland = function(selectedIsland) {
+        $scope.selectedIsland[selectedIsland] = !$scope.selectedIsland[selectedIsland];
+    }
+    
+    $scope.init();
+
+    // Mapster initialization
+    var basic_opts = { mapKey: 'island' };
+    var initial_opts = $.extend({},basic_opts, { fill: true, fillOpacity: 0.6 });
+    $('#factoryImageMap').mapster(initial_opts).mapster('snapshot').mapster('rebind',basic_opts);
+});
+
 app.service("mainService", function() {
     this.baseUrl = "http://localhost:8080/#coreaas/";
-    this.sections = {index: "Home", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
+    this.sections = {index: "Home", configuration: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
 });
 
 app.service("elementsService", function($location, mainService) {

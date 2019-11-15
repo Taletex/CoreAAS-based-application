@@ -108,3 +108,7 @@ li{
 .display-block {
     display: block !important;
 }
+
+.opacity50 {
+    opacity: 0.5;
+}
