@@ -65,7 +65,7 @@ li{
 
 .menu-item-body {
     overflow:auto; 
-    max-height: calc(100vh - 454px);
+    max-height: calc(100vh - 495px);
     /*
      -webkit-transition: all linear 0.5s;
      transition: all linear 0.5s;
