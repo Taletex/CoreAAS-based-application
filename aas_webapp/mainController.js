@@ -46,7 +46,15 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "/templates/resourcesTemplate.html",
             controller: "rscCtrl"
         })
-        .when("/configuration", {
+        .when("/configurations", {
+            templateUrl: "/templates/configurationListTemplate.html",
+            controller: "configCtrl"
+        })
+        .when("/configurations/create", {
+            templateUrl: "/templates/configurationCreateTemplate.html",
+            controller: "configCtrl"
+        })
+        .when("/configurations/:name", {
             templateUrl: "/templates/configurationTemplate.html",
             controller: "configCtrl"
         })
@@ -58,16 +66,23 @@ app.config(function($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('coreaas'); 
 });
 
-app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService) {
+app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService) {
     $scope.currentSection;
     $scope.elements;
+    $scope.configurationList;
     $scope.showList;
 
     $scope.init = function(){
         elementsService.init();
-        $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false, bShow5: false};
+        configurationService.init();
+        $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false, bShow5: false, bShow6: false};
         $scope.elements = elementsService.getElements();
+        $scope.configurationList = configurationService.getConfigurations();
         $scope.currentSection = mainService.sections[$location.absUrl().split("/")[4]];
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     }
     
     $scope.redirectTo = function(elem) {
@@ -78,7 +93,7 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
 
     $scope.setShow = function(bShowToSet){
         var actualVal = $scope.showList[bShowToSet];
-        $scope.showList.bShow1 = $scope.showList.bShow2 = $scope.showList.bShow3 = $scope.showList.bShow4 = $scope.showList.bShow5 = false;
+        $scope.showList.bShow1 = $scope.showList.bShow2 = $scope.showList.bShow3 = $scope.showList.bShow4 = $scope.showList.bShow5 = $scope.showList.bShow6 = false;
         if(actualVal==false) $scope.showList[bShowToSet] = true;
     }
 
@@ -175,9 +190,32 @@ app.controller('configCtrl', function($scope, $location, mainService, elementsSe
     $('#factoryImageMap').mapster(initial_opts).mapster('snapshot').mapster('rebind',basic_opts);
 });
 
+app.controller('configListCtrl', function($scope, mainService) {
+
+    $scope.init = function() {
+
+    }
+
+    $scope.delete = function() {
+
+    }
+   
+    $scope.upload = function() {
+
+    }
+
+    $scope.visualize = function() {
+
+    }
+
+
+
+    $scope.init();
+});
+
 app.service("mainService", function() {
     this.baseUrl = "http://localhost:8080/#coreaas/";
-    this.sections = {index: "Home", configuration: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
+    this.sections = {index: "Home", configurations: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
 });
 
 app.service("elementsService", function($location, mainService) {
@@ -323,5 +361,42 @@ app.service("elementsService", function($location, mainService) {
 
     this.getElements = function() {
         return this.elements;
+    }
+});
+
+// TODO: AGGIUNGERE DB IN CUI SALVARE LE CONFIGURAZIONI
+app.service("configurationService", function($location, mainService) {
+   
+    /* === VARIABLES === */
+    this.configurationList = [];
+
+    /* === FUNCTIONS === */
+    /*
+    this.getCurrentConfiguration = function(){
+        var elementList = this.getCurrentElementList();
+        for(var i=0; i<elementList.length; i++) {
+            if(elementList[i].id === $location.absUrl())
+                return elementList[i];
+        }
+
+        console.error("Nessun elemento con id " + $location.absUrl() + " trovato dentro la sua lista");
+    };  
+    */
+
+    this.init = function() {
+        this.configurationList = [
+            {name: "Configurazione 1", islands: {mps: true, sl: true, vg: true, ahbw: true}, description: "Configurazione di test numero 1", id: mainService.baseUrl + "configurations/001"},
+            {name: "Configurazione 2", islands: {mps: true, sl: true, vg: true, ahbw: false}, description: "Configurazione di test numero 2", id: mainService.baseUrl + "configurations/002"},
+            {name: "Configurazione 3", islands: {mps: true, sl: false, vg: true, ahbw: false}, description: "Configurazione di test numero 3", id: mainService.baseUrl + "configurations/003"},
+            {name: "Configurazione 4", islands: {mps: true, sl: false, vg: false, ahbw: false}, description: "Configurazione di test numero 4", id: mainService.baseUrl + "configurations/004"},
+            {name: "Configurazione 5", islands: {mps: true, sl: true, vg: true, ahbw: true}, description: "Configurazione di test numero 5", id: mainService.baseUrl + "configurations/005"},
+            {name: "Configurazione 6", islands: {mps: true, sl: false, vg: true, ahbw: true}, description: "Configurazione di test numero 6", id: mainService.baseUrl + "configurations/006"},
+            {name: "Configurazione 7", islands: {mps: true, sl: true, vg: true, ahbw: false}, description: "Configurazione di test numero 7", id: mainService.baseUrl + "configurations/007"}
+        ]
+        
+    }
+
+    this.getConfigurations = function() {
+        return this.configurationList;
     }
 });

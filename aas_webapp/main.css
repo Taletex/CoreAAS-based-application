@@ -65,7 +65,7 @@ li{
 
 .menu-item-body {
     overflow:auto; 
-    max-height: calc(100vh - 495px);
+    max-height: calc(100vh - 511px);
     /*
      -webkit-transition: all linear 0.5s;
      transition: all linear 0.5s;
@@ -111,4 +111,8 @@ li{
 
 .opacity50 {
     opacity: 0.5;
+}
+
+.configRow:hover {
+    background-color: aliceblue;
 }
