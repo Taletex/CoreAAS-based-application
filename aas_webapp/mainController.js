@@ -48,7 +48,7 @@ app.config(function($routeProvider, $locationProvider) {
         })
         .when("/configurations", {
             templateUrl: "/templates/configurationListTemplate.html",
-            controller: "configCtrl"
+            controller: "configListCtrl"
         })
         .when("/configurations/create", {
             templateUrl: "/templates/configurationCreateTemplate.html",
@@ -152,25 +152,36 @@ app.controller('rscCtrl', function($scope, $location, mainService, elementsServi
     $scope.init();
 });
 
-app.controller('configCtrl', function($scope, $location, mainService, elementsService) {
+app.controller('configCtrl', function($scope, $location, $window, mainService, elementsService, configurationService) {
     $scope.steps;
     $scope.STEP_ENUM;
     $scope.ISLAND_ENUM;
     $scope.stepsLength;
-    $scope.selectedIsland;
+    $scope.configurationList;
+    $scope.terminalSwitch;
+    $scope.configInformations;
 
     $scope.init = function() {
         $scope.steps = 0;
         $scope.STEP_ENUM = {INIT: 0, STEP1: 1, STEP2: 2, STEP3: 3};
         $scope.ISLAND_ENUM = {MPS: "multiProcessingStation", SL: "sortingLine", VG: "vacuumGripper", AHBW: "automatedHighBayWarehouse"};
         $scope.stepsLength = Object.values($scope.STEP_ENUM).length;
-        $scope.selectedIsland = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
-
+        $scope.configurationList = configurationService.getConfigurations();
+        $scope.terminalSwitch = [true, true, true, true];
+        $scope.configInformations = {name: "", islands: {}, description: "", mapping: {}, id: ""};
     }
 
     $scope.nextStep = function() {
         if($scope.steps+1 < $scope.stepsLength) 
             $scope.steps++;
+
+        if($scope.steps == $scope.STEP_ENUM.STEP1) {
+            $scope.configInformations.name = "Configuration #" + ($scope.configurationList.length+1);
+            $scope.configInformations.islands = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
+            $scope.configInformations.description = "Configuration #" + ($scope.configurationList.length+1);
+            $scope.configInformations.mapping = configurationService.getTerminalMappingList();
+            $scope.configInformations.id = mainService.baseUrl + "configurations/" + ($scope.configurationList.length+1).toString().padStart(3, '0');
+        }
     }
 
     $scope.previousStep = function() {
@@ -179,9 +190,20 @@ app.controller('configCtrl', function($scope, $location, mainService, elementsSe
     }
 
     $scope.selectIsland = function(selectedIsland) {
-        $scope.selectedIsland[selectedIsland] = !$scope.selectedIsland[selectedIsland];
+        $scope.configInformations.islands[selectedIsland] = !$scope.configInformations.islands[selectedIsland];
     }
     
+    $scope.switchAllTerminals = function(island, index) {
+        for(var i=0; i<$scope.configInformations.mapping[island].length; i++) {
+            $scope.configInformations.mapping[island][i].value = $scope.terminalSwitch[index];
+        }
+    }
+
+    $scope.submitConfig = function() {
+        configurationService.addConfiguration($scope.configInformations.name, $scope.configInformations.islands, $scope.configInformations.description, $scope.configInformations.mapping, $scope.configInformations.id);
+        $window.location.href =  mainService.baseUrl + "configurations";
+    }
+
     $scope.init();
 
     // Mapster initialization
@@ -190,10 +212,12 @@ app.controller('configCtrl', function($scope, $location, mainService, elementsSe
     $('#factoryImageMap').mapster(initial_opts).mapster('snapshot').mapster('rebind',basic_opts);
 });
 
-app.controller('configListCtrl', function($scope, mainService) {
+app.controller('configListCtrl', function($scope, mainService, configurationService) {
+
+    $scope.configurationList;
 
     $scope.init = function() {
-
+        $scope.configurationList = configurationService.getConfigurations();
     }
 
     $scope.delete = function() {
@@ -369,34 +393,76 @@ app.service("configurationService", function($location, mainService) {
    
     /* === VARIABLES === */
     this.configurationList = [];
+    this.terminalMappingList = {};
 
     /* === FUNCTIONS === */
-    /*
-    this.getCurrentConfiguration = function(){
-        var elementList = this.getCurrentElementList();
-        for(var i=0; i<elementList.length; i++) {
-            if(elementList[i].id === $location.absUrl())
-                return elementList[i];
-        }
-
-        console.error("Nessun elemento con id " + $location.absUrl() + " trovato dentro la sua lista");
-    };  
-    */
 
     this.init = function() {
-        this.configurationList = [
-            {name: "Configurazione 1", islands: {mps: true, sl: true, vg: true, ahbw: true}, description: "Configurazione di test numero 1", id: mainService.baseUrl + "configurations/001"},
-            {name: "Configurazione 2", islands: {mps: true, sl: true, vg: true, ahbw: false}, description: "Configurazione di test numero 2", id: mainService.baseUrl + "configurations/002"},
-            {name: "Configurazione 3", islands: {mps: true, sl: false, vg: true, ahbw: false}, description: "Configurazione di test numero 3", id: mainService.baseUrl + "configurations/003"},
-            {name: "Configurazione 4", islands: {mps: true, sl: false, vg: false, ahbw: false}, description: "Configurazione di test numero 4", id: mainService.baseUrl + "configurations/004"},
-            {name: "Configurazione 5", islands: {mps: true, sl: true, vg: true, ahbw: true}, description: "Configurazione di test numero 5", id: mainService.baseUrl + "configurations/005"},
-            {name: "Configurazione 6", islands: {mps: true, sl: false, vg: true, ahbw: true}, description: "Configurazione di test numero 6", id: mainService.baseUrl + "configurations/006"},
-            {name: "Configurazione 7", islands: {mps: true, sl: true, vg: true, ahbw: false}, description: "Configurazione di test numero 7", id: mainService.baseUrl + "configurations/007"}
-        ]
+        this.terminalMappingList = {multiProcessingStation: [], sortingLine: [], vacuumGripper: [], automatedHighBayWarehouse: []};
+        this.addTerminalsMapping("Terminal-Q0.0", "Terminal-MotorVacuumOven", "multiProcessingStation", true);
+        this.addTerminalsMapping("Terminal-Q0.1", "Terminal-MotorVacuumTurntable", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q0.2", "Terminal-MotorOvenRetract", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q0.3", "Terminal-MotorOvenExtend", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q0.4", "Terminal-LightOven", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q0.5", "Terminal-Compressor", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q0.6", "Terminal-MotorTurntable", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q0.7", "Terminal-MotorT2Turntable", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q1.0", "Terminal-MotorConveyorBelt", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q1.1", "Terminal-MotorSaw", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q1.2", "Terminal-ValveVacuum", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q1.3", "Terminal-ValveLowering", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q1.4", "Terminal-ValveOvenDoor", "multiProcessingStation", true); 
+        this.addTerminalsMapping("Terminal-Q1.5", "Terminal-ValveFeeder", "multiProcessingStation", true); 
+
+        this.addTerminalsMapping("Terminal-Q1.6", "Terminal-MotorVertAxisUp", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q1.7", "Terminal-MotorVertAxisDown", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q2.0", "Terminal-MotorHorAxisBackward", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q2.1", "Terminal-MotorHorAxisForward", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q2.2", "Terminal-MotorRotateCW", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q2.3", "Terminal-MotorRotateCCW", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q2.4", "Terminal-Compressor", "vacuumGripper", true); 
+        this.addTerminalsMapping("Terminal-Q2.5", "Terminal-Valve", "vacuumGripper", true); 
+
+        this.addTerminalsMapping("Terminal-Q2.6", "Terminal-MotorConveyorBelt", "sortingLine", true); 
+        this.addTerminalsMapping("Terminal-Q2.7", "Terminal-Compressor", "sortingLine", true); 
+        this.addTerminalsMapping("Terminal-Q3.0", "Terminal-ValveEjector1", "sortingLine", true); 
+        this.addTerminalsMapping("Terminal-Q3.1", "Terminal-ValveEjector2", "sortingLine", true); 
+        this.addTerminalsMapping("Terminal-Q3.2", "Terminal-ValveEjector3", "sortingLine", true);
         
+        this.addTerminalsMapping("Terminal-Q3.3", "Terminal-MotorConveyorBeltF", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q3.4", "Terminal-MotorConveyorBeltB", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q3.5", "Terminal-MotorHorizontalRack", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q3.6", "Terminal-MotorHorizontalConvBelt", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q3.7", "Terminal-MotorVerticalDown", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q4.0", "Terminal-MotorVerticalUp", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q4.1", "Terminal-MotorCantileverF", "automatedHighBayWarehouse", true); 
+        this.addTerminalsMapping("Terminal-Q4.2", "Terminal-MotorCantileverB", "automatedHighBayWarehouse", true); 
+
+        //TODO: prendere questi valori da un db
+        this.configurationList = [
+            {name: "Configuration #1", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/001"},
+            {name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/002"},
+            {name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 3", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/003"},
+            {name: "Configuration #4", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/004"},
+            {name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/005"},
+            {name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/006"},
+            {name: "Configuration #7", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 7", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/007"}
+        ];
     }
+
+    this.addConfiguration = function(name, islands, description, mapping, id) {
+        this.configurationList.push({name: name, islands: islands, description: description, id: id});
+    };
+
+    this.addTerminalsMapping = function(plcTerminalId, islandTerminalId, island, value) {
+        this.terminalMappingList[island].push({plcTerminalId: plcTerminalId, islandTerminalId: islandTerminalId, island: island, value: value});
+    };
 
     this.getConfigurations = function() {
         return this.configurationList;
+    }
+
+    this.getTerminalMappingList = function() {
+        return this.terminalMappingList;
     }
 });

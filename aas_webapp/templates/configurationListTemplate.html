@@ -1,22 +1,27 @@
 <table class="table" style="table-layout: fixed;">
     <thead>
-        <tr>
-            <th scope="col" class="text-left"></th>
-            <th scope="col" class="text-left">Name</th>
-            <th scope="col" class="text-left">Islands</th>
-            <th scope="col" class="text-left">Description</th>
-            <th scope="col" class="text-center">Actions</th>
+        <tr class="row m-0">
+            <th scope="col" class="col-1 text-left"></th>
+            <th scope="col" class="col-2 text-left">Name</th>
+            <th scope="col" class="col-3 text-left">Islands</th>
+            <th scope="col" class="col-3 text-left">Description</th>
+            <th scope="col" class="col-2 text-left">Identifier</th>
+            <th scope="col" class="col-1 text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="elem in configurationList | orderBy: elem.name track by $index" class="cursor-pointer configRow">
-            <th class="text-left" ng-click="redirectTo(elem)">{{$index + 1}}</th>
-            <td class="text-left" ng-click="redirectTo(elem)">{{elem.name}}</td>
-            <td class="text-left" ng-click="redirectTo(elem)">
-                <div ng-repeat="(key, value) in elem.islands track by $index">{{key}}: {{value}}</div>
+        <tr ng-repeat="elem in configurationList track by $index" class="cursor-pointer configRow row m-0">
+            <th class="col-1 text-left" ng-click="redirectTo(elem)">{{$index + 1}}</th>
+            <td class="col-2 text-left" ng-click="redirectTo(elem)">{{elem.name}}</td>
+            <td class="col-3 text-left" ng-click="redirectTo(elem)">
+                <span ng-class="{'fa fa-times-circle text-danger': !elem.islands.multiProcessingStation, 'fa fa-check-circle text-success': elem.islands.multiProcessingStation}"></span> Multi Processing Station <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !elem.islands.sortingLine, 'fa fa-check-circle text-success': elem.islands.sortingLine}"></span> Sorting Line <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !elem.islands.vacuumGripper, 'fa fa-check-circle text-success': elem.islands.vacuumGripper}"></span> Vacuum Gripper <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !elem.islands.automatedHighBayWarehouse, 'fa fa-check-circle text-success': elem.islands.automatedHighBayWarehouse}"></span> Automated High Bay Warehouse <br>
             </td>
-            <td class="text-left" ng-click="redirectTo(elem)">{{elem.description}}</td>
-            <td class="text-center">
+            <td class="col-3 text-left" ng-click="redirectTo(elem)">{{elem.description}}</td>
+            <td class="col-2 text-left" ng-click="redirectTo(elem)">{{elem.id}}</td>
+            <td class="col-1 text-center">
                 <div class="fa fa-link text-primary mr-2" ng-click="redirectTo(elem)" data-toggle="tooltip" data-placement="top" title="Modify configuration"></div>
                 <div class="fa fa-trash-alt text-danger mr-2" ng-click="delete(elem)" data-toggle="tooltip" data-placement="top" title="Delete configuration"></div>
                 <div class="fa fa-cogs" ng-click="upload(elem)" data-toggle="tooltip" data-placement="top" title="Upload configuration"></div>

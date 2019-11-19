@@ -116,3 +116,19 @@ li{
 .configRow:hover {
     background-color: aliceblue;
 }
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.overflow-scroll {
+    overflow: scroll;
+}
+
+.font-awesome-checkbox {
+    opacity: 0.9;
+}
+
+.font-awesome-checkbox:hover {
+    opacity: 1;
+}
