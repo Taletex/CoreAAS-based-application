@@ -179,7 +179,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, e
             $scope.configInformations.name = "Configuration #" + ($scope.configurationList.length+1);
             $scope.configInformations.islands = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
             $scope.configInformations.description = "Configuration #" + ($scope.configurationList.length+1);
-            $scope.configInformations.mapping = configurationService.getTerminalMappingList();
+            $scope.configInformations.mapping = angular.copy(configurationService.getTerminalMappingList());
             $scope.configInformations.id = mainService.baseUrl + "configurations/" + ($scope.configurationList.length+1).toString().padStart(3, '0');
         }
     }
@@ -200,6 +200,13 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, e
     }
 
     $scope.submitConfig = function() {
+        // Adjust terminals mapping final information for disabled island(s)
+        for (let key in $scope.configInformations.islands) {
+            if (!$scope.configInformations.islands[key]) {
+                for (let i=0; i<$scope.configInformations.mapping[key].length; i++)
+                $scope.configInformations.mapping[key][i].value = false;
+            }
+        }
         configurationService.addConfiguration($scope.configInformations.name, $scope.configInformations.islands, $scope.configInformations.description, $scope.configInformations.mapping, $scope.configInformations.id);
         $window.location.href =  mainService.baseUrl + "configurations";
     }
@@ -438,20 +445,21 @@ app.service("configurationService", function($location, mainService) {
         this.addTerminalsMapping("Terminal-Q4.1", "Terminal-MotorCantileverF", "automatedHighBayWarehouse", true); 
         this.addTerminalsMapping("Terminal-Q4.2", "Terminal-MotorCantileverB", "automatedHighBayWarehouse", true); 
 
-        //TODO: prendere questi valori da un db
+        //TODO: prendere questi valori da un DB
+        this.mappingSample = angular.copy(this.getTerminalMappingList());
         this.configurationList = [
-            {name: "Configuration #1", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/001"},
-            {name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/002"},
-            {name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 3", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/003"},
-            {name: "Configuration #4", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/004"},
-            {name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/005"},
-            {name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/006"},
-            {name: "Configuration #7", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 7", mapping: this.getTerminalMappingList(), id: mainService.baseUrl + "configurations/007"}
+            {name: "Configuration #1", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/001"},
+            {name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/002"},
+            {name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 3", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/003"},
+            {name: "Configuration #4", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/004"},
+            {name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/005"},
+            {name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/006"},
+            {name: "Configuration #7", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 7", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/007"}
         ];
     }
 
     this.addConfiguration = function(name, islands, description, mapping, id) {
-        this.configurationList.push({name: name, islands: islands, description: description, id: id});
+        this.configurationList.push({name: name, islands: islands, description: description, mapping: mapping, id: id});
     };
 
     this.addTerminalsMapping = function(plcTerminalId, islandTerminalId, island, value) {

@@ -8,14 +8,41 @@
     <tbody>
         <tr ng-repeat="(key, value) in currentElement track by $index" class="row m-0">
             <td class="text-left col-3">{{key}}</th>
-            <td class="text-left col-9" ng-if="key != 'additionalProperties' && key != 'id' && key != 'assetRef' && key != 'submodelsRef'">{{(value != undefined && value != "") ? value : "n.d."}}</td>
-            <td class="text-left col-9" ng-if="key == 'id' || key == 'assetRef'"><a href="{{value}}">{{(value != undefined && value != "") ? value : "n.d."}}</a></td>
-            <td class="text-left col-9" ng-if="key == 'additionalProperties'">
-                <div ng-repeat="innerValue in value track by $index">{{innerValue.name}} ({{innerValue.dataType}})</div>
+            <td class="text-left col-9" ng-if="key != 'mapping' && key != 'id' && key != 'islands'">{{(value != undefined && value != "") ? value : "n.d."}}</td>
+            <td class="text-left col-9" ng-if="key == 'islands'">
+                <span ng-class="{'fa fa-times-circle text-danger': !value.multiProcessingStation, 'fa fa-check-circle text-success': value.multiProcessingStation}"></span> Multi Processing Station <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !value.sortingLine, 'fa fa-check-circle text-success': value.sortingLine}"></span> Sorting Line <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !value.vacuumGripper, 'fa fa-check-circle text-success': value.vacuumGripper}"></span> Vacuum Gripper <br>
+                <span ng-class="{'fa fa-times-circle text-danger': !value.automatedHighBayWarehouse, 'fa fa-check-circle text-success': value.automatedHighBayWarehouse}"></span> Automated High Bay Warehouse <br>
             </td>
-            <td class="text-left col-9" ng-if="key == 'submodelsRef'">
-                <div ng-repeat="innerValue in value track by $index">{{innerValue}}</div>
-            </td>
+            <td class="text-left col-9" ng-if="key == 'id'"><a href="{{value}}">{{(value != undefined && value != "") ? value : "n.d."}}</a></td>
+            <td class="text-left col-9" ng-if="key == 'mapping'">
+                <div ng-repeat="(innerKey, innerValue) in value track by $index">
+                    <table class="table table-bordered mb-4" style="table-layout: fixed;">
+                        <caption class="text-capitalize" style="caption-side: top;">{{innerKey}}</caption>
+                        <thead ng-init="bShow=true" ng-click="bShow=!bShow" class="cursor-pointer">
+                            <tr class="row m-0" style="background-color:#cce7ff;">
+                                <th scope="col" class="col-5 text-left border-0">PLC Terminal Id</th>
+                                <th scope="col" class="col-5 text-left border-0">Island Terminal Id</th>
+                                <th scope="col" class="col-2 d-flex text-left border-0">Value
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="bShow">
+                            <tr ng-repeat="elem in innerValue track by $index" class="row m-0">
+                                <td class="col-5 text-left">{{elem.plcTerminalId}}</td>
+                                <td class="col-5 text-left">{{elem.islandTerminalId}}</td>
+                                <td class="col-2 text-left">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="terminal-checkbox-{{key}}{{$index}}" ng-model="elem.value" ng-disabled="true">
+                                        <label class="custom-control-label cursor-pointer" for="terminal-checkbox-{{key}}{{$index}}">{{elem.value ? "ON" : "OFF"}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>            
         </tr>
     </tbody>
 </table>
