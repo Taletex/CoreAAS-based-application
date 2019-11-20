@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ["ngRoute"]);
+var app = angular.module('myApp', ["ngRoute", 'ngSanitize', 'ui.bootstrap']);
 
 app.config(function($routeProvider, $locationProvider) {
     $routeProvider
@@ -52,7 +52,7 @@ app.config(function($routeProvider, $locationProvider) {
         })
         .when("/configurations/create", {
             templateUrl: "/templates/configurationCreateTemplate.html",
-            controller: "configCtrl"
+            controller: "configCreationCtrl"
         })
         .when("/configurations/:name", {
             templateUrl: "/templates/configurationTemplate.html",
@@ -108,7 +108,7 @@ app.controller('elementCtrl', function($scope, $routeParams, $location, mainServ
     $scope.init = function() {
         $scope.elements = elementsService.getElements();
         $scope.currentElement = elementsService.getCurrentElement();
-        $scope.currentSection = elementsService.getCurrentSection();
+        $scope.currentSection = mainService.getCurrentSection();
     }
 
     $scope.init();
@@ -122,7 +122,7 @@ app.controller('elementListCtrl', function($scope, $location, mainService, eleme
     $scope.init = function() {
         $scope.elements = elementsService.getElements();
         $scope.currentList = elementsService.getCurrentElementList();
-        $scope.currentSection = elementsService.getCurrentSection();
+        $scope.currentSection = mainService.getCurrentSection();
     }
 
     $scope.init();
@@ -152,7 +152,7 @@ app.controller('rscCtrl', function($scope, $location, mainService, elementsServi
     $scope.init();
 });
 
-app.controller('configCtrl', function($scope, $location, $window, mainService, elementsService, configurationService) {
+app.controller('configCreationCtrl', function($scope, $location, $window, mainService, elementsService, configurationService) {
     $scope.steps;
     $scope.STEP_ENUM;
     $scope.ISLAND_ENUM;
@@ -219,7 +219,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, e
     $('#factoryImageMap').mapster(initial_opts).mapster('snapshot').mapster('rebind',basic_opts);
 });
 
-app.controller('configListCtrl', function($scope, mainService, configurationService) {
+app.controller('configListCtrl', function($scope, mainService, configurationService, modalService) {
 
     $scope.configurationList;
 
@@ -227,26 +227,104 @@ app.controller('configListCtrl', function($scope, mainService, configurationServ
         $scope.configurationList = configurationService.getConfigurations();
     }
 
-    $scope.delete = function() {
+    $scope.edit = function(elem) {
+        configurationService.setEdit(true);
+        $scope.$parent.redirectTo(elem);
+    }
 
+    $scope.delete = function(elem) {
+        for(var i=0; i<$scope.configurationList.length; i++){ 
+            if ($scope.configurationList[i].id == elem.id) {
+                var index = i;
+                var deleteModal = modalService.getDeleteModal();
+                deleteModal.result.then(function() {
+                    $scope.splitElementFromList(index);
+                    return;
+                });
+            }
+        }
+    }
+
+    $scope.splitElementFromList = function(i) {
+        $scope.configurationList.splice(i, 1); 
     }
    
     $scope.upload = function() {
-
+        alert("Feature da implementare");
     }
-
-    $scope.visualize = function() {
-
-    }
-
-
 
     $scope.init();
 });
 
-app.service("mainService", function() {
+app.controller('configCtrl', function($scope, $location, $window, mainService, configurationService, modalService) {
+    $scope.configurationList;
+    $scope.currentConfig;
+    $scope.currentSection;
+    $scope.bEdit;
+    
+    $scope.init = function() {
+        $scope.configurationList = configurationService.getConfigurations();
+        $scope.currentConfig = angular.copy(configurationService.getCurrentConfig());
+        $scope.currentSection = mainService.getCurrentSection();
+        $scope.bEdit = configurationService.getEdit();
+        if($scope.bEdit) configurationService.setEdit(false);
+    }
+
+    $scope.edit = function() {
+        $scope.bEdit = true;
+    }
+
+    $scope.cancel = function() {
+        $scope.currentConfig = angular.copy(configurationService.getCurrentConfig());
+        $scope.bEdit = false;
+    }
+
+    $scope.save = function() {
+        for(var i=0; i<$scope.configurationList.length; i++) {
+            if($scope.configurationList[i].id == $scope.currentConfig.id) {
+                $scope.configurationList[i] = angular.copy($scope.currentConfig);
+                $scope.bEdit = false;
+                return;
+            }
+        }
+        console.error("ERRORE! Non è stato possibile effettuare il salvataggio della configurazione!");
+    }
+
+    $scope.delete = function() {
+        for(var i=0; i<$scope.configurationList.length; i++){ 
+            if ($scope.configurationList[i].id == $scope.currentConfig.id) {
+                var index = i;
+                var deleteModal = modalService.getDeleteModal();
+                deleteModal.result.then(function() {
+                    $scope.splitElementFromList(index);
+                    $scope.$parent.redirectTo({id: 'http://localhost:8080/#coreaas/configurations'});
+                    return;
+                });
+            }
+        }
+    }
+
+    $scope.splitElementFromList = function(i) {
+        $scope.configurationList.splice(i, 1); 
+    }
+   
+    $scope.upload = function() {
+        alert("Feature da implementare");
+    }
+
+    $scope.init();
+});
+
+
+
+app.service("mainService", function($location) {
     this.baseUrl = "http://localhost:8080/#coreaas/";
     this.sections = {index: "Home", configurations: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
+
+    
+    this.getCurrentSection = function() {
+        return $location.absUrl().split("/")[4]
+    }
 });
 
 app.service("elementsService", function($location, mainService) {
@@ -290,9 +368,8 @@ app.service("elementsService", function($location, mainService) {
                 return elementList[i];
         }
 
-        console.error("Nessun elemento con id " + $location.absUrl() + " trovato dentro la sua lista");
+        console.error("ERRORE! Nessun elemento con id " + $location.absUrl() + " trovato dentro la sua lista!");
     };
-
 
     this.init = function() {
         this.elements = {descriptions: [], submodels: [], assets: [], aas: [], dataspecs: []};
@@ -401,6 +478,7 @@ app.service("configurationService", function($location, mainService) {
     /* === VARIABLES === */
     this.configurationList = [];
     this.terminalMappingList = {};
+    this.bedit = false;
 
     /* === FUNCTIONS === */
 
@@ -446,15 +524,14 @@ app.service("configurationService", function($location, mainService) {
         this.addTerminalsMapping("Terminal-Q4.2", "Terminal-MotorCantileverB", "automatedHighBayWarehouse", true); 
 
         //TODO: prendere questi valori da un DB
-        this.mappingSample = angular.copy(this.getTerminalMappingList());
         this.configurationList = [
-            {name: "Configuration #1", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/001"},
-            {name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/002"},
-            {name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 3", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/003"},
-            {name: "Configuration #4", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/004"},
-            {name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: false, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/005"},
-            {name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: false, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/006"},
-            {name: "Configuration #7", islands: {multiProcessingStation: false, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: false}, description: "Configurazione di test numero 7", mapping: this.mappingSample, id: mainService.baseUrl + "configurations/007"}
+            {name: "Configuration #1", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/001"},
+            {name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/002"},
+            {name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 3", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/003"},
+            {name: "Configuration #4", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/004"},
+            {name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/005"},
+            {name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/006"},
+            {name: "Configuration #7", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 7", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/007"}
         ];
     }
 
@@ -473,4 +550,42 @@ app.service("configurationService", function($location, mainService) {
     this.getTerminalMappingList = function() {
         return this.terminalMappingList;
     }
+
+    this.getCurrentConfig = function(){
+        for(var i=0; i<this.configurationList.length; i++) {
+            if(this.configurationList[i].id === $location.absUrl())
+                return this.configurationList[i];
+        }
+
+        console.error("Nessuna configurazione con id " + $location.absUrl() + " trovata dentro la sua lista");
+    };
+
+    this.setEdit = function(bEdit) {
+        this.bEdit = bEdit;
+    }
+
+    this.getEdit = function() {
+        return this.bEdit;
+    }
+});
+
+app.service("modalService", function($uibModal, mainService) {
+    this.getDeleteModal = function () {
+        return $uibModal.open({
+            animation: true,
+            ariaLabelledBy: 'modal-title',
+            ariaDescribedBy: 'modal-body',
+            templateUrl: 'modals/deleteModal.html',
+            controllerAs: 'ctrl',
+            size: 'sm',
+            controller: function($scope, $uibModalInstance){
+                $scope.cancel = function(){
+                    $uibModalInstance.dismiss();
+                };
+                $scope.ok = function(){
+                    $uibModalInstance.close();
+                }
+            }
+        });
+    };
 });

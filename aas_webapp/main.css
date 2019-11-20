@@ -132,3 +132,21 @@ li{
 .font-awesome-checkbox:hover {
     opacity: 1;
 }
+
+.config-menu-buttons {
+    position:absolute;
+    right:15px;
+    top:3px;
+}
+
+.config-menu-buttons-save {
+    border-radius: .25rem 0rem 0rem .25rem;
+}
+
+.config-menu-buttons-cancel {
+    border-radius: 0rem .25rem .25rem 0rem;
+}
+
+.modal {
+    display: block;
+}
