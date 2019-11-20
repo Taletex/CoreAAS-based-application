@@ -164,10 +164,10 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
     $scope.init = function() {
         $scope.steps = 0;
         $scope.STEP_ENUM = {INIT: 0, STEP1: 1, STEP2: 2, STEP3: 3};
-        $scope.ISLAND_ENUM = {MPS: "multiProcessingStation", SL: "sortingLine", VG: "vacuumGripper", AHBW: "automatedHighBayWarehouse"};
+        $scope.ISLAND_ENUM = configurationService.ISLAND_ENUM;
         $scope.stepsLength = Object.values($scope.STEP_ENUM).length;
         $scope.configurationList = configurationService.getConfigurations();
-        $scope.terminalSwitch = [true, true, true, true];
+        $scope.terminalSwitch = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
         $scope.configInformations = {name: "", islands: {}, description: "", mapping: {}, id: ""};
     }
 
@@ -193,20 +193,55 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
         $scope.configInformations.islands[selectedIsland] = !$scope.configInformations.islands[selectedIsland];
     }
     
-    $scope.switchAllTerminals = function(island, index) {
+    $scope.switchAllTerminals = function(island) {
         for(var i=0; i<$scope.configInformations.mapping[island].length; i++) {
-            $scope.configInformations.mapping[island][i].value = $scope.terminalSwitch[index];
+            $scope.configInformations.mapping[island][i].value = $scope.terminalSwitch[island];
         }
+    }
+
+    $scope.checkActiveTerminals = function(island) {
+        // Adjust islands final informations according to disabled terminals
+        for(let i=0; i<$scope.configInformations.mapping[island].length; i++) {
+            if($scope.configInformations.mapping[island][i].value) {
+                $scope.terminalSwitch[island] = true;
+                return;
+            }
+        }
+        $scope.terminalSwitch[island] = false;
+    }
+
+    $scope.areActiveIsland = function() {
+        for(let island in $scope.configInformations.islands) {
+            if($scope.configInformations.islands[island]) {
+                for(var i=0; i<$scope.configInformations.mapping[island].length; i++) {
+                    if($scope.configInformations.mapping[island][i].value) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     $scope.submitConfig = function() {
         // Adjust terminals mapping final information for disabled island(s)
         for (let key in $scope.configInformations.islands) {
             if (!$scope.configInformations.islands[key]) {
-                for (let i=0; i<$scope.configInformations.mapping[key].length; i++)
+                for (var i=0; i<$scope.configInformations.mapping[key].length; i++)
                 $scope.configInformations.mapping[key][i].value = false;
             }
         }
+        // Adjust islands final informations according to disabled terminals
+        for(let island in $scope.configInformations.mapping) {
+            $scope.configInformations.islands[island] = false;
+            for(let i=0; i<$scope.configInformations.mapping[island].length; i++) {
+                if($scope.configInformations.mapping[island][i].value) {
+                    $scope.configInformations.islands[island] = true;
+                    break;
+                }
+            }
+        }
+
         configurationService.addConfiguration($scope.configInformations.name, $scope.configInformations.islands, $scope.configInformations.description, $scope.configInformations.mapping, $scope.configInformations.id);
         $window.location.href =  mainService.baseUrl + "configurations";
     }
@@ -238,17 +273,13 @@ app.controller('configListCtrl', function($scope, mainService, configurationServ
                 var index = i;
                 var deleteModal = modalService.getDeleteModal();
                 deleteModal.result.then(function() {
-                    $scope.splitElementFromList(index);
+                    $scope.configurationList.splice(index, 1); 
                     return;
-                });
+                },function(){ /*cancel*/ });
             }
         }
     }
 
-    $scope.splitElementFromList = function(i) {
-        $scope.configurationList.splice(i, 1); 
-    }
-   
     $scope.upload = function() {
         alert("Feature da implementare");
     }
@@ -261,8 +292,10 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
     $scope.currentConfig;
     $scope.currentSection;
     $scope.bEdit;
+    $scope.ISLAND_ENUM;
     
     $scope.init = function() {
+        $scope.ISLAND_ENUM = configurationService.ISLAND_ENUM;
         $scope.configurationList = configurationService.getConfigurations();
         $scope.currentConfig = angular.copy(configurationService.getCurrentConfig());
         $scope.currentSection = mainService.getCurrentSection();
@@ -296,7 +329,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
                 var index = i;
                 var deleteModal = modalService.getDeleteModal();
                 deleteModal.result.then(function() {
-                    $scope.splitElementFromList(index);
+                    $scope.configurationList.splice(index, 1); 
                     $scope.$parent.redirectTo({id: 'http://localhost:8080/#coreaas/configurations'});
                     return;
                 });
@@ -304,12 +337,30 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
         }
     }
 
-    $scope.splitElementFromList = function(i) {
-        $scope.configurationList.splice(i, 1); 
-    }
-   
     $scope.upload = function() {
         alert("Feature da implementare");
+    }
+
+    $scope.switchAllTerminals = function(island, btnType) {
+        if($scope.bEdit) {
+            if(btnType == undefined || btnType == null)
+            $scope.currentConfig.islands[island] = !$scope.currentConfig.islands[island];
+
+            for(var i=0; i<$scope.currentConfig.mapping[island].length; i++) {
+                $scope.currentConfig.mapping[island][i].value = $scope.currentConfig.islands[island];
+            }
+        }
+    }
+
+    $scope.checkActiveTerminals = function(island) {
+        // Adjust islands final informations according to disabled terminals
+        for(let i=0; i<$scope.currentConfig.mapping[island].length; i++) {
+            if($scope.currentConfig.mapping[island][i].value) {
+                $scope.currentConfig.islands[island] = true;
+                return;
+            }
+        }
+        $scope.currentConfig.islands[island] = false;
     }
 
     $scope.init();
@@ -479,10 +530,12 @@ app.service("configurationService", function($location, mainService) {
     this.configurationList = [];
     this.terminalMappingList = {};
     this.bedit = false;
-
+    this.ISLAND_ENUM;
     /* === FUNCTIONS === */
 
     this.init = function() {
+        this.ISLAND_ENUM = {MPS: "multiProcessingStation", SL: "sortingLine", VG: "vacuumGripper", AHBW: "automatedHighBayWarehouse"};
+
         this.terminalMappingList = {multiProcessingStation: [], sortingLine: [], vacuumGripper: [], automatedHighBayWarehouse: []};
         this.addTerminalsMapping("Terminal-Q0.0", "Terminal-MotorVacuumOven", "multiProcessingStation", true);
         this.addTerminalsMapping("Terminal-Q0.1", "Terminal-MotorVacuumTurntable", "multiProcessingStation", true); 
@@ -574,6 +627,7 @@ app.service("configurationService", function($location, mainService) {
 });
 
 app.service("modalService", function($uibModal, mainService) {
+
     this.getDeleteModal = function () {
         return $uibModal.open({
             animation: true,
@@ -592,4 +646,5 @@ app.service("modalService", function($uibModal, mainService) {
             }
         });
     };
+
 });

@@ -55,7 +55,7 @@
                             <th scope="col" class="col-5 text-left border-0">Island Terminal</th>
                             <th scope="col" class="col-2 d-flex text-left border-0">Value
                                 <div class="custom-control custom-checkbox ml-2">
-                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-all-{{$index}}" ng-click="switchAllTerminals(key, $index)" ng-model="terminalSwitch[$index]">
+                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-all-{{$index}}" ng-click="switchAllTerminals(key, $index)" ng-model="terminalSwitch[key]">
                                     <label class="custom-control-label cursor-pointer" for="terminal-checkbox-all-{{$index}}" data-toggle="tooltip" data-placement="top" title="Switch all terminals"></label>
                                 </div>
                             </th>
@@ -67,7 +67,7 @@
                             <td class="col-5 text-left">{{elem.islandTerminalId}}</td>
                             <td class="col-2 text-left">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-{{key}}{{$index}}" ng-model="elem.value">
+                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-{{key}}{{$index}}" ng-model="elem.value" ng-change="checkActiveTerminals(key)">
                                     <label class="custom-control-label cursor-pointer" for="terminal-checkbox-{{key}}{{$index}}">{{elem.value ? "ON" : "OFF"}}</label>
                                 </div>
                             </td>
@@ -111,7 +111,8 @@
         <button class="btn btn-info" ng-show="steps == STEP_ENUM.INIT" ng-click="nextStep()">Start</button>
         <button class="btn btn-secondary" ng-show="steps != STEP_ENUM.INIT" ng-disabled="steps == STEP_ENUM.STEP1" ng-click="previousStep()">Back</button>
         <button class="btn btn-primary" ng-show="steps != STEP_ENUM.INIT && steps != STEP_ENUM.STEP3" 
-            ng-disabled="(!configInformations.islands.multiProcessingStation && !configInformations.islands.sortingLine && !configInformations.islands.vacuumGripper && !configInformations.islands.automatedHighBayWarehouse)" 
+            ng-disabled="(!configInformations.islands.multiProcessingStation && !configInformations.islands.sortingLine && !configInformations.islands.vacuumGripper && !configInformations.islands.automatedHighBayWarehouse) 
+                          || (steps == STEP_ENUM.STEP2 && !areActiveIsland())" 
             ng-click="nextStep()">Next</button>
         <button class="btn btn-primary" ng-show="steps == STEP_ENUM.STEP3" ng-click="submitConfig()">Submit</button>
     </div>

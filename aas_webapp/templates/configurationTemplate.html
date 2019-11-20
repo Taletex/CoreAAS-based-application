@@ -14,10 +14,10 @@
     <div class="form-group row m-0 mb-2 text-left">
         <label class="col-2">Active islands:</label>
         <div class="col-10 pl-0"> 
-            <span ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.multiProcessingStation, 'fa fa-check-circle text-success': currentConfig.islands.multiProcessingStation}"></span> Multi Processing Station <br>
-            <span ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.sortingLine, 'fa fa-check-circle text-success': currentConfig.islands.sortingLine}"></span> Sorting Line <br>
-            <span ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.vacuumGripper, 'fa fa-check-circle text-success': currentConfig.islands.vacuumGripper}"></span> Vacuum Gripper <br>
-            <span ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.automatedHighBayWarehouse, 'fa fa-check-circle text-success': currentConfig.islands.automatedHighBayWarehouse}"></span> Automated High Bay Warehouse <br>
+            <span class="font-awesome-checkbox cursor-pointer" ng-click="switchAllTerminals(ISLAND_ENUM.MPS)" ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.multiProcessingStation, 'fa fa-check-circle text-success': currentConfig.islands.multiProcessingStation}"></span> Multi Processing Station <br>
+            <span class="font-awesome-checkbox cursor-pointer" ng-click="switchAllTerminals(ISLAND_ENUM.SL)" ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.sortingLine, 'fa fa-check-circle text-success': currentConfig.islands.sortingLine}"></span> Sorting Line <br>
+            <span class="font-awesome-checkbox cursor-pointer" ng-click="switchAllTerminals(ISLAND_ENUM.VG)" ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.vacuumGripper, 'fa fa-check-circle text-success': currentConfig.islands.vacuumGripper}"></span> Vacuum Gripper <br>
+            <span class="font-awesome-checkbox cursor-pointer" ng-click="switchAllTerminals(ISLAND_ENUM.AHBW)" ng-class="{'fa fa-times-circle text-danger': !currentConfig.islands.automatedHighBayWarehouse, 'fa fa-check-circle text-success': currentConfig.islands.automatedHighBayWarehouse}"></span> Automated High Bay Warehouse <br>
         </div>
     </div>
     <div class="form-group row m-0 mb-2 text-left">
@@ -31,6 +31,10 @@
                             <th scope="col" class="col-5 text-left border-0">PLC Terminal Id</th>
                             <th scope="col" class="col-5 text-left border-0">Island Terminal Id</th>
                             <th scope="col" class="col-2 d-flex text-left border-0">Value
+                                <div class="custom-control custom-checkbox ml-2">
+                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-all-{{$index}}" ng-click="switchAllTerminals(key, 'checkbox')" ng-model="currentConfig.islands[key]" ng-disabled="!bEdit">
+                                    <label class="custom-control-label cursor-pointer" for="terminal-checkbox-all-{{$index}}" data-toggle="tooltip" data-placement="top" title="Switch all terminals"></label>
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -40,7 +44,7 @@
                             <td class="col-5 text-left">{{elem.islandTerminalId}}</td>
                             <td class="col-2 text-left">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-{{key}}{{$index}}" ng-model="elem.value" ng-disabled="!bEdit">
+                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-{{key}}{{$index}}" ng-model="elem.value" ng-change="checkActiveTerminals(key)" ng-disabled="!bEdit">
                                     <label class="custom-control-label cursor-pointer" for="terminal-checkbox-{{key}}{{$index}}">{{elem.value ? "ON" : "OFF"}}</label>
                                 </div>
                             </td>
