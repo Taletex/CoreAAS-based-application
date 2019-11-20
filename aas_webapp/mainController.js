@@ -176,11 +176,11 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
             $scope.steps++;
 
         if($scope.steps == $scope.STEP_ENUM.STEP1) {
-            $scope.configInformations.name = "Configuration #" + ($scope.configurationList.length+1);
+            $scope.configInformations.name = "Configuration #" + configurationService.getNextConfigId();
             $scope.configInformations.islands = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
-            $scope.configInformations.description = "Configuration #" + ($scope.configurationList.length+1);
+            $scope.configInformations.description = "Configuration #" + configurationService.getNextConfigId();
             $scope.configInformations.mapping = angular.copy(configurationService.getTerminalMappingList());
-            $scope.configInformations.id = mainService.baseUrl + "configurations/" + ($scope.configurationList.length+1).toString().padStart(3, '0');
+            $scope.configInformations.id = mainService.baseUrl + "configurations/" + configurationService.getNextConfigId().toString().padStart(3, '0');
         }
     }
 
@@ -549,6 +549,10 @@ app.service("configurationService", function($location, mainService) {
 
     this.getTerminalMappingList = function() {
         return this.terminalMappingList;
+    }
+
+    this.getNextConfigId = function() {
+        return (Math.max(...this.configurationList.map(o => o.id.split("/")[5]), 0))+1;        
     }
 
     this.getCurrentConfig = function(){
