@@ -66,7 +66,7 @@ app.config(function($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('coreaas'); 
 });
 
-app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService) {
+app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService, restService) {
     $scope.currentSection;
     $scope.elements;
     $scope.configurationList;
@@ -77,7 +77,9 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
         configurationService.init();
         $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false, bShow5: false, bShow6: false};
         $scope.elements = elementsService.getElements();
-        $scope.configurationList = configurationService.getConfigurations();
+        restService.getConfigurations().then(function successCallback(response) {
+                $scope.configurationList = response.data;
+            }, function errorCallback(response) {});
         $scope.currentSection = mainService.sections[$location.absUrl().split("/")[4]];
 
         $(function () {
@@ -85,10 +87,14 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
         })
     }
     
+    $scope.windowsHRef = function(elem) {
+        $window.location.href = elem.id;
+    }
+
     $scope.redirectTo = function(elem) {
         $scope.currentSection = mainService.sections[elem.id.split("/")[4]];
         $scope.currentElement = elem;
-        $window.location.href = elem.id;
+        $scope.windowsHRef(elem);
     }
 
     $scope.setShow = function(bShowToSet){
@@ -152,12 +158,11 @@ app.controller('rscCtrl', function($scope, $location, mainService, elementsServi
     $scope.init();
 });
 
-app.controller('configCreationCtrl', function($scope, $location, $window, mainService, elementsService, configurationService) {
+app.controller('configCreationCtrl', function($scope, $location, $window, mainService, elementsService, configurationService, restService) {
     $scope.steps;
     $scope.STEP_ENUM;
     $scope.ISLAND_ENUM;
     $scope.stepsLength;
-    $scope.configurationList;
     $scope.terminalSwitch;
     $scope.configInformations;
 
@@ -166,7 +171,9 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
         $scope.STEP_ENUM = {INIT: 0, STEP1: 1, STEP2: 2, STEP3: 3};
         $scope.ISLAND_ENUM = configurationService.ISLAND_ENUM;
         $scope.stepsLength = Object.values($scope.STEP_ENUM).length;
-        $scope.configurationList = configurationService.getConfigurations();
+        restService.getConfigurations().then(function successCallback(response) {
+            $scope.$parent.configurationList = response.data;
+        }, function errorCallback(response) {});
         $scope.terminalSwitch = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
         $scope.configInformations = {name: "", islands: {}, description: "", mapping: {}, id: ""};
     }
@@ -176,11 +183,11 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
             $scope.steps++;
 
         if($scope.steps == $scope.STEP_ENUM.STEP1) {
-            $scope.configInformations.name = "Configuration #" + configurationService.getNextConfigId();
+            $scope.configInformations.name = "Configuration #" + configurationService.getNextConfigId($scope.$parent.configurationList);
             $scope.configInformations.islands = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
-            $scope.configInformations.description = "Configuration #" + configurationService.getNextConfigId();
+            $scope.configInformations.description = "Configuration #" + configurationService.getNextConfigId($scope.$parent.configurationList);
             $scope.configInformations.mapping = angular.copy(configurationService.getTerminalMappingList());
-            $scope.configInformations.id = mainService.baseUrl + "configurations/" + configurationService.getNextConfigId().toString().padStart(3, '0');
+            $scope.configInformations.id = mainService.baseUrl + "configurations/" + configurationService.getNextConfigId($scope.$parent.configurationList).toString().padStart(3, '0');
         }
     }
 
@@ -242,8 +249,10 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
             }
         }
 
-        configurationService.addConfiguration($scope.configInformations.name, $scope.configInformations.islands, $scope.configInformations.description, $scope.configInformations.mapping, $scope.configInformations.id);
-        $window.location.href =  mainService.baseUrl + "configurations";
+        restService.createConfiguration({name: $scope.configInformations.name, islands: $scope.configInformations.islands, description: $scope.configInformations.description, mapping: $scope.configInformations.mapping, id: $scope.configInformations.id}).then(function successCallback(response) {
+            $window.location.href =  mainService.baseUrl + "configurations";
+        }, function errorCallback(response) {});
+        
     }
 
     $scope.init();
@@ -254,30 +263,28 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
     $('#factoryImageMap').mapster(initial_opts).mapster('snapshot').mapster('rebind',basic_opts);
 });
 
-app.controller('configListCtrl', function($scope, mainService, configurationService, modalService) {
-
-    $scope.configurationList;
+app.controller('configListCtrl', function($scope, $window, mainService, configurationService, modalService, restService) {
 
     $scope.init = function() {
-        $scope.configurationList = configurationService.getConfigurations();
+        restService.getConfigurations().then(function successCallback(response) {
+            $scope.$parent.configurationList = response.data;
+        }, function errorCallback(response) {});
     }
 
     $scope.edit = function(elem) {
         configurationService.setEdit(true);
-        $scope.$parent.redirectTo(elem);
+        $window.location.href = elem.id;
     }
 
     $scope.delete = function(elem) {
-        for(var i=0; i<$scope.configurationList.length; i++){ 
-            if ($scope.configurationList[i].id == elem.id) {
-                var index = i;
-                var deleteModal = modalService.getDeleteModal();
-                deleteModal.result.then(function() {
-                    $scope.configurationList.splice(index, 1); 
-                    return;
-                },function(){ /*cancel*/ });
-            }
-        }
+        var deleteModal = modalService.getDeleteModal();
+        deleteModal.result.then(function() {
+            restService.deleteConfiguration(elem.id.split("/")[5]).then(function successCallback(response) {
+                restService.getConfigurations().then(function successCallback(response) {
+                    $scope.$parent.configurationList = response.data;
+                }, function errorCallback(response) {});
+            }, function errorCallback(response) {});
+        },function(){ /*cancel*/ });
     }
 
     $scope.upload = function() {
@@ -287,8 +294,7 @@ app.controller('configListCtrl', function($scope, mainService, configurationServ
     $scope.init();
 });
 
-app.controller('configCtrl', function($scope, $location, $window, mainService, configurationService, modalService) {
-    $scope.configurationList;
+app.controller('configCtrl', function($scope, $location, $window, mainService, configurationService, modalService, restService) {
     $scope.currentConfig;
     $scope.currentSection;
     $scope.bEdit;
@@ -296,8 +302,15 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
     
     $scope.init = function() {
         $scope.ISLAND_ENUM = configurationService.ISLAND_ENUM;
-        $scope.configurationList = configurationService.getConfigurations();
-        $scope.currentConfig = angular.copy(configurationService.getCurrentConfig());
+
+        restService.getConfigurations().then(function successCallback(response) {
+            $scope.$parent.configurationList = response.data;
+        }, function errorCallback(response) {});
+
+        restService.getConfiguration($location.absUrl().split("/")[5]).then(function successCallback(response) {
+            $scope.currentConfig = response.data[0];
+        }, function errorCallback(response) {});
+
         $scope.currentSection = mainService.getCurrentSection();
         $scope.bEdit = configurationService.getEdit();
         if($scope.bEdit) configurationService.setEdit(false);
@@ -308,33 +321,32 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
     }
 
     $scope.cancel = function() {
-        $scope.currentConfig = angular.copy(configurationService.getCurrentConfig());
+        restService.getConfiguration($location.absUrl().split("/")[5]).then(function successCallback(response) {
+            $scope.currentConfig = response.data[0];
+        }, function errorCallback(response) {});
+
         $scope.bEdit = false;
     }
 
     $scope.save = function() {
-        for(var i=0; i<$scope.configurationList.length; i++) {
-            if($scope.configurationList[i].id == $scope.currentConfig.id) {
-                $scope.configurationList[i] = angular.copy($scope.currentConfig);
+        restService.updateConfiguration(($scope.currentConfig.id).split("/")[5], $scope.currentConfig).then(function successCallback(response) {
+            restService.getConfigurations().then(function successCallback(response) {
+                $scope.$parent.configurationList = response.data;
                 $scope.bEdit = false;
-                return;
-            }
-        }
-        console.error("ERRORE! Non è stato possibile effettuare il salvataggio della configurazione!");
+            }, function errorCallback(response) {
+                $scope.bEdit = false;
+            });
+        }, function errorCallback(response) {});
     }
 
     $scope.delete = function() {
-        for(var i=0; i<$scope.configurationList.length; i++){ 
-            if ($scope.configurationList[i].id == $scope.currentConfig.id) {
-                var index = i;
-                var deleteModal = modalService.getDeleteModal();
-                deleteModal.result.then(function() {
-                    $scope.configurationList.splice(index, 1); 
-                    $scope.$parent.redirectTo({id: 'http://localhost:8080/#coreaas/configurations'});
-                    return;
-                });
-            }
-        }
+        var deleteModal = modalService.getDeleteModal();
+        deleteModal.result.then(function() {
+            restService.deleteConfiguration(($scope.currentConfig.id).split("/")[5]).then(function successCallback(response) {
+                    $scope.bEdit = false;
+                    $window.location.href = mainService.baseUrl + "configurations";
+            }, function errorCallback(response) {});
+        },function(){ /*cancel*/ });
     }
 
     $scope.upload = function() {
@@ -370,6 +382,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
 
 app.service("mainService", function($location) {
     this.baseUrl = "http://localhost:8080/#coreaas/";
+    this.databaseUrl = "http://localhost:3000";
     this.sections = {index: "Home", configurations: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
 
     
@@ -524,15 +537,15 @@ app.service("elementsService", function($location, mainService) {
 });
 
 // TODO: AGGIUNGERE DB IN CUI SALVARE LE CONFIGURAZIONI
-app.service("configurationService", function($location, mainService) {
+app.service("configurationService", function($location, mainService, restService) {
    
     /* === VARIABLES === */
     this.configurationList = [];
     this.terminalMappingList = {};
     this.bedit = false;
     this.ISLAND_ENUM;
-    /* === FUNCTIONS === */
 
+    /* === FUNCTIONS === */
     this.init = function() {
         this.ISLAND_ENUM = {MPS: "multiProcessingStation", SL: "sortingLine", VG: "vacuumGripper", AHBW: "automatedHighBayWarehouse"};
 
@@ -576,46 +589,28 @@ app.service("configurationService", function($location, mainService) {
         this.addTerminalsMapping("Terminal-Q4.1", "Terminal-MotorCantileverF", "automatedHighBayWarehouse", true); 
         this.addTerminalsMapping("Terminal-Q4.2", "Terminal-MotorCantileverB", "automatedHighBayWarehouse", true); 
 
-        //TODO: prendere questi valori da un DB
-        this.configurationList = [
-            {name: "Configuration #1", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/001"},
-            {name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/002"},
-            {name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 3", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/003"},
-            {name: "Configuration #4", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/004"},
-            {name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/005"},
-            {name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/006"},
-            {name: "Configuration #7", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 7", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/007"}
-        ];
+        /* Creazione configurazioni - one shot 
+        restService.createConfiguration({name: "Configuration #1", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 1", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/001"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        restService.createConfiguration({name: "Configuration #2", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 2", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/002"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        restService.createConfiguration({name: "Configuration #3", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 3", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/003"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        restService.createConfiguration({name: "Configuration #4", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 4", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/004"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        restService.createConfiguration({name: "Configuration #5", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 5", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/005"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        restService.createConfiguration({name: "Configuration #6", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 6", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/006"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        restService.createConfiguration({name: "Configuration #7", islands: {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true}, description: "Configurazione di test numero 7", mapping: angular.copy(this.getTerminalMappingList()), id: mainService.baseUrl + "configurations/007"}).then(function successCallback(response) {}, function errorCallback(response) {});
+        */
     }
 
-    this.addConfiguration = function(name, islands, description, mapping, id) {
-        this.configurationList.push({name: name, islands: islands, description: description, mapping: mapping, id: id});
-    };
+    this.getNextConfigId = function(configurations) {
+        return (Math.max(...configurations.map(o => o.id.split("/")[5]), 0))+1;        
+    }
 
     this.addTerminalsMapping = function(plcTerminalId, islandTerminalId, island, value) {
         this.terminalMappingList[island].push({plcTerminalId: plcTerminalId, islandTerminalId: islandTerminalId, island: island, value: value});
     };
 
-    this.getConfigurations = function() {
-        return this.configurationList;
-    }
-
     this.getTerminalMappingList = function() {
         return this.terminalMappingList;
     }
-
-    this.getNextConfigId = function() {
-        return (Math.max(...this.configurationList.map(o => o.id.split("/")[5]), 0))+1;        
-    }
-
-    this.getCurrentConfig = function(){
-        for(var i=0; i<this.configurationList.length; i++) {
-            if(this.configurationList[i].id === $location.absUrl())
-                return this.configurationList[i];
-        }
-
-        console.error("Nessuna configurazione con id " + $location.absUrl() + " trovata dentro la sua lista");
-    };
 
     this.setEdit = function(bEdit) {
         this.bEdit = bEdit;
@@ -648,3 +643,32 @@ app.service("modalService", function($uibModal, mainService) {
     };
 
 });
+
+app.service("restService", function($http, mainService) {
+    
+    // Create a new Configuration
+    this.createConfiguration = function(configuration) {
+        return $http.post(mainService.databaseUrl + "/configurations", configuration);
+    }
+
+    // Retrieve all Configuration
+    this.getConfigurations = function(){
+        return $http.get(mainService.databaseUrl + "/configurations");
+    }
+    
+    // Retrieve a single Configuration with id
+    this.getConfiguration = function(id){
+        return $http.get(mainService.databaseUrl + "/configurations/" + id);
+    }
+
+    // Update a Configuration with id
+    this.updateConfiguration = function(id, configuration){
+        return $http.put(mainService.databaseUrl + "/configurations/" + id, configuration);
+    }
+
+    // Delete a Configuration with id
+    this.deleteConfiguration = function(id){
+        return $http.delete(mainService.databaseUrl + "/configurations/" + id);
+    }
+});
+
