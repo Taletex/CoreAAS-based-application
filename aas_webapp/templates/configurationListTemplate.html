@@ -1,4 +1,4 @@
-<table class="table" style="table-layout: fixed;" ng-show="configurationList.length > 0">
+<table class="table" style="table-layout: fixed;" ng-show="configurationList.length > 0 && !bLoading">
     <thead>
         <tr class="row m-0">
             <th scope="col" class="col-1 text-left"></th>
@@ -31,4 +31,16 @@
     </tbody>
 </table>
 
-<div ng-show="configurationList.length == 0" class="list-group-item">Nessuna configurazione presente!</div>
+<div class="list-group-item" ng-show="configurationList.length == 0 && !bLoading">Nessuna configurazione presente!</div>
+
+<div class='h-100 w-100' ng-show="bLoading">
+    <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100"></div>
+    <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+    </div>
+</div>

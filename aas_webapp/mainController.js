@@ -165,15 +165,18 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
     $scope.stepsLength;
     $scope.terminalSwitch;
     $scope.configInformations;
+    $scope.bLoading = false;
 
     $scope.init = function() {
         $scope.steps = 0;
         $scope.STEP_ENUM = {INIT: 0, STEP1: 1, STEP2: 2, STEP3: 3};
         $scope.ISLAND_ENUM = configurationService.ISLAND_ENUM;
         $scope.stepsLength = Object.values($scope.STEP_ENUM).length;
+        $scope.bLoading = true;
         restService.getConfigurations().then(function successCallback(response) {
             $scope.$parent.configurationList = response.data;
-        }, function errorCallback(response) {});
+            $scope.bLoading = false;
+        }, function errorCallback(response) { $scope.bLoading = false; });
         $scope.terminalSwitch = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
         $scope.configInformations = {name: "", islands: {}, description: "", mapping: {}, id: ""};
     }
@@ -249,9 +252,11 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
             }
         }
 
+        $scope.bLoading = true;
         restService.createConfiguration({name: $scope.configInformations.name, islands: $scope.configInformations.islands, description: $scope.configInformations.description, mapping: $scope.configInformations.mapping, id: $scope.configInformations.id}).then(function successCallback(response) {
+            $scope.bLoading = false;
             $window.location.href =  mainService.baseUrl + "configurations";
-        }, function errorCallback(response) {});
+        }, function errorCallback(response) { $scope.bLoading = false; });
         
     }
 
@@ -264,11 +269,14 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
 });
 
 app.controller('configListCtrl', function($scope, $window, mainService, configurationService, modalService, restService) {
+    $scope.bLoading = false;
 
     $scope.init = function() {
+        $scope.bLoading = true;
         restService.getConfigurations().then(function successCallback(response) {
             $scope.$parent.configurationList = response.data;
-        }, function errorCallback(response) {});
+            $scope.bLoading = false;
+        }, function errorCallback(response) {$scope.bLoading = false;});
     }
 
     $scope.edit = function(elem) {
@@ -279,11 +287,13 @@ app.controller('configListCtrl', function($scope, $window, mainService, configur
     $scope.delete = function(elem) {
         var deleteModal = modalService.getDeleteModal();
         deleteModal.result.then(function() {
+            $scope.bLoading = true;
             restService.deleteConfiguration(elem.id.split("/")[5]).then(function successCallback(response) {
                 restService.getConfigurations().then(function successCallback(response) {
                     $scope.$parent.configurationList = response.data;
-                }, function errorCallback(response) {});
-            }, function errorCallback(response) {});
+                    $scope.bLoading = false;
+                }, function errorCallback(response) {$scope.bLoading = false;});
+            }, function errorCallback(response) {$scope.bLoading = false;});
         },function(){ /*cancel*/ });
     }
 
@@ -299,17 +309,22 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
     $scope.currentSection;
     $scope.bEdit;
     $scope.ISLAND_ENUM;
+    $scope.bLoading = false;
     
     $scope.init = function() {
         $scope.ISLAND_ENUM = configurationService.ISLAND_ENUM;
 
+        $scope.bLoading = true;
         restService.getConfigurations().then(function successCallback(response) {
             $scope.$parent.configurationList = response.data;
-        }, function errorCallback(response) {});
+            $scope.bLoading = false;
+        }, function errorCallback(response) { $scope.bLoading = false; });
 
+        $scope.bLoading = true;
         restService.getConfiguration($location.absUrl().split("/")[5]).then(function successCallback(response) {
             $scope.currentConfig = response.data[0];
-        }, function errorCallback(response) {});
+            $scope.bLoading = false;
+        }, function errorCallback(response) { $scope.bLoading = false; });
 
         $scope.currentSection = mainService.getCurrentSection();
         $scope.bEdit = configurationService.getEdit();
@@ -321,31 +336,38 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
     }
 
     $scope.cancel = function() {
+        $scope.bLoading = true;
         restService.getConfiguration($location.absUrl().split("/")[5]).then(function successCallback(response) {
             $scope.currentConfig = response.data[0];
-        }, function errorCallback(response) {});
+            $scope.bLoading = false;
+        }, function errorCallback(response) { $scope.bLoading = false; });
 
         $scope.bEdit = false;
     }
 
     $scope.save = function() {
+        $scope.bLoading = true;
         restService.updateConfiguration(($scope.currentConfig.id).split("/")[5], $scope.currentConfig).then(function successCallback(response) {
             restService.getConfigurations().then(function successCallback(response) {
                 $scope.$parent.configurationList = response.data;
                 $scope.bEdit = false;
+                $scope.bLoading = false;
             }, function errorCallback(response) {
                 $scope.bEdit = false;
+                $scope.bLoading = false;
             });
-        }, function errorCallback(response) {});
+        }, function errorCallback(response) { $scope.bLoading = false; });
     }
 
     $scope.delete = function() {
         var deleteModal = modalService.getDeleteModal();
         deleteModal.result.then(function() {
+            $scope.bLoading = true;
             restService.deleteConfiguration(($scope.currentConfig.id).split("/")[5]).then(function successCallback(response) {
                     $scope.bEdit = false;
+                    $scope.bLoading = false;
                     $window.location.href = mainService.baseUrl + "configurations";
-            }, function errorCallback(response) {});
+            }, function errorCallback(response) { $scope.bLoading = false; });
         },function(){ /*cancel*/ });
     }
 

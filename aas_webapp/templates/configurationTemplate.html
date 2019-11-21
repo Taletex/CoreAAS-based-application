@@ -1,4 +1,4 @@
-<div class="h-100">
+<div class="h-100" ng-show="!bLoading">
     <div class="form-group row m-0 mb-2 text-left">
         <label class="col-2" for="config-name">Name:</label>
         <input class="col-10 form-control" type="text" id="config-name" name="config-name" ng-model="currentConfig.name" ng-disabled="!bEdit">
@@ -62,3 +62,15 @@
     <button class="btn btn-danger mr-1" ng-click=delete()><span class="fa fa-trash-alt mr-1"></span>Delete</button>
     <button class="btn btn-dark" ng-click="upload()"><span class="fa fa-cogs mr-1"></span>Upload</button>
 </div>
+
+<div class='h-100 w-100' ng-show="bLoading">
+        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100"></div>
+        <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+            <i class='layer'></i>
+            <i class='layer'></i>
+            <i class='layer'></i>
+            <i class='layer'></i>
+            <i class='layer'></i>
+            <i class='layer d-flex align-items-center justify-content-center'></i>
+        </div>
+    </div>
