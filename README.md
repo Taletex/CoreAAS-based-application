@@ -48,47 +48,47 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 ## Dependencies
 The application has the following dependencies (libraries and packages)
 - **OPC UA CoreAAS based Server**:
-  1. node-opcua-coreaas https://github.com/OPCUAUniCT/node-opcua-coreaas.
+    1. node-opcua-coreaas https://github.com/OPCUAUniCT/node-opcua-coreaas.
 - **Web Application**:
-  1. AngularJS 1.6.9 https://angularjs.org/.
-  2. Bootstrap 4.0.0 https://getbootstrap.com/docs/4.0/getting-started/download/.
-  3. FontAwesome 5.6.1 https://fontawesome.com/.
-  4. ImageMapster 1.2.10 http://www.outsharked.com/imagemapster/.
-  5. Body-parse 1.19.0 (package-json).
-  6. Cors 2.8.5 (package-json).
-  7. Http-server 0.9.0 (package-json).
-  8. Mongodb 3.3.4 (package-json).
-  9. Mongoose 5.7.12 (package-json).
-  10. Express 4.17.1 (package-json).
+    1. AngularJS 1.6.9 https://angularjs.org/.
+    2. Bootstrap 4.0.0 https://getbootstrap.com/docs/4.0/getting-started/download/.
+    3. FontAwesome 5.6.1 https://fontawesome.com/.
+    4. ImageMapster 1.2.10 http://www.outsharked.com/imagemapster/.
+    5. Body-parse 1.19.0 (package-json).
+    6. Cors 2.8.5 (package-json).
+    7. Http-server 0.9.0 (package-json).
+    8. Mongodb 3.3.4 (package-json).
+    9. Mongoose 5.7.12 (package-json).
+    10. Express 4.17.1 (package-json).
 
 
 
 ## Running for test
 After having installed all the requirements it is possible to clone this project and run it by following the next steps. 
 
-#### 1 - Clone the project from master branch
-Open a terminal and write:
-```
-git clone https://github.com/Taletex/CoreAAS-based-application
-```
+#### 1. Clone the project from master branch
+- Open a terminal and write:
+    ```
+    git clone https://github.com/Taletex/CoreAAS-based-application
+    ```
 
-#### 2 - Build and run the OPC UA CoreAAS based Server
-1. Open a terminal and write (from the root folder of the project):
+#### 2. Build and run the OPC UA CoreAAS based Server
+- Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_server
 	npm run uaIndustryServer
 	```
 
-#### 3 - Run the Web Application
-1. MongoDB server. Execute the mongoDB community server previously installed.
-2. Http-server. Open a terminal and write (from the root folder of the project):
+#### 3. Run the Web Application
+- MongoDB server. Execute the mongoDB community server previously installed.
+- Http-server. Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_webapp
 	http-server -o
 	```
-A new browser tab at the address where the web application is running will open.
+   A new browser tab at the address where the web application is running will open.
 
-3. NodeJs-server (REST API and DataBase). Open a terminal and write (from the root folder of the project):
+- NodeJs-server (REST API and DataBase). Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_webapp
 	cd database
