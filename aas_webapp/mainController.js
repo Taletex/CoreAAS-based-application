@@ -693,4 +693,3 @@ app.service("restService", function($http, mainService) {
         return $http.delete(mainService.databaseUrl + "/configurations/" + id);
     }
 });
-

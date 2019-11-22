@@ -254,13 +254,13 @@ li{
             transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg);
   }
   .layer:nth-of-type(1) {
-    background: #595959;
+    background: #3c3b3b;
     margin-top: 4.6153846154em;
     -webkit-animation: movedown 1.8s cubic-bezier(0.39, 0.575, 0.565, 1) 0.9s infinite normal;
             animation: movedown 1.8s cubic-bezier(0.39, 0.575, 0.565, 1) 0.9s infinite normal;
   }
   .layer:nth-of-type(2) {
-    background: #999999;
+    background: #8e8e8e;
     margin-top: 3.8461538462em;
     -webkit-animation: movedown 1.8s cubic-bezier(0.39, 0.575, 0.565, 1) 0.9s infinite normal;
             animation: movedown 1.8s cubic-bezier(0.39, 0.575, 0.565, 1) 0.9s infinite normal;
