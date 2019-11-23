@@ -1,7 +1,10 @@
 const Configuration = require('../models/coreaas.model.js');
 const webAppBaseUrl = "http://localhost:8080/#coreaas/";
-const webAppConfigUrl = webAppBaseUrl + "configurations/"
+const webAppConfigUrl = webAppBaseUrl + "configurations/";
 
+const rscPath = "./rsc/openplc/";
+var fs = require('fs');
+var readline = require('readline');
 
 // Create and Save a new Configuration
 exports.createConfiguration = (req, res) => {
@@ -134,11 +137,61 @@ exports.uploadConfiguration = (req, res) => {
             });            
         }
 
-        // Modifica i file .st e .xml
+        // Edit .st and .xml files    
+        var configObject = configuration[0].toObject();
+        var terminalArray = [];
+        var editor;
 
+        for (islands in configObject.mapping)
+            for (var i=0; i<configObject.mapping[islands].length; i++)
+                terminalArray.push(configObject.mapping[islands][i].value);
+
+        // Edit .st file
+        editor = readline.createInterface({
+            input: fs.createReadStream(rscPath + "plcTemplate.st"),
+            output: fs.createWriteStream(rscPath + "plc.st"),
+            console: false
+        });                    
+        var stMappingElement = 0;
+
+        editor.on('line', function(line) {
+            var lineArray = line.split(" ");  
+            var toWrite = "";                    
+
+            if (stMappingElement < terminalArray.length && lineArray.length == 11)    // Corresponds to a line to be modified
+                lineArray[10] = (terminalArray[stMappingElement++] + ";"); // Edits values in the plc memory to be written on terminal according to the configuration mapping
+
+            for (var i=0; i<lineArray.length; i++) {
+                toWrite += (lineArray[i] + " ");
+            }
+            toWrite += "\r\n";
+            this.output.write(toWrite);
+        });
+
+        // Edit .xml file
+        editor = readline.createInterface({
+            input: fs.createReadStream(rscPath + "plcTemplate.xml"),
+            output: fs.createWriteStream(rscPath + "plc.xml"),
+            console: false
+        });
+        var xmlMappingElement = 0;
+
+        editor.on('line', function(line) {
+            var lineArray = line.split(" ");  
+            var toWrite = "";
+
+            if (xmlMappingElement < terminalArray.length && lineArray[16] == "<simpleValue")    // Corresponds to a line to be modified
+                lineArray[17] = ("value=\"" + terminalArray[xmlMappingElement++] + "\"/>"); // Edits values in the plc memory to be written on terminal according to the configuration mapping
+
+            for (var i=0; i<lineArray.length; i++) {
+                toWrite += (lineArray[i] + " ");
+            }
+            toWrite += "\r\n";
+            this.output.write(toWrite);
+        });
 
         // Carica i file .st sul runtime
-        
+        //
 
         res.send(configuration);
     }).catch(err => {
