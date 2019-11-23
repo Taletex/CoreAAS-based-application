@@ -35,8 +35,9 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 	3. OPC UA CoreAAS Server. Open a terminal and write (from the root folder of the project):
 		```
 		cd aas_server
-		npm install node-opcua-coreaas --save
+		npm install 
 		```
+	> Note: don't run "npm update" command or dependencies will be updated and the opcuaserver may not compile anymore!
 - **Web Application**:
 	1. Nodejs.
 	2. Package-json. Open a terminal and write:

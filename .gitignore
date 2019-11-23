@@ -1,3 +1,4 @@
-aas_server/node_modules
+aas_opcuaserver/node_modules
+aas_nodeserver/node_modules
 aas_webapp/node_modules
 /.vscode
