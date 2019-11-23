@@ -21,7 +21,7 @@
     "Alessandro Messina",
     "Marco Pisasale"
   ],
-  "license": "GNU General Public License v3.0",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Taletex/CoreAAS-based-application"
