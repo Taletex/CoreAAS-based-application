@@ -297,7 +297,7 @@ app.controller('configListCtrl', function($scope, $window, mainService, configur
         },function(){ /*cancel*/ });
     }
 
-    $scope.upload = function() {
+    $scope.editPlcProgram = function() {
         alert("Feature da implementare");
     }
 
@@ -371,10 +371,6 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
         },function(){ /*cancel*/ });
     }
 
-    $scope.upload = function() {
-        alert("Feature da implementare");
-    }
-
     $scope.switchAllTerminals = function(island, btnType) {
         if($scope.bEdit) {
             if(btnType == undefined || btnType == null)
@@ -397,6 +393,17 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
         $scope.currentConfig.islands[island] = false;
     }
 
+    // TODO
+    $scope.uploadPlcProgram = function(id) {
+        
+        // Edita i file .xml e .st in accordo alla configurazione passata e li carica sul server
+        $scope.bLoading = true;
+        restService.uploadPlcProgram(id).then(function successCallback(response) {
+            $scope.bLoading = false;
+            alert("Configurazione caricata con successo!");
+        }, function errorCallback(response) { $scope.bLoading = false; });
+    }
+
     $scope.init();
 });
 
@@ -404,7 +411,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
 
 app.service("mainService", function($location) {
     this.baseUrl = "http://localhost:8080/#coreaas/";
-    this.databaseUrl = "http://localhost:3000";
+    this.nodeServerUrl = "http://localhost:3000";
     this.sections = {index: "Home", configurations: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
 
     
@@ -670,26 +677,31 @@ app.service("restService", function($http, mainService) {
     
     // Create a new Configuration
     this.createConfiguration = function(configuration) {
-        return $http.post(mainService.databaseUrl + "/configurations", configuration);
+        return $http.post(mainService.nodeServerUrl + "/configurations", configuration);
     }
 
     // Retrieve all Configuration
     this.getConfigurations = function(){
-        return $http.get(mainService.databaseUrl + "/configurations");
+        return $http.get(mainService.nodeServerUrl + "/configurations");
     }
     
     // Retrieve a single Configuration with id
     this.getConfiguration = function(id){
-        return $http.get(mainService.databaseUrl + "/configurations/" + id);
+        return $http.get(mainService.nodeServerUrl + "/configurations/" + id);
     }
 
     // Update a Configuration with id
     this.updateConfiguration = function(id, configuration){
-        return $http.put(mainService.databaseUrl + "/configurations/" + id, configuration);
+        return $http.put(mainService.nodeServerUrl + "/configurations/" + id, configuration);
     }
 
     // Delete a Configuration with id
     this.deleteConfiguration = function(id){
-        return $http.delete(mainService.databaseUrl + "/configurations/" + id);
+        return $http.delete(mainService.nodeServerUrl + "/configurations/" + id);
+    }
+
+    // Upload a Configuration with id
+    this.uploadPlcProgram = function(id){
+        return $http.get(mainService.nodeServerUrl + "/upload/" + id);
     }
 });

@@ -60,17 +60,17 @@
     <button class="btn btn-primary mr-0 config-menu-buttons-save" ng-show="bEdit" ng-click="save()"><span class="fa fa-save mr-1"></span>Save</button>
     <button class="btn btn-secondary mr-1 config-menu-buttons-cancel" ng-show="bEdit" ng-click="cancel()"><span class="fa fa-times mr-1"></span>Cancel</button>
     <button class="btn btn-danger mr-1" ng-click=delete()><span class="fa fa-trash-alt mr-1"></span>Delete</button>
-    <button class="btn btn-dark" ng-click="upload()"><span class="fa fa-cogs mr-1"></span>Upload</button>
+    <button class="btn btn-dark" ng-click="uploadPlcProgram(currentConfig.id)"><span class="fa fa-cogs mr-1"></span>Upload</button>
 </div>
 
 <div class='h-100 w-100' ng-show="bLoading">
-        <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100"></div>
-        <div class="container d-flex align-items-center justify-content-center w-100 h-100">
-            <i class='layer'></i>
-            <i class='layer'></i>
-            <i class='layer'></i>
-            <i class='layer'></i>
-            <i class='layer'></i>
-            <i class='layer d-flex align-items-center justify-content-center'></i>
-        </div>
+    <div style="position:absolute; background-color:black; opacity:50%; right:0; top:0;" class="w-100 h-100"></div>
+    <div class="container d-flex align-items-center justify-content-center w-100 h-100">
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer'></i>
+        <i class='layer d-flex align-items-center justify-content-center'></i>
     </div>
+</div>

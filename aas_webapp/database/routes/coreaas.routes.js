@@ -20,4 +20,7 @@ module.exports = (app) => {
 
     // Delete a Configuration with id
     app.delete('/configurations/:id', cors(corsOptions), coreaas.deleteConfiguration);
+
+    // Upload a configuration with id
+    app.get('/upload/:id', cors(corsOptions), coreaas.uploadConfiguration);
 }

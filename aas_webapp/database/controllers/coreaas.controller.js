@@ -123,3 +123,32 @@ exports.deleteConfiguration = (req, res) => {
         });
     });
 };
+
+// Upload a configuration with id
+exports.uploadConfiguration = (req, res) => {
+    Configuration.find({id: webAppConfigUrl + req.params.id})
+    .then(configuration => {
+        if(!configuration) {
+            return res.status(404).send({
+                message: "Configuration not found with id " + req.params.id
+            });            
+        }
+
+        // Modifica i file .st e .xml
+
+
+        // Carica i file .st sul runtime
+        
+
+        res.send(configuration);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Configuration not found with id " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving configuration with id " + req.params.id
+        });
+    });
+};
