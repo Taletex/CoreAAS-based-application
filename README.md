@@ -32,13 +32,19 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 		```
 		npm install -g typescript
 		```
-	3. OPC UA CoreAAS Server. Open a terminal and write (from the root folder of the project):
+	3. OPC UA CoreAAS Server and its dependencies. Open a terminal and write (from the root folder of the project):
 		```
-		cd aas_server
+		cd aas_opcuaserver
 		npm install 
 		```
 	> Note: don't run "npm update" command or dependencies will be updated and the opcuaserver may not compile anymore!
 - **Web Application**:
+	1. Nodejs.
+	2. Package-json. Open a terminal and write:
+		```
+		npm install
+		```
+- **Nodejs Server**:
 	1. Nodejs.
 	2. Package-json. Open a terminal and write:
 		```
@@ -55,12 +61,13 @@ The application has the following dependencies (libraries and packages)
 	2. Bootstrap 4.0.0 https://getbootstrap.com/docs/4.0/getting-started/download/.
 	3. FontAwesome 5.6.1 https://fontawesome.com/.
 	4. ImageMapster 1.2.10 http://www.outsharked.com/imagemapster/.
-	5. Body-parse 1.19.0 (package-json).
-	6. Cors 2.8.5 (package-json).
-	7. Http-server 0.9.0 (package-json).
-	8. Mongodb 3.3.4 (package-json).
-	9. Mongoose 5.7.12 (package-json).
-	10. Express 4.17.1 (package-json).
+	5. Http-server 0.9.0 (package-json).
+- **Nodejs Server**:
+	1. Body-parse 1.19.0 (package-json).
+	2. Cors 2.8.5 (package-json).
+	3. Mongodb 3.3.4 (package-json).
+	4. Mongoose 5.7.12 (package-json).
+	5. Express 4.17.1 (package-json).
 
 
 
@@ -76,12 +83,11 @@ After having installed all the requirements it is possible to clone this project
 #### 2. Build and run the OPC UA CoreAAS based Server
 - Open a terminal and write (from the root folder of the project):
 	```
-	cd aas_server
+	cd aas_opcuaserver
 	npm run uaIndustryServer
 	```
 
 #### 3. Run the Web Application
-- MongoDB server. Execute the mongoDB community server previously installed.
 - Http-server. Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_webapp
@@ -89,10 +95,11 @@ After having installed all the requirements it is possible to clone this project
 	```
    A new browser tab at the address where the web application is running will open.
 
-- NodeJs-server (REST API and DataBase). Open a terminal and write (from the root folder of the project):
+#### 4. Run the Nodejs Server and MongoDB database
+- MongoDB server. Execute the mongoDB community server previously installed.
+- NodeJs-server. Open a terminal and write (from the root folder of the project):
 	```
-	cd aas_webapp
-	cd database
+	cd aas_nodeserver
 	node server.js
 	```
 
