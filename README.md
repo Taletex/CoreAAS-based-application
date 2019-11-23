@@ -42,12 +42,14 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 	1. Nodejs.
 	2. Package-json. Open a terminal and write:
 		```
+		cd aas_webapp
 		npm install
 		```
 - **Nodejs Server**:
 	1. Nodejs.
 	2. Package-json. Open a terminal and write:
 		```
+		cd aas_nodeserver
 		npm install
 		```
 	3. MongoDB (https://www.mongodb.com/download-center/community)
