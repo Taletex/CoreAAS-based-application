@@ -87,15 +87,15 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
         $scope.currentConfig.islands[island] = false;
     }
 
-    // TODO
     $scope.uploadPlcProgram = function(id) {
-        
-        // Edita i file .xml e .st in accordo alla configurazione passata e li carica sul server
         $scope.bLoading = true;
-        restService.uploadPlcProgram(id).then(function successCallback(response) {
+        restService.uploadPlcProgram(id.split("/")[5]).then(function successCallback(response) {
             $scope.bLoading = false;
             alert("Configurazione caricata con successo!");
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { 
+            $scope.bLoading = false; 
+            alert("Errore durante il caricamento della configurazione!");
+        });
     }
 
     $scope.init();

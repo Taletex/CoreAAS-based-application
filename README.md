@@ -53,6 +53,10 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 		npm install
 		```
 	3. MongoDB (https://www.mongodb.com/download-center/community)
+	4. OpenPLC Runtime (https://www.openplcproject.com/runtime). 
+		- Download and install the runtime environment from the above link.
+		- Copy the file "webserver.py" from the folder "aas_nodeserver\rsc" to the folder "OpenPLC_v3\webserver" located in the OpenPLC runtime installation folder (e.g. C:\Users\Aless\OpenPLC\Runtime\home\Aless\OpenPLC_v3\webserver).
+
 
 ## Dependencies
 The application has the following dependencies (libraries and packages)
@@ -97,14 +101,14 @@ After having installed all the requirements it is possible to clone this project
 	```
    A new browser tab at the address where the web application is running will open (localhost:8081).
 
-#### 4. Run the Nodejs Server and MongoDB database
+#### 4. Run the Nodejs Server, OpenPLC Runtime and MongoDB database
 - MongoDB server. Execute the mongoDB community server previously installed.
+- OpenPLC Runtime setup. Execute the openPLC Runtime previously installed.
 - NodeJs-server. Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_nodeserver
 	node server.js
 	```
-
 
 
 

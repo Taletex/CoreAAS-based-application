@@ -27,8 +27,15 @@ app.controller('configListCtrl', function($scope, $window, mainService, configur
         },function(){ /*cancel*/ });
     }
 
-    $scope.editPlcProgram = function() {
-        alert("Feature da implementare");
+    $scope.uploadPlcProgram = function(id) {
+        $scope.bLoading = true;
+        restService.uploadPlcProgram(id.split("/")[5]).then(function successCallback(response) {
+            $scope.bLoading = false;
+            alert("Configurazione caricata con successo!");
+        }, function errorCallback(response) { 
+            $scope.bLoading = false; 
+            alert("Errore durante il caricamento della configurazione!");
+        });
     }
 
     $scope.init();
