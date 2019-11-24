@@ -1,5 +1,7 @@
 const Configuration = require('../models/coreaas.model.js');
+const http = require('http');
 const webAppBaseUrl = "http://localhost:8081/#coreaas/";
+const runtimeBaseUrl = "http://localhost:8080/";
 const webAppConfigUrl = webAppBaseUrl + "configurations/";
 
 const rscPath = "./rsc/openplc/";
@@ -190,9 +192,35 @@ exports.uploadConfiguration = (req, res) => {
         });
 
         // Carica i file .st sul runtime
-        //
+        http.get(runtimeBaseUrl + "login", (resp) => {
+            let data = '';
 
-        res.send(configuration);
+            resp.on('data', (chunk) => { data += chunk; });
+            resp.on('end', () => { 
+                console.log("Successfully logged!"); 
+                
+                http.get(runtimeBaseUrl + "upload_configuration", (resp) => {
+                    let data = '';
+        
+                    resp.on('data', (chunk) => { data += chunk; });
+                    resp.on('end', () => { 
+                        console.log("Configuration successfully uploaded!"); 
+                        res.send("Configuration successfully uploaded!");
+                    });
+                }).on("error", (err) => {
+                    console.log("Error: " + err.message);
+                    res.status(500).send({
+                        message: "Error: " + err.message 
+                    });
+                });
+
+            });
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+            res.status(500).send({
+                message: "Error: " + err.message 
+            });
+        });
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
