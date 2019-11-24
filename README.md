@@ -95,7 +95,7 @@ After having installed all the requirements it is possible to clone this project
 	cd aas_webapp
 	http-server -o
 	```
-   A new browser tab at the address where the web application is running will open.
+   A new browser tab at the address where the web application is running will open (localhost:8081).
 
 #### 4. Run the Nodejs Server and MongoDB database
 - MongoDB server. Execute the mongoDB community server previously installed.

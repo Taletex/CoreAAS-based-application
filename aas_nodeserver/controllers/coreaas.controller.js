@@ -1,5 +1,5 @@
 const Configuration = require('../models/coreaas.model.js');
-const webAppBaseUrl = "http://localhost:8080/#coreaas/";
+const webAppBaseUrl = "http://localhost:8081/#coreaas/";
 const webAppConfigUrl = webAppBaseUrl + "configurations/";
 
 const rscPath = "./rsc/openplc/";

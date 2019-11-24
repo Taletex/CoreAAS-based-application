@@ -39,7 +39,7 @@
                 <!-- HEADER -->
                 <div class="col-md-12 " style="z-index:1">
                     <div class="row main-header">
-                        <div class="col-md-3 h-100 p-0 p-0 d-flex align-items-center cursor-pointer" style="overflow: hidden" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/index'})" data-toggle="tooltip" data-placement="bottom" title="Go to the main page"> 
+                        <div class="col-md-3 h-100 p-0 p-0 d-flex align-items-center cursor-pointer" style="overflow: hidden" ng-click="redirectTo({id: baseUrl + 'index'})" data-toggle="tooltip" data-placement="bottom" title="Go to the main page"> 
                             <img style="height: 175px;" src="rsc/img/logo.png">
                             <div class="mb-0 ml-2 text-light webapp-title">CoreAAS Web Application</div>
                         </div>
@@ -61,7 +61,7 @@
                             <!-- Home Item -->
                             <div class="card p-0 border-0">
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 4px 4px 0px 0px !important;" 
-                                    ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/index'})" data-toggle="tooltip" data-placement="top" title="Open homepage">
+                                    ng-click="redirectTo({id: baseUrl + 'index'})" data-toggle="tooltip" data-placement="top" title="Open homepage">
                                     <b>Homepage</b>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                             <!-- Resources Item -->
                             <div class="card p-0 border-0 mb-3">
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" 
-                                    ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/resources'})" data-toggle="tooltip" data-placement="top" title="Open resources">
+                                    ng-click="redirectTo({id: baseUrl + 'resources'})" data-toggle="tooltip" data-placement="top" title="Open resources">
                                     <b>Resources</b>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 4px 4px 4px 4px !important" ng-click="setShow('bShow6')">
                                     <b>Configuration</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/configurations'})" data-toggle="tooltip" data-placement="top" title="Open configurations">
+                                <div class="menu-list-button" ng-click="redirectTo({id: baseUrl + 'configurations'})" data-toggle="tooltip" data-placement="top" title="Open configurations">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right"></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow6">
@@ -96,7 +96,7 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 4px 4px 0px 0px !important;" ng-click="setShow('bShow1')">
                                     <b>Concept Descriptions</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/descriptions'})" data-toggle="tooltip" data-placement="top" title="Open descriptions">
+                                <div class="menu-list-button" ng-click="redirectTo({id: baseUrl + 'descriptions'})" data-toggle="tooltip" data-placement="top" title="Open descriptions">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow1">
@@ -114,7 +114,7 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px !important;" ng-click="setShow('bShow2')">
                                     <b>Submodels</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/submodels'})" data-toggle="tooltip" data-placement="top" title="Open submodels">
+                                <div class="menu-list-button" ng-click="redirectTo({id: baseUrl + 'submodels'})" data-toggle="tooltip" data-placement="top" title="Open submodels">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow2">
@@ -131,7 +131,7 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px !important;" ng-click="setShow('bShow3')" >
                                     <b>Assets</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/assets'})" data-toggle="tooltip" data-placement="top" title="Open assets">
+                                <div class="menu-list-button" ng-click="redirectTo({id: baseUrl + 'assets'})" data-toggle="tooltip" data-placement="top" title="Open assets">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow3">
@@ -148,7 +148,7 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 0px 0px !important;" ng-click="setShow('bShow4')" >
                                     <b>Asset Administration Shells</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/aas'})" data-toggle="tooltip" data-placement="top" title="Open AAS">
+                                <div class="menu-list-button" ng-click="redirectTo({id: baseUrl + 'aas'})" data-toggle="tooltip" data-placement="top" title="Open AAS">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow4">
@@ -165,7 +165,7 @@
                                 <div class="card-header p-2 m-0 text-left text-white cursor-pointer menu-item-header" style="border-radius: 0px 0px 4px 4px !important;" ng-click="setShow('bShow5')" >
                                     <b>Data Specifications</b>
                                 </div>
-                                <div class="menu-list-button" ng-click="redirectTo({id: 'http://localhost:8080/#coreaas/dataspecs'})" data-toggle="tooltip" data-placement="top" title="Open Data Specifications">
+                                <div class="menu-list-button" ng-click="redirectTo({id: baseUrl + 'dataspecs'})" data-toggle="tooltip" data-placement="top" title="Open Data Specifications">
                                     <button class="btn btn-sm btn-info"><span class="fa fa-angle-right" ></span></button>
                                 </div>
                                 <ul class="card-body p-0 m-0 menu-item-body" ng-show="showList.bShow5">

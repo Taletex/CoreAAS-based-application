@@ -67,12 +67,14 @@ app.config(function($routeProvider, $locationProvider) {
 });
 
 app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService, restService) {
+    $scope.baseUrl;
     $scope.currentSection;
     $scope.elements;
     $scope.configurationList;
     $scope.showList;
 
     $scope.init = function(){
+        $scope.baseUrl = mainService.baseUrl;
         elementsService.init();
         configurationService.init();
         $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false, bShow5: false, bShow6: false};
@@ -410,7 +412,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
 
 
 app.service("mainService", function($location) {
-    this.baseUrl = "http://localhost:8080/#coreaas/";
+    this.baseUrl = "http://localhost:8081/#coreaas/";
     this.nodeServerUrl = "http://localhost:3000";
     this.sections = {index: "Home", configurations: "Configuration", resources: "Resource", descriptions: "Concept Description", submodels: "Submodel", assets: "Asset", aas: "Asset Administration Shell", dataspecs: "Data Specification"};
 
