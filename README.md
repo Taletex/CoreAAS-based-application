@@ -93,7 +93,7 @@ After having installed all the requirements it is possible to clone this project
 - Http-server. Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_webapp
-	http-server -o
+	http-server -o -p 8081
 	```
    A new browser tab at the address where the web application is running will open (localhost:8081).
 
