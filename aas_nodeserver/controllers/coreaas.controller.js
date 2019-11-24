@@ -140,21 +140,20 @@ exports.uploadConfiguration = (req, res) => {
         // Edit .st and .xml files    
         var configObject = configuration[0].toObject();
         var terminalArray = [];
-        var editor;
 
         for (islands in configObject.mapping)
             for (var i=0; i<configObject.mapping[islands].length; i++)
                 terminalArray.push(configObject.mapping[islands][i].value);
 
         // Edit .st file
-        editor = readline.createInterface({
+        var stEditor = readline.createInterface({
             input: fs.createReadStream(rscPath + "plcTemplate.st"),
             output: fs.createWriteStream(rscPath + "plc.st"),
             console: false
         });                    
         var stMappingElement = 0;
 
-        editor.on('line', function(line) {
+        stEditor.on('line', function(line) {
             var lineArray = line.split(" ");  
             var toWrite = "";                    
 
@@ -169,14 +168,14 @@ exports.uploadConfiguration = (req, res) => {
         });
 
         // Edit .xml file
-        editor = readline.createInterface({
+        var xmlEditor = readline.createInterface({
             input: fs.createReadStream(rscPath + "plcTemplate.xml"),
             output: fs.createWriteStream(rscPath + "plc.xml"),
             console: false
         });
         var xmlMappingElement = 0;
 
-        editor.on('line', function(line) {
+        xmlEditor.on('line', function(line) {
             var lineArray = line.split(" ");  
             var toWrite = "";
 
