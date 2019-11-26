@@ -1,4 +1,4 @@
-app.controller('configCtrl', function($scope, $location, $window, mainService, configurationService, modalService, restService) {
+app.controller('configCtrl', function($scope, $location, $window, mainService, configurationService, modalService, restService, toastr) {
     $scope.currentConfig;
     $scope.currentSection;
     $scope.bEdit;
@@ -12,17 +12,27 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
         restService.getConfigurations().then(function successCallback(response) {
             $scope.$parent.configurationList = response.data;
             $scope.bLoading = false;
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { $scope.error("Errore durante il caricamento delle configurazioni!") });
 
         $scope.bLoading = true;
         restService.getConfiguration($location.absUrl().split("/")[5]).then(function successCallback(response) {
             $scope.currentConfig = response.data[0];
             $scope.bLoading = false;
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { $scope.error("Errore durante il caricamento della configurazione!") });
 
         $scope.currentSection = mainService.getCurrentSection();
         $scope.bEdit = configurationService.getEdit();
         if($scope.bEdit) configurationService.setEdit(false);
+    }
+
+    $scope.error = function(msg) {
+        $scope.bLoading = false; 
+        toastr.error(msg, 'Errore');
+    }
+
+    $scope.success = function(msg) {
+        $scope.bLoading = false; 
+        toastr.success(msg, 'Successo');
     }
 
     $scope.edit = function() {
@@ -34,7 +44,7 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
         restService.getConfiguration($location.absUrl().split("/")[5]).then(function successCallback(response) {
             $scope.currentConfig = response.data[0];
             $scope.bLoading = false;
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { $scope.error("Errore durante il caricamento della configurazione!") });
 
         $scope.bEdit = false;
     }
@@ -45,12 +55,12 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
             restService.getConfigurations().then(function successCallback(response) {
                 $scope.$parent.configurationList = response.data;
                 $scope.bEdit = false;
-                $scope.bLoading = false;
+                $scope.success("Salvataggio della configurazione completato!");
             }, function errorCallback(response) {
                 $scope.bEdit = false;
-                $scope.bLoading = false;
+                $scope.error(response)
             });
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { $scope.error("Errore durante il salvataggio della configurazione!") });
     }
 
     $scope.delete = function() {
@@ -59,9 +69,9 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
             $scope.bLoading = true;
             restService.deleteConfiguration(($scope.currentConfig.id).split("/")[5]).then(function successCallback(response) {
                     $scope.bEdit = false;
-                    $scope.bLoading = false;
+                    $scope.success("Cancellazione della configurazione completata!");
                     $window.location.href = mainService.baseUrl + "configurations";
-            }, function errorCallback(response) { $scope.bLoading = false; });
+            }, function errorCallback(response) { $scope.error("Errore durante la cancellazione della configurazione!") });
         },function(){ /*cancel*/ });
     }
 
@@ -90,12 +100,8 @@ app.controller('configCtrl', function($scope, $location, $window, mainService, c
     $scope.uploadPlcProgram = function(id) {
         $scope.bLoading = true;
         restService.uploadPlcProgram(id.split("/")[5]).then(function successCallback(response) {
-            $scope.bLoading = false;
-            alert("Configurazione caricata con successo!");
-        }, function errorCallback(response) { 
-            $scope.bLoading = false; 
-            alert("Errore durante il caricamento della configurazione!");
-        });
+            $scope.success("La configurazione è stata caricata sul device!");
+        }, function errorCallback(response) { $scope.error("Errore durante il caricamento della configurazione sul device") });
     }
 
     $scope.init();

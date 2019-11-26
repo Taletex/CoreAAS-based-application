@@ -16,9 +16,19 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
         restService.getConfigurations().then(function successCallback(response) {
             $scope.$parent.configurationList = response.data;
             $scope.bLoading = false;
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { $scope.error("Errore durante il caricamento delle configurazioni!") });
         $scope.terminalSwitch = {multiProcessingStation: true, sortingLine: true, vacuumGripper: true, automatedHighBayWarehouse: true};
         $scope.configInformations = {name: "", islands: {}, description: "", mapping: {}, id: ""};
+    }
+
+    $scope.error = function(msg) {
+        $scope.bLoading = false; 
+        toastr.error(msg, 'Errore');
+    }
+
+    $scope.success = function(msg) {
+        $scope.bLoading = false; 
+        toastr.success(msg, 'Successo');
     }
 
     $scope.nextStep = function() {
@@ -94,9 +104,9 @@ app.controller('configCreationCtrl', function($scope, $location, $window, mainSe
 
         $scope.bLoading = true;
         restService.createConfiguration({name: $scope.configInformations.name, islands: $scope.configInformations.islands, description: $scope.configInformations.description, mapping: $scope.configInformations.mapping, id: $scope.configInformations.id}).then(function successCallback(response) {
-            $scope.bLoading = false;
+            $scope.success("Configurazione creata con successo!");
             $window.location.href =  mainService.baseUrl + "configurations";
-        }, function errorCallback(response) { $scope.bLoading = false; });
+        }, function errorCallback(response) { $scope.error("Errore durante la creazione della configurazione!") });
         
     }
 

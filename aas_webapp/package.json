@@ -2,9 +2,13 @@
   "name": "aas_webapp",
   "version": "1.0.0",
   "description": "Coreaas webapp ",
-  "main": "mainController.js",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server -o -p 8081"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Taletex/CoreAAS-based-application.git"
   },
   "keywords": [
     "industry",
@@ -15,7 +19,8 @@
   "author": "Alessandro Messina, Marco Pisasale",
   "license": "GPL-3.0",
   "dependencies": {
-    "http-server": "^0.9.0"
+    "angular-toastr": "^2.1.1",
+    "http-server": "^0.11.1"
   },
   "bugs": {
     "url": "https://github.com/Taletex/CoreAAS-based-application/issues"

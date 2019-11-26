@@ -1,6 +1,6 @@
-var app = angular.module('myApp', ["ngRoute", 'ngSanitize', 'ui.bootstrap']);
+var app = angular.module('myApp', ["ngRoute", 'ngSanitize', 'ui.bootstrap', 'ngAnimate', 'toastr']);
 
-app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService, restService) {
+app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService, restService, toastr) {
     $scope.baseUrl;
     $scope.currentSection;
     $scope.elements;
@@ -15,12 +15,22 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
         $scope.elements = elementsService.getElements();
         restService.getConfigurations().then(function successCallback(response) {
                 $scope.configurationList = response.data;
-            }, function errorCallback(response) {});
+            }, function errorCallback(response) { $scope.error("Errore durante il caricamento delle configurazioni!") });
         $scope.currentSection = mainService.sections[$location.absUrl().split("/")[4]];
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
+    }
+    
+    $scope.error = function(msg) {
+        $scope.bLoading = false; 
+        toastr.error(msg, 'Errore');
+    }
+
+    $scope.success = function(msg) {
+        $scope.bLoading = false; 
+        toastr.success(msg, 'Successo');
     }
     
     $scope.windowsHRef = function(elem) {
