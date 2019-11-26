@@ -6,6 +6,7 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
     $scope.elements;
     $scope.configurationList;
     $scope.showList;
+    $scope.bLoading;
 
     $scope.init = function(){
         $scope.baseUrl = mainService.baseUrl;
@@ -13,8 +14,10 @@ app.controller('mainCtrl', function($scope, $window, $location, mainService, ele
         configurationService.init();
         $scope.showList = {bShow1: false, bShow2: false, bShow3: false, bShow4: false, bShow5: false, bShow6: false};
         $scope.elements = elementsService.getElements();
+        $scope.bLoading = true;
         restService.getConfigurations().then(function successCallback(response) {
                 $scope.configurationList = response.data;
+                $scope.bLoading = false;
             }, function errorCallback(response) { $scope.error("Errore durante il caricamento delle configurazioni!") });
         $scope.currentSection = mainService.sections[$location.absUrl().split("/")[4]];
 
