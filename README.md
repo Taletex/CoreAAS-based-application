@@ -1,5 +1,5 @@
 # CoreAAS-based-application
-Definition of the digital twin of a smart factory by Asset Administration Shell and an application using it.
+Master degree thesis project dealing with the development of an Asset Administration Shell of a Factory. This project aims to show a possible implementation of an AAS and the importance of adopting the PLC open standard (https://plcopen.org/) for the development of PLC projects in order to support the interoperability in the Industry 4.0.
 
 
 ## Table of Contents
