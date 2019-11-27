@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ["ngRoute", 'ngSanitize', 'ui.bootstrap', 'ngAnimate', 'toastr']);
+var app = angular.module('myApp', ["ngRoute", 'ngSanitize', 'ui.bootstrap', 'toastr']);
 
 app.controller('mainCtrl', function($scope, $window, $location, mainService, elementsService, configurationService, restService, toastr) {
     $scope.baseUrl;

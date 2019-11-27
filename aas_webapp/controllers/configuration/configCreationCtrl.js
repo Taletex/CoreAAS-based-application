@@ -1,4 +1,4 @@
-app.controller('configCreationCtrl', function($scope, $location, $window, mainService, elementsService, configurationService, restService) {
+app.controller('configCreationCtrl', function($scope, $location, $window, mainService, elementsService, configurationService, restService, toastr) {
     $scope.steps;
     $scope.STEP_ENUM;
     $scope.ISLAND_ENUM;

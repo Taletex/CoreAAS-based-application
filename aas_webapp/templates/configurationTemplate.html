@@ -32,7 +32,7 @@
                             <th scope="col" class="col-5 text-left border-0">Island Terminal Id</th>
                             <th scope="col" class="col-2 d-flex text-left border-0">Value
                                 <div class="custom-control custom-checkbox ml-2">
-                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-all-{{$index}}" ng-click="switchAllTerminals(key, 'checkbox')" ng-model="currentConfig.islands[key]" ng-disabled="!bEdit">
+                                    <input type="checkbox" class="custom-control-input" id="terminal-checkbox-all-{{$index}}" ng-change="switchAllTerminals(key, 'checkbox')" ng-model="currentConfig.islands[key]" ng-disabled="!bEdit">
                                     <label class="custom-control-label cursor-pointer" for="terminal-checkbox-all-{{$index}}" data-toggle="tooltip" data-placement="top" title="Switch all terminals"></label>
                                 </div>
                             </th>
