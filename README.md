@@ -45,6 +45,10 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 		cd aas_webapp
 		npm install
 		```
+	3. Http-server. Open a terminal and write:
+		```
+		npm install -g http-server
+		```
 - **Nodejs Server**:
 	1. Nodejs.
 	2. Package-json. Open a terminal and write:
@@ -63,11 +67,17 @@ The application has the following dependencies (libraries and packages)
 - **OPC UA CoreAAS based Server**:
 	1. node-opcua-coreaas https://github.com/OPCUAUniCT/node-opcua-coreaas.
 - **Web Application**:
-	1. AngularJS 1.6.9 https://angularjs.org/.
-	2. Bootstrap 4.0.0 https://getbootstrap.com/docs/4.0/getting-started/download/.
-	3. FontAwesome 5.6.1 https://fontawesome.com/.
-	4. ImageMapster 1.2.10 http://www.outsharked.com/imagemapster/.
-	5. Http-server 0.9.0 (package-json).
+	1. AngularJS 1.7.9 https://angularjs.org/.
+	2. AngularRoute 1.7.9.
+	3. AngularSanitize 1.7.9.
+	4. AngularAnimate 1.7.9.
+	5. AngularToastr 2.1.1.
+	6. Jquery 3.4.1.
+	7. UiBootstrap 3.0.6.
+	8. Bootstrap 4.3.1 https://getbootstrap.com/docs/4.0/getting-started/download/.
+	9. FontAwesome 5.6.1 https://fontawesome.com/.
+	10. ImageMapster 1.2.10 http://www.outsharked.com/imagemapster/.
+	11. Http-server 0.12.0 (package-json).
 - **Nodejs Server**:
 	1. Body-parse 1.19.0 (package-json).
 	2. Cors 2.8.5 (package-json).
