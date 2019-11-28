@@ -59,7 +59,7 @@ Note: this app was successfully tested on Windows 10. The following links refer 
 	3. MongoDB (https://www.mongodb.com/download-center/community)
 	4. OpenPLC Runtime (https://www.openplcproject.com/runtime). 
 		- Download and install the runtime environment from the above link.
-		- Copy the file "webserver.py" from the folder "aas_nodeserver\rsc" to the folder "OpenPLC_v3\webserver" located in the OpenPLC runtime installation folder (e.g. C:\Users\Aless\OpenPLC\Runtime\home\Aless\OpenPLC_v3\webserver).
+		- Copy the file "webserver.py", "plcTemplate.st" from the folder "aas_nodeserver\rsc" to the folder "OpenPLC_v3\webserver" located in the OpenPLC runtime installation folder (e.g. C:\Users\Aless\OpenPLC\Runtime\home\Aless\OpenPLC_v3\webserver).
 
 
 ## Dependencies
@@ -109,11 +109,11 @@ After having installed all the requirements it is possible to clone this project
 	cd aas_webapp
 	http-server -o -p 8081
 	```
-   A new browser tab at the address where the web application is running will open (localhost:8081).
+   A new browser tab at the address where the web application is running will open.
 
 #### 4. Run the Nodejs Server, OpenPLC Runtime and MongoDB database
 - MongoDB server. Execute the mongoDB server previously installed.
-  > To enable MongoDB server to be addressed from any IP address (and not only from localhost) go to the installation folder, then bin. Open a a terminal and write:
+  > To enable MongoDB server to be addressed from any IP address (and not only from localhost) go to the installation folder, then bin. Open a terminal (using administrator priviledges) and write:
   	```
 	mongod --dbpath ../data --bind_ip 0.0.0.0
 	```

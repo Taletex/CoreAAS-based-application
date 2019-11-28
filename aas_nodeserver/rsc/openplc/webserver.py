@@ -467,7 +467,7 @@ def login():
 def upload_config():
 
     # upload_program: copia il file dal nodejs server alla cartella corretta del runtime
-    filePath = "C:\\Users\\Aless\\Documents\\Projects\\CoreAAS-based-application\\aas_nodeserver\\rsc\\openplc\\plcTemplate.st"
+    filePath = "plcTemplate.st"
     filename = str(random.randint(1,1000000)) + ".st"
     copyfile(filePath, os.path.join('st_files', filename))
 

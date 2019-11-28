@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const bodyParser = require('body-parser');
+const appConfig = require('./config.js')
 
 // create express app
 const app = express();
@@ -15,9 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Configuring the database
-const dbConfig = {url: 'mongodb://localhost:27017/coreaas'};
-if(process.argv.length == 3) 
-    dbConfig.url = "mongodb://" + process.argv[2] + ":27017/coreaas";
+const dbConfig = {url: "mongodb://" + ( (process.argv[2] != undefined && process.argv[2] != null && process.argv[2] != "") ? process.argv[2] : appConfig.database.ip) + ":" + appConfig.database.port + "/" + appConfig.database.dbname};
 console.log("Database address: " + dbConfig.url);
 const mongoose = require('mongoose');
 
