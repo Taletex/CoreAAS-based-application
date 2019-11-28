@@ -112,13 +112,23 @@ After having installed all the requirements it is possible to clone this project
    A new browser tab at the address where the web application is running will open (localhost:8081).
 
 #### 4. Run the Nodejs Server, OpenPLC Runtime and MongoDB database
-- MongoDB server. Execute the mongoDB community server previously installed.
+- MongoDB server. Execute the mongoDB server previously installed.
+  > To enable MongoDB server to be addressed from any IP address (and not only from localhost) go to the installation folder, then bin. Open a a terminal and write:
+  	```
+	mongod --dbpath ../data --bind_ip 0.0.0.0
+	```
+    This will run mongodb server and let it to accept connections from any IP address.
 - OpenPLC Runtime setup. Execute the openPLC Runtime previously installed.
 - NodeJs-server. Open a terminal and write (from the root folder of the project):
 	```
 	cd aas_nodeserver
 	node server.js
 	```
+  > If you need to connect to a mongodb server hosted in another PC (different from the one hosting the nodejs server), you need to run the nodejs server with the follow command: 
+  	```
+	node server.js ip
+	```
+    where "ip" is the ip address of the PC hosting the mongodb server (default "localhost")
 
 
 
