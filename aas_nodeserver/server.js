@@ -16,6 +16,9 @@ app.use(bodyParser.json())
 
 // Configuring the database
 const dbConfig = {url: 'mongodb://localhost:27017/coreaas'};
+if(process.argv.length == 3) 
+    dbConfig.url = "mongodb://" + process.argv[2] + ":27017/coreaas";
+console.log("Database address: " + dbConfig.url);
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
