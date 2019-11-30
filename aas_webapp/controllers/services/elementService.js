@@ -73,7 +73,7 @@ app.service("elementsService", function($location, mainService) {
         this.addConceptDescription("Property - Light Terminal", "Light Terminal", "Terminale relativo ad una luce", "V", mainService.baseUrl + "descriptions/032");
         this.addConceptDescription("Property - Switch Terminal", "Switch Terminal", "Terminale relativo ad uno switch", "V", mainService.baseUrl + "descriptions/040");
         this.addConceptDescription("Property - Light barrier Terminal", "Light barrier Terminal", "Terminale relativo ad un sensore luminoso", "V", mainService.baseUrl + "descriptions/041");
-        this.addConceptDescription("File - Program File", "Program File", "Link ad un file contenente un programma IEC", "", mainService.baseUrl + "descriptions/052");
+        this.addConceptDescription("File - Source File", "Source File", "File contenente un programma/FB IEC", "", mainService.baseUrl + "descriptions/052");
         this.addConceptDescription("Submodel - IO Module", "IO Module", "Submodel contenente informazioni sui moduli di IO aggiuntivi", "", mainService.baseUrl + "descriptions/053");
         this.addConceptDescription("Submodel - IO", "IO", "Submodel contenente informazioni sugli I/O dell'Asset", "", mainService.baseUrl + "descriptions/054");
         this.addConceptDescription("Elem. Collection - IEC Program", "Program", "Collection element contenente informazioni su un programma IEC", "", mainService.baseUrl + "descriptions/055");
@@ -81,11 +81,11 @@ app.service("elementsService", function($location, mainService) {
         this.addConceptDescription("Submodel - IEC Resource", "IEC Resource", "Submodel contenente informazioni relative alla risorsa conforme allo standard IEC61131-3", "", mainService.baseUrl + "descriptions/057");
         this.addConceptDescription("Property - IEC Resource Description", "Description", "Proprietà che descrive la risorsa IEC", "", mainService.baseUrl + "descriptions/058");
         this.addConceptDescription("Property - IEC Resource Address List", "Address List", "Proprietà che descrive gli indirizzi della risorsa", "", mainService.baseUrl + "descriptions/059");
-        this.addConceptDescription("Submodel - IEC Program", "IEC Program", "Submodel contenente informazioni relative ai programmi conformi allo standard IEC61131-3", "", mainService.baseUrl + "descriptions/060");
+        this.addConceptDescription("Submodel - IEC POU", "IEC POU", "Submodel contenente informazioni relative ai POU (Programmi, Function Block, Funzioni) conforme allo standard IEC 61161-3", "", mainService.baseUrl + "descriptions/060");
         this.addConceptDescription("Rel. Element - Associated Configuration", "Associated Configuration", "Relazione di appartenenza di un elemento ad una configurazione", "", mainService.baseUrl + "descriptions/061");
         this.addConceptDescription("Rel. Element - Associated Resource", "Associated Resource", "Relazione di appartenenza di un elemento ad una risorsa", "", mainService.baseUrl + "descriptions/062");
         this.addConceptDescription("Rel. Element - Associated Task", "Associated Task", "Relazione di associazione tra un elemento e un task", "", mainService.baseUrl + "descriptions/063");
-        this.addConceptDescription("Submodel - IEC Communication", "IEC Communication", "Submodel contenente informazioni relative alla modalità di comunicazione del PLC", "", mainService.baseUrl + "descriptions/065");
+        this.addConceptDescription("Submodel - Communication", "Communication", "Submodel contenente informazioni relative alla modalità di comunicazione del PLC", "", mainService.baseUrl + "descriptions/065");
         this.addConceptDescription("Elem. Collection - Profinet IO", "Profinet IO", "Collection element contenente informazioni relative alla modalità di comunicazione Profinet IO del PLC", "", mainService.baseUrl + "descriptions/066");
         this.addConceptDescription("Property - Device Type", "Device Type", "Proprietà indicante il tipo di dispositivo: IO Controller o IO Device nel caso di ProfinetIO, Master o Slave nel caso di ProfibusDP", "", mainService.baseUrl + "descriptions/067");
         this.addConceptDescription("Property - Send Clock Time", "Send Clock Time", "valore reale indicante il l'intervallo di scambio dati tra controller e device. Da usare solo nel caso in cui il tipo sia IO Controller", "ms", mainService.baseUrl + "descriptions/068");
@@ -97,7 +97,7 @@ app.service("elementsService", function($location, mainService) {
         this.addConceptDescription("Property - Profibus Address", "Profibus Address", "indirizzo profibus DP del device", "", mainService.baseUrl + "descriptions/075");
         this.addConceptDescription("Property - Highest Station Address", "HSA", "intero che indica il valore dell'indirizzo più alto ammissibile per una stazione attiva", "", mainService.baseUrl + "descriptions/076");
         this.addConceptDescription("IEC Task", "IEC Task", "Submodel contenente informazioni relative ai task conforme allo standard IEC61131-3", "", mainService.baseUrl + "descriptions/077");
-        this.addConceptDescription("Cyclic Interrupt", "Cyclic Interrupt", "Collection element contenente informazioni relative ai task ciclici", "", mainService.baseUrl + "descriptions/078");
+        this.addConceptDescription("Elem. Collection - Cyclic Interrupt", "Cyclic Interrupt", "Collection element contenente informazioni relative ai task ciclici", "", mainService.baseUrl + "descriptions/078");
         this.addConceptDescription("Property - OB Number", "OB number", "Intero indicante il numero dell'Organization Block (OB)", "", mainService.baseUrl + "descriptions/079");
         this.addConceptDescription("Property - Priority", "Priority", "Intero indicante la priorità dell'Organization Block (OB)", "", mainService.baseUrl + "descriptions/080");
         this.addConceptDescription("Property - Period", "Period", "Periodo dell'OB schedulazione d'orologio", "", mainService.baseUrl + "descriptions/081");
@@ -105,12 +105,19 @@ app.service("elementsService", function($location, mainService) {
         this.addConceptDescription("Property - Trigger Input Channel", "Trigger Input Channel", "Canale di input d'innesco", "", mainService.baseUrl + "descriptions/083");
         this.addConceptDescription("Submodel - Terminals Mapping", "Terminals Mapping", "Submodel contenente informazioni relative al mapping dei terminali", "", mainService.baseUrl + "descriptions/084");
         this.addConceptDescription("Rel. Element - Paired Terminals", "Paired Terminals", "Relazione di accoppiamento tra due terminali appartenenti ad AAS differenti", "", mainService.baseUrl + "descriptions/085");
+        this.addConceptDescription("Elem. Collection - Function Block", "FunctionBlock", "Submodel element collection contenente informazioni relative ad un Function Block", "", mainService.baseUrl + "descriptions/086");
+        this.addConceptDescription("Submodel - IEC Variables", "IECVariables", "Submodel contenente informazioni relative alle variabili IEC di configurazioni, risorse, programmi e function block", "", mainService.baseUrl + "descriptions/087");
+        this.addConceptDescription("Elem. Collection - Variable", "Variable", "Submodel element collection contenente infromazioni circa una variabile IEC", "", mainService.baseUrl + "descriptions/088");
+        this.addConceptDescription("Rel. Element - Associated Program", "AssociatedProgram", "Relazione di appartenenza di un elemento ad un programma", "", mainService.baseUrl + "descriptions/089");
+        this.addConceptDescription("Rel. Element - Associated Terminal", "AssociatedTerminal", "Relazione di associazione di un elemento ad un terminale", "", mainService.baseUrl + "descriptions/090");
+        this.addConceptDescription("Rel. Element - Associated Function Block", "AssociatedFunctionBlock", "Relazione di associazione di un elemento ad un function block", "", mainService.baseUrl + "descriptions/091");
+        this.addConceptDescription("Rel. Element - Associated Variable", "AssociatedVariable", "Relazione di associazione di un elemento ad una variabile", "", mainService.baseUrl + "descriptions/092");
 
         this.addAAS("Multi Processing Station AAS", "1", "1", "Multi Processing Station AAS", mainService.baseUrl + "aas/mps-1.0", mainService.baseUrl + "assets/536632", [mainService.baseUrl + "submodels/identification1", mainService.baseUrl + "submodels/configuration1", mainService.baseUrl + "submodels/gripper1", mainService.baseUrl + "submodels/oven1", mainService.baseUrl + "submodels/turntable1"]);
         this.addAAS("Vacuum Gripper AAS", "1", "1", "Vacuum Gripper AAS", mainService.baseUrl + "aas/vg-1.0", mainService.baseUrl + "assets/536630", [mainService.baseUrl + "submodels/identification2", mainService.baseUrl + "submodels/configuration2", mainService.baseUrl + "submodels/gripper2"]);
         this.addAAS("Sorting Line AAS", "1", "1",  "Sorting Line AAS", mainService.baseUrl + "aas/sl-1.0", mainService.baseUrl + "assets/536633", [mainService.baseUrl + "submodels/identification3", mainService.baseUrl + "submodels/configuration3", mainService.baseUrl + "submodels/sortingLine3"]);
         this.addAAS("Automated High Bay Warehouse AAS", "1", "1",  "Automated High Bay Warehouse AAS", mainService.baseUrl + "aas/ahbw-1.0", mainService.baseUrl + "assets/536631", [mainService.baseUrl + "submodels/identification4", mainService.baseUrl + "submodels/configuration4", mainService.baseUrl + "submodels/ahbWarehouse4"]);
-        this.addAAS("PLC AAS", "1", "1", "PLC AAS", mainService.baseUrl + "aas/plc-1.0", mainService.baseUrl + "assets/PLC_1214C", [mainService.baseUrl + "submodels/identification5", mainService.baseUrl + "submodels/configuration5", mainService.baseUrl + "submodels/IO5", mainService.baseUrl + "submodels/IECConfiguration5", mainService.baseUrl + "submodels/IECResource5", mainService.baseUrl + "submodels/IECProgram5", mainService.baseUrl + "submodels/IECTask5", mainService.baseUrl + "submodels/IECCommunication5"]);
+        this.addAAS("PLC AAS", "1", "1", "PLC AAS", mainService.baseUrl + "aas/plc-1.0", mainService.baseUrl + "assets/PLC_1214C", [mainService.baseUrl + "submodels/identification5", mainService.baseUrl + "submodels/configuration5", mainService.baseUrl + "submodels/IO5", mainService.baseUrl + "submodels/IECConfiguration5", mainService.baseUrl + "submodels/IECResource5", mainService.baseUrl + "submodels/IECPOU5", mainService.baseUrl + "submodels/IECTask5", mainService.baseUrl + "submodels/Communication5"]);
 
         this.addAsset("Multi Processing Station 536632", "1", "1", "Asset Multi Processing Station 536632", "TODO", "Fischertechnik", mainService.baseUrl + "datasheets/536632-Multi_Processing_Station_24V.pdf", mainService.baseUrl + "assets/536632");
         this.addAsset("Vacuum Gripper 536630", "1", "1", "Asset Vacuum Gripper 536630", "TODO", "Fischertechnik", mainService.baseUrl + "datasheets/536630-Vacuum_Gripper_Robot_24V.pdf", mainService.baseUrl + "assets/536630");
@@ -130,9 +137,10 @@ app.service("elementsService", function($location, mainService) {
         this.addSubmodel("IO Module Type", "1", "1", "IO Module", mainService.baseUrl + "submodels/IOModuleType");
         this.addSubmodel("IEC Configuration Type", "1", "1", "IEC Configuration", mainService.baseUrl + "submodels/IECConfigurationType");
         this.addSubmodel("IEC Resource Type", "1", "1", "IEC Resource", mainService.baseUrl + "submodels/IECResourceType");
-        this.addSubmodel("IEC Program Type", "1", "1", "IEC Program", mainService.baseUrl + "submodels/IECProgramType");
+        this.addSubmodel("IEC POU Type", "1", "1", "IEC POU", mainService.baseUrl + "submodels/IECPOUType");
+        this.addSubmodel("IEC Variables Type", "1", "1", "IEC Variables", mainService.baseUrl + "submodels/IECVariablesType");
         this.addSubmodel("IEC Task Type", "1", "1", "IEC Task", mainService.baseUrl + "submodels/IECTaskType");
-        this.addSubmodel("IEC Communication Type", "1", "1", "IEC Communication", mainService.baseUrl + "submodels/IECCommunicationType");
+        this.addSubmodel("Communication Type", "1", "1", "Communication", mainService.baseUrl + "submodels/CommunicationType");
         this.addSubmodel("Terminals Mapping Type", "1", "1", "Terminals Mapping", mainService.baseUrl + "submodels/TerminalsMappingType");
         
         this.addDataSpecs("Terminal Template", "1", "1", "Template for Terminal Property", mainService.baseUrl + "dataspecs/terminalDataTemplate", [{name: "TerminalType", dataType: "String"}, {name: "TerminalNumber", dataType: "Int16"}] );
