@@ -128,10 +128,13 @@ After having installed all the requirements it is possible to clone this project
   	```
 	node server.js ip
 	```
-    where "ip" is the ip address of the PC hosting the mongodb server (default "localhost")
+    where "ip" is the ip address of the PC hosting the mongodb server (default: "localhost")
 
 
 
 
 ## Future developments
-- TODO
+The system created underlines the effectiveness of the solutions proposed by Plattform Industrie 4.0. The Asset Administration Shells perform the digitalization of the smart factory under consideration, allowing a user to interact at will through an OPC UA Client or a Web Browser.
+The use of two technologies such as OPC UA and the Web to access the system improve the ability to use the system, while enabling the possibility of Machine To Machine (M2M) scenarios.
+The work on interoperability, carried out as defined by PLCopen, thus adopting XML in the industrial sector, highlights how the use of open and standard formats for the realization of industrial projects represents a key element for the diffusion of Industry 4.0 solutions.
+The implementation also illustrates the generalization possibilities of the project. One possible improvement concerns the standardization of the submodels of the Asset Administration Shells, relating to any island of a smart factory, highlighting the elements in common. It is also possible to generalize the smart factory configuration process, providing for a wider choice between additional production islands, which allows to consequently change the instances of the Asset Administration Shell considered. Similarly, a further development concerns the possibility of allowing a user to upload the XML file of his own program, which must be suitably modified by the system based on the chosen configuration, to guarantee its operation with the adopted smart factory.
