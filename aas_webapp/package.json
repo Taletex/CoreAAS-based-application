@@ -26,7 +26,7 @@
     "angular-toastr": "^2.1.1",
     "bootstrap": "^4.3.1",
     "http-server": "^0.12.0",
-    "jquery": "^3.4.1"
+    "jquery": "^3.5.0"
   },
   "bugs": {
     "url": "https://github.com/Taletex/CoreAAS-based-application/issues"
