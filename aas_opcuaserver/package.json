@@ -31,7 +31,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "node-opcua": "^2.1.5",
+    "node-opcua": "^2.74.0",
     "node-opcua-coreaas": "^1.0.1"
   },
   "bugs": {
